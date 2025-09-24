@@ -1,5 +1,6 @@
 "use client";
 
+import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 
 interface AuthProviderProps {
@@ -7,6 +8,5 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // Temporary auth provider - replace with NextAuth.js implementation
-  return <div>{children}</div>;
+  return <SessionProvider>{children}</SessionProvider>;
 }
