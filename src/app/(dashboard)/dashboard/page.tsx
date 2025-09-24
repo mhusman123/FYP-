@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -185,8 +186,8 @@ export default function StudentDashboard() {
                 </Badge>
               </div>
             ))}
-            <Button className="w-full" variant="outline">
-              View All Assignments
+            <Button className="w-full" variant="outline" asChild>
+              <Link href="/assignments">View All Assignments</Link>
             </Button>
           </CardContent>
         </Card>
@@ -218,8 +219,8 @@ export default function StudentDashboard() {
                 </p>
               </div>
             ))}
-            <Button className="w-full" variant="outline">
-              View All Courses
+            <Button className="w-full" variant="outline" asChild>
+              <Link href="/courses">View All Courses</Link>
             </Button>
           </CardContent>
         </Card>
@@ -248,8 +249,8 @@ export default function StudentDashboard() {
                 </div>
               </div>
             ))}
-            <Button className="w-full" variant="outline">
-              View All Badges
+            <Button className="w-full" variant="outline" asChild>
+              <Link href="/badges">View All Badges</Link>
             </Button>
           </CardContent>
         </Card>
@@ -263,21 +264,29 @@ export default function StudentDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline">
-              <FileText className="h-4 w-4 mr-2" />
-              Submit Assignment
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link href="/submissions">
+                <FileText className="h-4 w-4 mr-2" />
+                Submit Assignment
+              </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Calendar className="h-4 w-4 mr-2" />
-              View Schedule
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link href="/assignments">
+                <Calendar className="h-4 w-4 mr-2" />
+                View Schedule
+              </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Trophy className="h-4 w-4 mr-2" />
-              Check Leaderboard
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link href="/leaderboard">
+                <Trophy className="h-4 w-4 mr-2" />
+                Check Leaderboard
+              </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Award className="h-4 w-4 mr-2" />
-              Request Grade Review
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link href="/grade-requests">
+                <Award className="h-4 w-4 mr-2" />
+                Request Grade Review
+              </Link>
             </Button>
           </CardContent>
         </Card>
