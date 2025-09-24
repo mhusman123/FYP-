@@ -1,10 +1,61 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Clock, Users, Calendar, TrendingUp, Play } from 'lucide-react'
+import { BookOpen, Clock, Users, Calendar, TrendingUp, Play, Settings, BarChart3, FileText } from 'lucide-react'
 
-// Mock data - replace with actual API calls
+// Mock educator courses data
+const educatorCourses = [
+  {
+    id: '1',
+    title: 'Advanced Web Development',
+    code: 'CS 4350',
+    semester: 'Fall 2025',
+    students: 45,
+    capacity: 50,
+    assignments: 12,
+    pendingGrades: 8,
+    status: 'active' as const,
+    credits: 3,
+    schedule: 'MWF 10:00-11:00 AM',
+    description: 'Advanced concepts in modern web development including React, Next.js, and full-stack applications.',
+    color: 'bg-blue-500'
+  },
+  {
+    id: '2',
+    title: 'Database Systems', 
+    code: 'CS 3320',
+    semester: 'Fall 2025',
+    students: 52,
+    capacity: 55,
+    assignments: 15,
+    pendingGrades: 12,
+    status: 'active' as const,
+    credits: 4,
+    schedule: 'TTh 2:00-3:30 PM',
+    description: 'Comprehensive study of database design, SQL, NoSQL, and database management systems.',
+    color: 'bg-green-500'
+  },
+  {
+    id: '3',
+    title: 'Human-Computer Interaction',
+    code: 'CS 4550',
+    semester: 'Fall 2025',
+    students: 38,
+    capacity: 40,
+    assignments: 10,
+    pendingGrades: 3,
+    status: 'active' as const,
+    credits: 3,
+    schedule: 'MW 1:00-2:30 PM',
+    description: 'User experience design principles, usability testing, and interface design methodologies.',
+    color: 'bg-purple-500'
+  }
+]
+
+// Mock student courses data
 const mockCourses = [
   {
     id: '1',
@@ -78,7 +129,18 @@ const mockCourses = [
   }
 ]
 
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const session = await getServerSession(authOptions)
+  const userRole = session?.user?.role || 'STUDENT'
+  
+  if (userRole === 'EDUCATOR') {
+    return <EducatorCoursesView />
+  }
+  
+  return <StudentCoursesView />
+}
+
+function StudentCoursesView() {
   const activeCourses = mockCourses.filter(course => course.status === 'active')
   const completedCourses = mockCourses.filter(course => course.status === 'completed')
 
@@ -258,6 +320,156 @@ export default function CoursesPage() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function EducatorCoursesView() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">My Courses</h1>
+          <p className="text-muted-foreground">
+            Manage your teaching courses and track student progress
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline">
+            <Settings className="mr-2 h-4 w-4" />
+            Course Settings
+          </Button>
+          <Button>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Create Course
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{educatorCourses.length}</div>
+            <p className="text-xs text-muted-foreground">This semester</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {educatorCourses.reduce((sum, course) => sum + course.students, 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">Enrolled across all courses</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Assignments</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {educatorCourses.reduce((sum, course) => sum + course.assignments, 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">Total created</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Grades</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {educatorCourses.reduce((sum, course) => sum + course.pendingGrades, 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">Need review</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Active Courses */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5" />
+            Teaching Courses ({educatorCourses.length})
+          </CardTitle>
+          <CardDescription>
+            Your current semester courses
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {educatorCourses.map((course) => (
+              <Card key={course.id} className="overflow-hidden">
+                <div className={`h-2 ${course.color}`} />
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{course.title}</CardTitle>
+                      <CardDescription>{course.code} • {course.semester}</CardDescription>
+                    </div>
+                    <Badge variant="outline">{course.credits} credits</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">{course.description}</p>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Enrollment</span>
+                      <span className="font-medium">{course.students}/{course.capacity}</span>
+                    </div>
+                    <Progress value={(course.students / course.capacity) * 100} className="h-2" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Schedule</p>
+                      <p className="font-medium">{course.schedule}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Assignments</p>
+                      <p className="font-medium">{course.assignments} created</p>
+                    </div>
+                  </div>
+
+                  {course.pendingGrades > 0 && (
+                    <div className="flex items-center gap-2 p-2 bg-orange-50 rounded text-sm text-orange-800">
+                      <Clock className="h-4 w-4" />
+                      <span>{course.pendingGrades} submissions need grading</span>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 pt-2">
+                    <Button size="sm" className="flex-1">
+                      <BarChart3 className="mr-2 h-3 w-3" />
+                      Analytics
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      <Settings className="mr-2 h-3 w-3" />
+                      Settings
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
