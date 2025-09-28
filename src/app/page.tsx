@@ -49,9 +49,9 @@ export default async function Home() {
             </div>
             <nav className="hidden md:flex items-center gap-8">
               <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</Link>
-              <Link href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link>
+              <Link href="#about" className="text-gray-600 hover:text-gray-900 transition-colors">About</Link>
               <Link href="#testimonials" className="text-gray-600 hover:text-gray-900 transition-colors">Reviews</Link>
-              <Link href="/demo" className="text-gray-600 hover:text-gray-900 transition-colors">Demo</Link>
+              <Link href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</Link>
             </nav>
             <div className="flex items-center gap-3">
               <Button variant="ghost" asChild>
@@ -70,32 +70,32 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="secondary" className="mb-6 px-4 py-2">
-              🚀 Now with AI-Powered Autograding
+              🎓 Final Year Capstone Project 2025
             </Badge>
             <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
-              Transform Your
+              Next-Generation
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
-                {" "}Educational Journey
+                {" "}Learning Management
               </span>
             </h1>
             <p className="text-xl lg:text-2xl text-gray-600 mb-10 leading-relaxed">
-              The complete platform for modern education. Manage courses, track progress, 
-              engage with gamification, and accelerate learning like never before.
+              An innovative educational platform featuring AI-powered autograding, gamification, 
+              and comprehensive course management designed for the future of education.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Button size="lg" className="px-8 py-4 text-lg" asChild>
                 <Link href="/auth/signin">
-                  Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                  Get Started <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
-                <Link href="/demo">View Live Demo</Link>
+                <Link href="#features">Explore Features</Link>
               </Button>
             </div>
             <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Free 30-day trial</span>
+                <span>Full-featured platform</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
@@ -435,14 +435,14 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4" asChild>
               <Link href="/auth/signin">
-                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4" asChild>
-              <Link href="/demo">Explore Demo</Link>
+              <Link href="#features">Learn More</Link>
             </Button>
           </div>
-          <p className="text-sm mt-6 opacity-75">No credit card required • 30-day free trial • Cancel anytime</p>
+          <p className="text-sm mt-6 opacity-75">Innovative • AI-Powered • Student-Centric</p>
         </div>
       </section>
 
@@ -458,15 +458,15 @@ export default async function Home() {
                 <span className="text-xl font-bold">EduPlatform</span>
               </div>
               <p className="text-gray-400">
-                Transforming education through innovative technology and AI-powered learning experiences.
+                A comprehensive educational platform developed as a final year capstone project, showcasing modern web technologies and AI integration.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Product</h3>
+              <h3 className="font-semibold mb-4">Platform</h3>
               <div className="space-y-2 text-gray-400">
                 <div><Link href="#features" className="hover:text-white transition-colors">Features</Link></div>
-                <div><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></div>
-                <div><Link href="/demo" className="hover:text-white transition-colors">Demo</Link></div>
+                <div><Link href="#about" className="hover:text-white transition-colors">About Project</Link></div>
+                <div><Link href="#testimonials" className="hover:text-white transition-colors">Testimonials</Link></div>
                 <div><Link href="/auth/signin" className="hover:text-white transition-colors">Get Started</Link></div>
               </div>
             </div>
@@ -490,7 +490,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 EduPlatform. All rights reserved. Built with ❤️ for educators and students.</p>
+            <p>&copy; 2025 EduPlatform - Final Year Capstone Project. Built with cutting-edge technology for the future of education.</p>
           </div>
         </div>
       </footer>

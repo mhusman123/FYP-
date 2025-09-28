@@ -16,33 +16,33 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
-    // Demo credentials provider for testing
+    // Test credentials provider
     CredentialsProvider({
-      name: "Demo Account",
+      name: "Test Account",
       credentials: {
         email: { label: "Email", type: "email" },
         role: { label: "Role", type: "select" }
       },
       async authorize(credentials) {
-        // Demo accounts for testing
-        const demoUsers = [
+        // Test accounts for platform demonstration
+        const testUsers = [
           {
-            id: "demo-student",
-            email: "student@demo.edu",
-            name: "Demo Student",
+            id: "test-student",
+            email: "student@eduplatform.edu",
+            name: "Test Student",
             role: "STUDENT",
             image: "/placeholder-avatar.jpg"
           },
           {
-            id: "demo-educator", 
-            email: "educator@demo.edu",
-            name: "Demo Educator",
+            id: "test-educator", 
+            email: "educator@eduplatform.edu",
+            name: "Test Educator",
             role: "EDUCATOR",
             image: "/placeholder-avatar.jpg"
           }
         ]
 
-        const user = demoUsers.find(u => u.email === credentials?.email)
+        const user = testUsers.find(u => u.email === credentials?.email)
         if (user) {
           return {
             id: user.id,

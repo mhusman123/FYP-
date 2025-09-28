@@ -13,7 +13,7 @@ A comprehensive, modern educational platform built with Next.js 14, TypeScript, 
 - **Grade Adjustment System**: Request and manage grade adjustments for special circumstances
 
 ### 🔐 **Authentication & User Management**
-- **Multiple Sign-in Options**: Demo accounts, OAuth (Google, GitHub), and credentials
+- **Multiple Sign-in Options**: Test accounts, OAuth (Google, GitHub), and credentials
 - **Role-Based Access**: Student, Educator, and Admin roles with appropriate permissions
 - **Enhanced UI/UX**: Modern, responsive design with smooth animations
 - **Secure Session Management**: JWT-based authentication with NextAuth.js
@@ -51,7 +51,7 @@ A comprehensive, modern educational platform built with Next.js 14, TypeScript, 
    This will:
    - Generate Prisma client
    - Create SQLite database
-   - Seed with comprehensive CS courses and demo data
+   - Seed with comprehensive CS courses and test data
 
 4. **Start development server**
    ```bash
@@ -62,14 +62,14 @@ A comprehensive, modern educational platform built with Next.js 14, TypeScript, 
    - Visit: http://localhost:3000
    - View database: `npx prisma studio`
 
-### 🎮 Demo Accounts
+### 🎮 Test Accounts
 
 **Student Account:**
-- Email: `student@demo.edu`
+- Email: `student@eduplatform.edu`
 - Features: Course enrollment, assignment submission, progress tracking, gamification
 
 **Educator Account:**
-- Email: `educator@demo.edu`  
+- Email: `educator@eduplatform.edu`  
 - Features: Course management, autograding, analytics, student management
 
 ## 📁 Project Structure
@@ -192,7 +192,7 @@ GITHUB_SECRET=""
 - Call-to-action sections
 
 ### 🔐 **Authentication System**
-- Enhanced sign-in page with demo accounts
+- Enhanced sign-in page with test accounts
 - Role-based registration (Student/Educator)
 - OAuth integration (Google, GitHub)
 - Password strength validation

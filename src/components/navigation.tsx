@@ -133,8 +133,12 @@ export function Navigation({ user }: NavigationProps) {
 
           {/* Settings & Logout */}
           <div className="px-4 py-4 border-t space-y-1">
+            <NavItem href="/" label="Landing Page" icon={Home} />
             <NavItem href="/settings" label="Settings" icon={Settings} />
-            <button className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted w-full">
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted w-full"
+            >
               <LogOut className="h-4 w-4" />
               Logout
             </button>
@@ -166,6 +170,12 @@ export function Navigation({ user }: NavigationProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/">
+                    <Home className="h-4 w-4 mr-2" />
+                    Landing Page
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="h-4 w-4 mr-2" />
                   Settings

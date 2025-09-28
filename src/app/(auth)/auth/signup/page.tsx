@@ -79,7 +79,7 @@ export default function SignUpPage() {
     setError("");
 
     try {
-      // For demo purposes, we'll use the credentials provider
+      // Using credentials provider for authentication
       // In a real app, you'd make an API call to create the user first
       const result = await signIn("credentials", {
         email: formData.email,

@@ -125,12 +125,12 @@ export default function SignInPage() {
                 </Alert>
               )}
 
-              {/* Demo Accounts Section */}
+              {/* Quick Access Section */}
               <div className="space-y-4">
-                <div className="text-center">
-                  <Badge variant="secondary" className="px-3 py-1">
-                    🚀 Quick Demo Access
-                  </Badge>
+                <div className="text-center mb-4">
+                  <div className="flex items-center justify-center gap-2 text-sm font-medium text-blue-600 mb-2">
+                    🎓 Test Accounts Available
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-3">
@@ -138,18 +138,19 @@ export default function SignInPage() {
                     variant="outline"
                     className="w-full h-12 text-left justify-start"
                     onClick={() => signIn("credentials", { 
-                      email: "student@demo.edu",
+                      email: "student@eduplatform.edu",
+                      password: "password",
                       callbackUrl
                     })}
                     disabled={isLoading}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <GraduationCap className="h-4 w-4 text-blue-600" />
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <GraduationCap className="h-4 w-4 text-green-600" />
                       </div>
                       <div className="text-left">
-                        <div className="font-medium">Demo Student</div>
-                        <div className="text-xs text-gray-500">Experience student features</div>
+                        <div className="font-medium">Test Student</div>
+                        <div className="text-xs text-gray-500">Student account features</div>
                       </div>
                     </div>
                   </Button>
@@ -158,7 +159,8 @@ export default function SignInPage() {
                     variant="outline"
                     className="w-full h-12 text-left justify-start"
                     onClick={() => signIn("credentials", { 
-                      email: "educator@demo.edu",
+                      email: "educator@eduplatform.edu",
+                      password: "password",
                       callbackUrl
                     })}
                     disabled={isLoading}
@@ -168,8 +170,8 @@ export default function SignInPage() {
                         <User className="h-4 w-4 text-purple-600" />
                       </div>
                       <div className="text-left">
-                        <div className="font-medium">Demo Educator</div>
-                        <div className="text-xs text-gray-500">Experience educator features</div>
+                        <div className="font-medium">Test Educator</div>
+                        <div className="text-xs text-gray-500">Educator account features</div>
                       </div>
                     </div>
                   </Button>

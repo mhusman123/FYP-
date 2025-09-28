@@ -50,9 +50,9 @@ try {
   console.log('\n🚀 Quick start:');
   console.log('   1. Run: npm run dev');
   console.log('   2. Visit: http://localhost:3000');
-  console.log('   3. Use demo accounts:');
-  console.log('      - Student: student@demo.edu');
-  console.log('      - Educator: educator@demo.edu');
+  console.log('   3. Use test accounts:');
+  console.log('      - Student: student@eduplatform.edu');
+  console.log('      - Educator: educator@eduplatform.edu');
   console.log('\n📊 View your data: npx prisma studio');
 
 } catch (error) {
