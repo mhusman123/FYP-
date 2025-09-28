@@ -319,9 +319,24 @@ function AutogradingConfigForm() {
                 <SelectValue placeholder="Select course" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cs380">Data Structures (CS-380)</SelectItem>
-                <SelectItem value="cs401">Web Development (CS-401)</SelectItem>
-                <SelectItem value="cs425">HCI (CS-425)</SelectItem>
+                <SelectItem value="cs150">Programming Fundamentals (CS-150)</SelectItem>
+                <SelectItem value="cs200">Data Structures & Algorithms (CS-200)</SelectItem>
+                <SelectItem value="cs210">Computer Systems (CS-210)</SelectItem>
+                <SelectItem value="cs300">Advanced Data Structures (CS-300)</SelectItem>
+                <SelectItem value="cs310">Operating Systems (CS-310)</SelectItem>
+                <SelectItem value="cs320">Database Systems (CS-320)</SelectItem>
+                <SelectItem value="cs330">Computer Networks (CS-330)</SelectItem>
+                <SelectItem value="cs340">Software Engineering (CS-340)</SelectItem>
+                <SelectItem value="cs360">Computer Graphics (CS-360)</SelectItem>
+                <SelectItem value="cs401">Advanced Web Development (CS-401)</SelectItem>
+                <SelectItem value="cs410">Machine Learning (CS-410)</SelectItem>
+                <SelectItem value="cs420">Artificial Intelligence (CS-420)</SelectItem>
+                <SelectItem value="cs425">Human-Computer Interaction (CS-425)</SelectItem>
+                <SelectItem value="cs430">Cybersecurity (CS-430)</SelectItem>
+                <SelectItem value="cs440">Distributed Systems (CS-440)</SelectItem>
+                <SelectItem value="cs450">Compiler Design (CS-450)</SelectItem>
+                <SelectItem value="cs460">Mobile Development (CS-460)</SelectItem>
+                <SelectItem value="cs470">Cloud Computing (CS-470)</SelectItem>
               </SelectContent>
             </Select>
           </div>

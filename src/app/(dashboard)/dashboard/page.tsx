@@ -81,7 +81,7 @@ const mockData = {
     {
       id: '2',
       name: 'Database Systems',
-      code: 'CS-380',
+      code: 'CS-320',
       progress: 60,
       nextAssignment: 'Database Design Project'
     },
@@ -91,6 +91,20 @@ const mockData = {
       code: 'CS-425',
       progress: 90,
       nextAssignment: 'Final Project Presentation'
+    },
+    {
+      id: '4',
+      name: 'Machine Learning',
+      code: 'CS-410',
+      progress: 45,
+      nextAssignment: 'Neural Network Implementation'
+    },
+    {
+      id: '5',
+      name: 'Data Structures & Algorithms',
+      code: 'CS-200',
+      progress: 82,
+      nextAssignment: 'Graph Algorithms Lab'
     }
   ]
 }

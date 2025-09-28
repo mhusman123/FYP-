@@ -11,7 +11,7 @@ const educatorCourses = [
   {
     id: '1',
     title: 'Advanced Web Development',
-    code: 'CS 4350',
+    code: 'CS 401',
     semester: 'Fall 2025',
     students: 45,
     capacity: 50,
@@ -26,7 +26,7 @@ const educatorCourses = [
   {
     id: '2',
     title: 'Database Systems', 
-    code: 'CS 3320',
+    code: 'CS 320',
     semester: 'Fall 2025',
     students: 52,
     capacity: 55,
@@ -41,7 +41,7 @@ const educatorCourses = [
   {
     id: '3',
     title: 'Human-Computer Interaction',
-    code: 'CS 4550',
+    code: 'CS 425',
     semester: 'Fall 2025',
     students: 38,
     capacity: 40,
@@ -52,6 +52,51 @@ const educatorCourses = [
     schedule: 'MW 1:00-2:30 PM',
     description: 'User experience design principles, usability testing, and interface design methodologies.',
     color: 'bg-purple-500'
+  },
+  {
+    id: '4',
+    title: 'Machine Learning',
+    code: 'CS 410',
+    semester: 'Spring 2025',
+    students: 28,
+    capacity: 35,
+    assignments: 8,
+    pendingGrades: 5,
+    status: 'active' as const,
+    credits: 4,
+    schedule: 'TTh 10:00-11:30 AM',
+    description: 'Supervised and unsupervised learning, neural networks, and practical ML applications.',
+    color: 'bg-orange-500'
+  },
+  {
+    id: '5',
+    title: 'Operating Systems',
+    code: 'CS 310',
+    semester: 'Spring 2025',
+    students: 42,
+    capacity: 45,
+    assignments: 6,
+    pendingGrades: 2,
+    status: 'active' as const,
+    credits: 4,
+    schedule: 'MWF 9:00-10:00 AM',
+    description: 'Process management, memory management, file systems, and concurrent programming.',
+    color: 'bg-red-500'
+  },
+  {
+    id: '6',
+    title: 'Data Structures & Algorithms',
+    code: 'CS 200',
+    semester: 'Fall 2025',
+    students: 68,
+    capacity: 70,
+    assignments: 10,
+    pendingGrades: 15,
+    status: 'active' as const,
+    credits: 4,
+    schedule: 'MWF 11:00-12:00 PM',
+    description: 'Fundamental data structures and algorithm analysis for efficient problem solving.',
+    color: 'bg-indigo-500'
   }
 ]
 
@@ -60,7 +105,7 @@ const mockCourses = [
   {
     id: '1',
     title: 'Advanced Web Development',
-    code: 'CS 4350',
+    code: 'CS 401',
     instructor: 'Dr. Sarah Johnson',
     progress: 78,
     totalLessons: 24,
@@ -74,7 +119,7 @@ const mockCourses = [
   {
     id: '2',
     title: 'Database Systems',
-    code: 'CS 3320',
+    code: 'CS 320',
     instructor: 'Prof. Michael Chen',
     progress: 65,
     totalLessons: 20,
@@ -88,7 +133,7 @@ const mockCourses = [
   {
     id: '3',
     title: 'Human-Computer Interaction',
-    code: 'CS 4550',
+    code: 'CS 425',
     instructor: 'Dr. Emily Rodriguez',
     progress: 92,
     totalLessons: 16,
@@ -102,7 +147,7 @@ const mockCourses = [
   {
     id: '4',
     title: 'Software Engineering',
-    code: 'CS 3300',
+    code: 'CS 340',
     instructor: 'Dr. Robert Kim',
     progress: 45,
     totalLessons: 22,
@@ -116,7 +161,7 @@ const mockCourses = [
   {
     id: '5',
     title: 'Data Structures & Algorithms',
-    code: 'CS 2400',
+    code: 'CS 200',
     instructor: 'Prof. Lisa Wang',
     progress: 100,
     totalLessons: 18,
@@ -126,6 +171,48 @@ const mockCourses = [
     credits: 4,
     description: 'Fundamental data structures and algorithm analysis for efficient problem solving.',
     color: 'bg-gray-500'
+  },
+  {
+    id: '6',
+    title: 'Machine Learning',
+    code: 'CS 410',
+    instructor: 'Dr. Amanda Lee',
+    progress: 35,
+    totalLessons: 20,
+    completedLessons: 7,
+    nextDeadline: '2025-10-02',
+    status: 'active' as const,
+    credits: 4,
+    description: 'Supervised and unsupervised learning, neural networks, and practical ML applications.',
+    color: 'bg-teal-500'
+  },
+  {
+    id: '7',
+    title: 'Programming Fundamentals',
+    code: 'CS 150',
+    instructor: 'Prof. David Wilson',
+    progress: 100,
+    totalLessons: 16,
+    completedLessons: 16,
+    nextDeadline: null,
+    status: 'completed' as const,
+    credits: 3,
+    description: 'Introduction to programming using Python. Variables, control structures, functions, and basic data structures.',
+    color: 'bg-cyan-500'
+  },
+  {
+    id: '8',
+    title: 'Cybersecurity',
+    code: 'CS 430',
+    instructor: 'Dr. Jennifer Martinez',
+    progress: 58,
+    totalLessons: 18,
+    completedLessons: 10,
+    nextDeadline: '2025-09-27',
+    status: 'active' as const,
+    credits: 3,
+    description: 'Information security, cryptography, network security, and ethical hacking principles.',
+    color: 'bg-red-600'
   }
 ]
 
