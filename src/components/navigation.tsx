@@ -31,7 +31,9 @@ import {
   BarChart3,
   Users,
   ClipboardCheck,
-  AlertTriangle
+  AlertTriangle,
+  FileCheck,
+  Bot
 } from 'lucide-react'
 
 interface User {
@@ -54,6 +56,7 @@ const studentNavItems = [
   { href: '/submissions', label: 'Submissions', icon: Upload },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/badges', label: 'My Badges', icon: Award },
+  { href: '/submission-feedback', label: 'AI Feedback', icon: Bot },
   { href: '/grade-requests', label: 'Grade Requests', icon: ClipboardCheck },
 ]
 
@@ -61,7 +64,8 @@ const educatorNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/courses', label: 'My Courses', icon: BookOpen },
   { href: '/assignments', label: 'Assignments', icon: FileText },
-  { href: '/grading', label: 'Grading Queue', icon: ClipboardCheck },
+  { href: '/grading', label: 'Grading', icon: FileCheck },
+  { href: '/autograding', label: 'Autograding', icon: Bot },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/students', label: 'Students', icon: Users },
   { href: '/plagiarism', label: 'Plagiarism Reports', icon: AlertTriangle },
