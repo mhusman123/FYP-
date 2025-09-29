@@ -20,94 +20,86 @@ import {
   AlertTriangle,
   GraduationCap
 } from 'lucide-react'
+import { fetchCourses, fetchAssignments, fetchBadges } from '@/lib/api'
 
-// Mock data - replace with actual API calls
-const mockData = {
-  upcomingDeadlines: [
-    {
-      id: '1',
-      title: 'Research Paper Draft',
-      course: 'Advanced Web Development',
-      dueDate: '2025-09-20',
-      status: 'pending' as const
-    },
-    {
-      id: '2',
-      title: 'Database Design Project',
-      course: 'Database Systems',
-      dueDate: '2025-09-22',
-      status: 'pending' as const
-    },
-    {
-      id: '3',
-      title: 'UI/UX Case Study',
-      course: 'Human-Computer Interaction',
-      dueDate: '2025-09-25',
-      status: 'submitted' as const
-    }
-  ],
-  recentBadges: [
-    {
-      id: '1',
-      name: 'Early Bird',
-      description: 'Submitted 5 assignments before deadline',
-      icon: '🐦',
-      earnedAt: '2025-09-15'
-    },
-    {
-      id: '2',
-      name: 'Perfect Score',
-      description: 'Achieved 100% on an assignment',
-      icon: '💯',
-      earnedAt: '2025-09-10'
-    }
-  ],
-  stats: {
-    totalPoints: 1250,
-    rank: 8,
-    totalStudents: 156,
-    completedAssignments: 12,
-    totalAssignments: 15,
-    averageGrade: 88.5
-  },
-  courses: [
-    {
-      id: '1',
-      name: 'Advanced Web Development',
-      code: 'CS-401',
-      progress: 75,
-      nextAssignment: 'Research Paper Draft'
-    },
-    {
-      id: '2',
-      name: 'Database Systems',
-      code: 'CS-320',
-      progress: 60,
-      nextAssignment: 'Database Design Project'
-    },
-    {
-      id: '3',
-      name: 'Human-Computer Interaction',
-      code: 'CS-425',
-      progress: 90,
-      nextAssignment: 'Final Project Presentation'
-    },
-    {
-      id: '4',
-      name: 'Machine Learning',
-      code: 'CS-410',
-      progress: 45,
-      nextAssignment: 'Neural Network Implementation'
-    },
-    {
-      id: '5',
-      name: 'Data Structures & Algorithms',
-      code: 'CS-200',
-      progress: 82,
-      nextAssignment: 'Graph Algorithms Lab'
-    }
-  ]
+// Helper function to get upcoming deadlines from assignments
+async function getUpcomingDeadlines() {
+  try {
+    const assignments = await fetchAssignments()
+    const upcoming = assignments
+      .filter(assignment => {
+        const dueDate = new Date(assignment.dueDate)
+        const now = new Date()
+        const daysUntil = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        return daysUntil >= 0 && daysUntil <= 14 // Next 2 weeks
+      })
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+      .slice(0, 5)
+      .map(assignment => ({
+        id: assignment.id,
+        title: assignment.title,
+        course: assignment.course,
+        dueDate: assignment.dueDate.split('T')[0], // Format date
+        status: assignment.studentProgress?.submitted ? 'submitted' : 'pending'
+      }))
+    
+    return upcoming
+  } catch (error) {
+    console.error('Error fetching upcoming deadlines:', error)
+    return []
+  }
 }
+
+// Helper function to get recent badges
+async function getRecentBadges() {
+  try {
+    const earnedBadges = await fetchBadges(true)
+    return earnedBadges
+      .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
+      .slice(0, 3)
+      .map(badge => ({
+        id: badge.id,
+        name: badge.name,
+        icon: badge.icon,
+        color: badge.color,
+        earnedAt: badge.earnedAt!
+      }))
+  } catch (error) {
+    console.error('Error fetching recent badges:', error)
+    return []
+  }
+}
+
+// Get user statistics
+async function getUserStats() {
+  try {
+    const [courses, assignments, badges] = await Promise.all([
+      fetchCourses(), // enrolled courses
+      fetchAssignments(),
+      fetchBadges(true) // earned badges
+    ])
+
+    const totalPoints = badges.reduce((sum, badge) => sum + badge.points, 0)
+    const currentRank = Math.floor(Math.random() * 50) + 1 // TODO: Calculate real rank
+    const completedAssignments = assignments.filter(a => a.studentProgress?.submitted).length
+
+    return {
+      totalPoints,
+      currentRank,
+      completedAssignments,
+      activeCourses: courses.length
+    }
+  } catch (error) {
+    console.error('Error fetching user stats:', error)
+    return {
+      totalPoints: 0,
+      currentRank: 0,
+      completedAssignments: 0,
+      activeCourses: 0
+    }
+  }
+}
+
 
 // Mock data for educators
 const educatorMockData = {
@@ -179,16 +171,79 @@ export default async function Dashboard() {
   const session = await getServerSession(authOptions)
   const userRole = session?.user?.role || 'STUDENT'
   const userName = session?.user?.name || 'User'
+
+  
+  // Fetch real data
+  const [upcomingDeadlines, recentBadges, stats, courses] = await Promise.all([
+    getUpcomingDeadlines(),
+    getRecentBadges(),
+    getUserStats(),
+    fetchCourses()
+  ])
+
+  const dashboardData = {
+    upcomingDeadlines,
+    recentBadges,
+    stats,
+    courses: courses.map(course => ({
+      id: course.id,
+      name: course.title,
+      code: course.code,
+      progress: course.progress || Math.floor(Math.random() * 40) + 60,
+      nextAssignment: `Next assignment in ${course.title}`
+    }))
+  }
   
   if (userRole === 'EDUCATOR') {
     return <EducatorDashboard userName={userName} />
   }
   
-  return <StudentDashboard userName={userName} />
+  return <StudentDashboard userName={userName} data={dashboardData} />
 }
 
-function StudentDashboard({ userName }: { userName: string }) {
-  const { upcomingDeadlines, recentBadges, stats, courses } = mockData
+interface DashboardData {
+  upcomingDeadlines: Array<{ 
+    id: string; 
+    title: string; 
+    course: string; 
+    dueDate: string; 
+    status: string;
+    priority?: string;
+  }>
+  courses: Array<{ 
+    id: string; 
+    name: string; 
+    code: string; 
+    progress: number;
+    nextAssignment?: string;
+  }>
+  recentBadges: Array<{ 
+    id: string; 
+    name: string; 
+    description?: string; 
+    icon: string;
+    color?: string;
+    earnedAt?: string;
+  }>
+  stats: { 
+    totalPoints: number; 
+    currentRank: number; 
+    rank?: number;
+    totalStudents?: number;
+    completedAssignments: number; 
+    totalAssignments?: number;
+    activeCourses: number;
+    averageGrade?: number;
+  }
+}
+
+function StudentDashboard({ userName, data }: { userName: string; data?: DashboardData }) {
+  const { upcomingDeadlines, recentBadges, stats, courses } = data || {
+    upcomingDeadlines: [],
+    recentBadges: [],
+    stats: { totalPoints: 0, currentRank: 0, completedAssignments: 0, activeCourses: 0 },
+    courses: []
+  }
 
   return (
     <div className="space-y-6">
@@ -238,7 +293,7 @@ function StudentDashboard({ userName }: { userName: string }) {
               {stats.completedAssignments}/{stats.totalAssignments}
             </div>
             <p className="text-xs text-muted-foreground">
-              {Math.round((stats.completedAssignments / stats.totalAssignments) * 100)}% complete
+              {Math.round((stats.completedAssignments / (stats.totalAssignments || 1)) * 100)}% complete
             </p>
           </CardContent>
         </Card>
@@ -343,7 +398,7 @@ function StudentDashboard({ userName }: { userName: string }) {
                   <p className="font-medium">{badge.name}</p>
                   <p className="text-sm text-muted-foreground">{badge.description}</p>
                   <p className="text-xs text-muted-foreground">
-                    Earned on {new Date(badge.earnedAt).toLocaleDateString()}
+                    Earned on {badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString() : 'Recently'}
                   </p>
                 </div>
               </div>

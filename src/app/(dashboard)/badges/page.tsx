@@ -14,8 +14,7 @@ import {
   CheckCircle,
   Lock
 } from 'lucide-react'
-
-// Mock data - replace with actual API calls
+import { fetchBadges } from '@/lib/api'
 const mockBadges = [
   // Earned Badges
   {
@@ -157,7 +156,7 @@ const mockBadges = [
   }
 ]
 
-const earnedBadges = mockBadges.filter(badge => badge.isEarned)
+
 const availableBadges = mockBadges.filter(badge => !badge.isEarned)
 
 function getRarityColor(rarity: string) {
@@ -181,10 +180,14 @@ function getCategoryIcon(category: string) {
   }
 }
 
-export default function BadgesPage() {
+export default async function BadgesPage() {
+  // Fetch real badges data
+  const allBadges = await fetchBadges(false) // Get all badges with progress
+  const earnedBadges = allBadges.filter(badge => badge.isEarned)
+  
   const totalEarned = earnedBadges.length
-  const totalAvailable = mockBadges.length
-  const totalPoints = earnedBadges.reduce((sum, badge) => sum + badge.pointsWorth, 0)
+  const totalAvailable = allBadges.length
+  const totalPoints = earnedBadges.reduce((sum, badge) => sum + badge.points, 0)
 
   return (
     <div className="space-y-8">
@@ -261,19 +264,19 @@ export default function BadgesPage() {
         <h2 className="text-2xl font-semibold mb-4">Recently Earned</h2>
         <div className="grid gap-4 md:grid-cols-3">
           {earnedBadges.slice(0, 3).map((badge) => {
-            const CategoryIcon = getCategoryIcon(badge.category)
+            const CategoryIcon = getCategoryIcon('achievement') // Default category
             return (
               <Card key={badge.id} className="hover:shadow-lg transition-shadow border-green-200 bg-green-50/30">
                 <CardHeader className="text-center pb-2">
                   <div className="text-4xl mb-2">{badge.icon}</div>
                   <CardTitle className="text-lg">{badge.name}</CardTitle>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge className={getRarityColor(badge.rarity)}>
-                      {badge.rarity}
+                    <Badge className={getRarityColor('common')}>
+                      common
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       <CategoryIcon className="w-3 h-3 mr-1" />
-                      {badge.category}
+                      achievement
                     </Badge>
                   </div>
                 </CardHeader>
@@ -283,7 +286,7 @@ export default function BadgesPage() {
                   </p>
                   <div className="flex items-center justify-center gap-2 text-sm">
                     <Star className="h-4 w-4 text-yellow-500" />
-                    <span className="font-medium">{badge.pointsWorth} points</span>
+                    <span className="font-medium">{badge.points} points</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Earned on {new Date(badge.earnedAt!).toLocaleDateString()}
@@ -300,7 +303,7 @@ export default function BadgesPage() {
         <h2 className="text-2xl font-semibold mb-4">All Earned Badges ({totalEarned})</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {earnedBadges.map((badge) => {
-            const CategoryIcon = getCategoryIcon(badge.category)
+            const CategoryIcon = getCategoryIcon('achievement') // Default category
             return (
               <Card key={badge.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
@@ -309,18 +312,18 @@ export default function BadgesPage() {
                     <div className="flex items-center gap-1">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">{badge.pointsWorth}</span>
+                      <span className="text-sm font-medium">{badge.points}</span>
                     </div>
                   </div>
                   <div>
                     <CardTitle className="text-lg">{badge.name}</CardTitle>
                     <CardDescription className="flex items-center gap-2 mt-1">
-                      <Badge className={getRarityColor(badge.rarity)}>
-                        {badge.rarity}
+                      <Badge className={getRarityColor('common')}>
+                        common
                       </Badge>
                       <Badge variant="outline" className="text-xs">
                         <CategoryIcon className="w-3 h-3 mr-1" />
-                        {badge.category}
+                        achievement
                       </Badge>
                     </CardDescription>
                   </div>

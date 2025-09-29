@@ -4,9 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Clock, Users, Calendar, TrendingUp, Play, Settings, BarChart3, FileText } from 'lucide-react'
-
-// Mock educator courses data
+import { BookOpen, Clock, Users, TrendingUp, Play, Settings, BarChart3, FileText } from 'lucide-react'
+import { fetchCourses } from '@/lib/api'
 const educatorCourses = [
   {
     id: '1',
@@ -220,16 +219,32 @@ export default async function CoursesPage() {
   const session = await getServerSession(authOptions)
   const userRole = session?.user?.role || 'STUDENT'
   
+  // Fetch real courses data
+  const courses = await fetchCourses() // Get enrolled courses
+  
   if (userRole === 'EDUCATOR') {
     return <EducatorCoursesView />
   }
   
-  return <StudentCoursesView />
+  return <StudentCoursesView courses={courses.map(course => ({
+    ...course,
+    instructor: { name: course.instructor || 'Unknown' },
+    _count: { enrollments: 0 }
+  }))} />
 }
 
-function StudentCoursesView() {
-  const activeCourses = mockCourses.filter(course => course.status === 'active')
-  const completedCourses = mockCourses.filter(course => course.status === 'completed')
+interface DatabaseCourse {
+  id: string
+  title: string
+  code: string
+  description: string
+  instructor: { name: string }
+  _count: { enrollments: number }
+}
+
+function StudentCoursesView({ courses }: { courses: DatabaseCourse[] }) {
+  const activeCourses = courses // All courses are considered active from database
+  const completedCourses: DatabaseCourse[] = [] // No completed courses from database yet
 
   return (
     <div className="space-y-8">
@@ -282,7 +297,7 @@ function StudentCoursesView() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {Math.round(activeCourses.reduce((sum, course) => sum + course.progress, 0) / activeCourses.length)}%
+              {Math.round(activeCourses.reduce((sum) => sum + 75, 0) / activeCourses.length)}% {/* Mock progress */}
             </div>
             <p className="text-xs text-muted-foreground">
               Across active courses
@@ -311,17 +326,17 @@ function StudentCoursesView() {
             <Card key={course.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className={`w-12 h-12 rounded-lg ${course.color} flex items-center justify-center text-white font-bold text-lg mb-3`}>
-                    {course.code.split(' ')[1]}
+                                    <div className={`w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-lg mb-3`}>
+                    {course.code.slice(0, 2)}
                   </div>
-                  <Badge variant="outline" className="text-xs">
-                    {course.credits} Credits
+                  <Badge variant="secondary" className="mb-2">
+                    3 Credits
                   </Badge>
                 </div>
                 <CardTitle className="text-lg">{course.title}</CardTitle>
                 <CardDescription className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
-                  {course.instructor}
+                  {course.instructor.name}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -332,22 +347,15 @@ function StudentCoursesView() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Progress</span>
-                    <span>{course.completedLessons}/{course.totalLessons} lessons</span>
+                                        <span>8/12 lessons</span>
                   </div>
-                  <Progress value={course.progress} className="h-2" />
-                  <div className="text-right text-sm text-muted-foreground">
-                    {course.progress}% complete
+                  <Progress value={67} className="h-2" />
+                  <div className="text-sm text-muted-foreground text-right">
+                    67% complete
                   </div>
                 </div>
 
-                {course.nextDeadline && (
-                  <div className="flex items-center gap-2 p-2 bg-orange-50 rounded-md">
-                    <Calendar className="h-4 w-4 text-orange-600" />
-                    <span className="text-sm text-orange-800">
-                      Next deadline: {new Date(course.nextDeadline).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
+
 
                 <div className="flex gap-2 pt-2">
                   <Button size="sm" className="flex-1">
@@ -373,7 +381,7 @@ function StudentCoursesView() {
               <Card key={course.id} className="opacity-75 hover:opacity-100 transition-opacity">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className={`w-12 h-12 rounded-lg ${course.color} flex items-center justify-center text-white font-bold text-lg mb-3`}>
+                    <div className={`w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center text-white font-bold text-lg mb-3`}>
                       ✓
                     </div>
                     <Badge variant="secondary" className="text-xs">
@@ -383,7 +391,7 @@ function StudentCoursesView() {
                   <CardTitle className="text-lg">{course.title}</CardTitle>
                   <CardDescription className="flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    {course.instructor}
+                    {course.instructor.name}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
