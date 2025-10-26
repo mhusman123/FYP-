@@ -28,29 +28,6 @@ async function main() {
     },
   })
 
-  // Create test accounts for login
-  const testStudent = await prisma.user.upsert({
-    where: { email: 'student@eduplatform.edu' },
-    update: {},
-    create: {
-      email: 'student@eduplatform.edu',
-      name: 'Test Student',
-      role: 'STUDENT',
-      totalPoints: 1250,
-    },
-  })
-
-  const testEducator = await prisma.user.upsert({
-    where: { email: 'educator@eduplatform.edu' },
-    update: {},
-    create: {
-      email: 'educator@eduplatform.edu',
-      name: 'Test Educator',
-      role: 'EDUCATOR',
-      totalPoints: 0,
-    },
-  })
-
   // Create sample students
   const student1 = await prisma.user.upsert({
     where: { email: 'john.doe@student.edu' },
@@ -491,49 +468,6 @@ async function main() {
     },
   })
 
-  // Enroll test student in some courses
-  await prisma.courseEnrollment.upsert({
-    where: { 
-      courseId_studentId: {
-        courseId: cs200.id,
-        studentId: testStudent.id
-      }
-    },
-    update: {},
-    create: {
-      courseId: cs200.id,
-      studentId: testStudent.id,
-    },
-  })
-
-  await prisma.courseEnrollment.upsert({
-    where: { 
-      courseId_studentId: {
-        courseId: cs150.id,
-        studentId: testStudent.id
-      }
-    },
-    update: {},
-    create: {
-      courseId: cs150.id,
-      studentId: testStudent.id,
-    },
-  })
-
-  await prisma.courseEnrollment.upsert({
-    where: { 
-      courseId_studentId: {
-        courseId: cs300.id,
-        studentId: testStudent.id
-      }
-    },
-    update: {},
-    create: {
-      courseId: cs300.id,
-      studentId: testStudent.id,
-    },
-  })
-
   // Create sample badges
   const badge1 = await prisma.badge.upsert({
     where: { name: 'Early Bird' },
@@ -613,37 +547,6 @@ async function main() {
       userId: student1.id,
       badgeId: badge2.id,
       earnedAt: new Date('2025-09-10'),
-    },
-  })
-
-  // Award badges to test student
-  await prisma.userBadge.upsert({
-    where: {
-      userId_badgeId: {
-        userId: testStudent.id,
-        badgeId: badge1.id
-      }
-    },
-    update: {},
-    create: {
-      userId: testStudent.id,
-      badgeId: badge1.id,
-      earnedAt: new Date('2025-09-20'),
-    },
-  })
-
-  await prisma.userBadge.upsert({
-    where: {
-      userId_badgeId: {
-        userId: testStudent.id,
-        badgeId: badge2.id
-      }
-    },
-    update: {},
-    create: {
-      userId: testStudent.id,
-      badgeId: badge2.id,
-      earnedAt: new Date('2025-09-18'),
     },
   })
 

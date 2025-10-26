@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Clock, Users, TrendingUp, Play, Settings, BarChart3, FileText, Award, Calendar, CheckCircle, AlertTriangle, Target } from 'lucide-react'
-import { prisma } from '@/lib/db/prisma'
+import { BookOpen, Clock, Users, TrendingUp, Play, Settings, BarChart3, FileText } from 'lucide-react'
+import { fetchCourses } from '@/lib/api'
 const educatorCourses = [
   {
     id: '1',
@@ -219,178 +219,32 @@ export default async function CoursesPage() {
   const session = await getServerSession(authOptions)
   const userRole = session?.user?.role || 'STUDENT'
   
-  // Fetch real courses data using Prisma directly for server-side rendering  
-  let courses: DatabaseCourse[] = []
-  
-  if (session?.user?.id) {
-    if (userRole === 'STUDENT') {
-      // Get courses the student is enrolled in
-      const enrollments = await prisma.courseEnrollment.findMany({
-        where: { studentId: session.user.id },
-        include: {
-          course: {
-            include: {
-              educator: {
-                select: { name: true, email: true }
-              },
-              _count: {
-                select: { enrollments: true }
-              }
-            }
-          }
-        }
-      })
-      courses = enrollments.map(enrollment => ({
-        id: enrollment.course.id,
-        title: enrollment.course.name,
-        code: enrollment.course.code,
-        description: enrollment.course.description,
-        instructor: enrollment.course.educator,
-        _count: enrollment.course._count
-      }))
-    } else {
-      // Get courses the educator teaches
-      const educatorCourses = await prisma.course.findMany({
-        where: { educatorId: session.user.id },
-        include: {
-          educator: {
-            select: { name: true, email: true }
-          },
-          _count: {
-            select: { enrollments: true }
-          }
-        }
-      })
-      courses = educatorCourses.map(course => ({
-        id: course.id,
-        title: course.name,
-        code: course.code,
-        description: course.description,
-        instructor: course.educator,
-        _count: course._count
-      }))
-    }
-  }
+  // Fetch real courses data
+  const courses = await fetchCourses() // Get enrolled courses
   
   if (userRole === 'EDUCATOR') {
     return <EducatorCoursesView />
   }
   
-  return <StudentCoursesView courses={courses} />
+  return <StudentCoursesView courses={courses.map(course => ({
+    ...course,
+    instructor: { name: course.instructor || 'Unknown' },
+    _count: { enrollments: 0 }
+  }))} />
 }
 
 interface DatabaseCourse {
   id: string
   title: string
   code: string
-  description: string | null
-  instructor: { name: string | null; email?: string }
+  description: string
+  instructor: { name: string }
   _count: { enrollments: number }
 }
 
-// Enhanced mock data for student courses with detailed analytics
-const enhancedMockCourses = [
-  {
-    id: '1',
-    title: 'Data Structures & Algorithms',
-    code: 'CS 200',
-    instructor: { name: 'Prof. Lisa Wang', email: 'lisa.wang@university.edu' },
-    progress: 92,
-    totalLessons: 18,
-    completedLessons: 16,
-    nextDeadline: '2025-10-05',
-    status: 'active' as const,
-    credits: 4,
-    description: 'Fundamental data structures and algorithm analysis for efficient problem solving.',
-    color: 'bg-blue-500',
-    currentGrade: 94.2,
-    totalPoints: 1520,
-    earnedPoints: 1432,
-    assignments: 12,
-    completedAssignments: 11,
-    attendanceRate: 96.4,
-    participationScore: 89,
-    upcomingDeadlines: [
-      { title: 'Graph Algorithms Assignment', dueDate: '2025-10-05', priority: 'high' as const },
-      { title: 'Final Project Proposal', dueDate: '2025-10-12', priority: 'medium' as const }
-    ],
-    recentGrades: [95, 92, 96, 89, 94],
-    strengths: ['Problem Solving', 'Algorithm Design', 'Code Optimization'],
-    improvements: ['Time Complexity Analysis', 'Documentation'],
-    studyHours: 8.5,
-    lastActivity: '2025-09-22T14:30:00'
-  },
-  {
-    id: '2',
-    title: 'Advanced Web Development',
-    code: 'CS 401',
-    instructor: { name: 'Dr. Sarah Johnson', email: 'sarah.johnson@university.edu' },
-    progress: 78,
-    totalLessons: 20,
-    completedLessons: 15,
-    nextDeadline: '2025-09-30',
-    status: 'active' as const,
-    credits: 3,
-    description: 'Advanced concepts in modern web development including React, Next.js, and full-stack applications.',
-    color: 'bg-green-500',
-    currentGrade: 87.8,
-    totalPoints: 1200,
-    earnedPoints: 1054,
-    assignments: 15,
-    completedAssignments: 13,
-    attendanceRate: 89.2,
-    participationScore: 92,
-    upcomingDeadlines: [
-      { title: 'React Components Lab', dueDate: '2025-09-30', priority: 'high' as const },
-      { title: 'API Integration Project', dueDate: '2025-10-08', priority: 'medium' as const }
-    ],
-    recentGrades: [85, 89, 91, 84, 88],
-    strengths: ['Frontend Development', 'UI/UX Design', 'Component Architecture'],
-    improvements: ['Backend Integration', 'Testing Practices'],
-    studyHours: 6.2,
-    lastActivity: '2025-09-21T16:45:00'
-  },
-  {
-    id: '3',
-    title: 'Programming Fundamentals',
-    code: 'CS 150',
-    instructor: { name: 'Prof. David Wilson', email: 'david.wilson@university.edu' },
-    progress: 100,
-    totalLessons: 16,
-    completedLessons: 16,
-    nextDeadline: null,
-    status: 'completed' as const,
-    credits: 3,
-    description: 'Introduction to programming using Python. Variables, control structures, functions, and basic data structures.',
-    color: 'bg-purple-500',
-    currentGrade: 96.5,
-    totalPoints: 800,
-    earnedPoints: 772,
-    assignments: 10,
-    completedAssignments: 10,
-    attendanceRate: 98.1,
-    participationScore: 95,
-    upcomingDeadlines: [],
-    recentGrades: [98, 95, 97, 94, 99],
-    strengths: ['Python Mastery', 'Logic Implementation', 'Code Structure'],
-    improvements: ['Advanced Libraries', 'Performance Optimization'],
-    studyHours: 4.8,
-    lastActivity: '2025-08-15T10:00:00'
-  }
-]
-
 function StudentCoursesView({ courses }: { courses: DatabaseCourse[] }) {
-  const activeCourses = enhancedMockCourses.filter(c => c.status === 'active')
-  const completedCourses = enhancedMockCourses.filter(c => c.status === 'completed')
-  const allCourses = enhancedMockCourses
-  
-  // Calculate overall statistics
-  const totalPoints = allCourses.reduce((sum, course) => sum + course.earnedPoints, 0)
-  const maxPoints = allCourses.reduce((sum, course) => sum + course.totalPoints, 0)
-  const overallGrade = ((totalPoints / maxPoints) * 100).toFixed(1)
-  const avgAttendance = (allCourses.reduce((sum, course) => sum + course.attendanceRate, 0) / allCourses.length).toFixed(1)
-  const totalStudyHours = allCourses.reduce((sum, course) => sum + course.studyHours, 0)
-  const avgProgress = (activeCourses.reduce((sum, course) => sum + course.progress, 0) / activeCourses.length).toFixed(1)
+  const activeCourses = courses // All courses are considered active from database
+  const completedCourses: DatabaseCourse[] = [] // No completed courses from database yet
 
   return (
     <div className="space-y-8">
@@ -402,77 +256,51 @@ function StudentCoursesView({ courses }: { courses: DatabaseCourse[] }) {
             Track your progress and manage your enrolled courses
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <BarChart3 className="mr-2 h-4 w-4" />
-            View Analytics
-          </Button>
-          <Button>
-            <BookOpen className="mr-2 h-4 w-4" />
-            Browse All Courses
-          </Button>
-        </div>
+        <Button>
+          <BookOpen className="mr-2 h-4 w-4" />
+          Browse All Courses
+        </Button>
       </div>
 
-      {/* Enhanced Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      {/* Stats Overview */}
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium">Total Courses</CardTitle>
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{overallGrade}%</div>
+            <div className="text-2xl font-bold">{mockCourses.length}</div>
             <p className="text-xs text-muted-foreground">
-              Across all courses
+              {activeCourses.length} active
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Points</CardTitle>
-            <Award className="h-4 w-4 text-yellow-500" />
+            <CardTitle className="text-sm font-medium">Total Credits</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{totalPoints.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              {mockCourses.reduce((sum, course) => sum + course.credits, 0)}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Out of {maxPoints.toLocaleString()}
+              Credit hours enrolled
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg Progress</CardTitle>
-            <Clock className="h-4 w-4 text-blue-500" />
+            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{avgProgress}%</div>
+            <div className="text-2xl font-bold">
+              {Math.round(activeCourses.reduce((sum) => sum + 75, 0) / activeCourses.length)}% {/* Mock progress */}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Active courses
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Attendance</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{avgAttendance}%</div>
-            <p className="text-xs text-muted-foreground">
-              Average rate
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Study Hours</CardTitle>
-            <Clock className="h-4 w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{totalStudyHours}h</div>
-            <p className="text-xs text-muted-foreground">
-              This week
+              Across active courses
             </p>
           </CardContent>
         </Card>
@@ -492,143 +320,50 @@ function StudentCoursesView({ courses }: { courses: DatabaseCourse[] }) {
 
       {/* Active Courses */}
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Active Courses ({activeCourses.length})</h2>
-        <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+        <h2 className="text-2xl font-semibold mb-4">Active Courses</h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {activeCourses.map((course) => (
             <Card key={course.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-4">
+              <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className={`w-16 h-16 rounded-lg ${course.color} flex items-center justify-center text-white font-bold text-xl mb-3`}>
-                    {course.code.split(' ')[0]}
+                                    <div className={`w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-lg mb-3`}>
+                    {course.code.slice(0, 2)}
                   </div>
-                  <div className="text-right">
-                    <Badge variant="secondary" className="mb-2">
-                      {course.credits} Credits
-                    </Badge>
-                    <div className="text-2xl font-bold text-green-600">{course.currentGrade}%</div>
-                  </div>
-                </div>
-                <CardTitle className="text-xl">{course.title}</CardTitle>
-                <CardDescription className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    {course.instructor.name}
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {course.code}
+                  <Badge variant="secondary" className="mb-2">
+                    3 Credits
                   </Badge>
+                </div>
+                <CardTitle className="text-lg">{course.title}</CardTitle>
+                <CardDescription className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  {course.instructor.name}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   {course.description}
                 </p>
-
-                {/* Progress Section */}
-                <div className="space-y-3">
+                
+                <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium">Course Progress</span>
-                    <span>{course.completedLessons}/{course.totalLessons} lessons</span>
+                    <span>Progress</span>
+                                        <span>8/12 lessons</span>
                   </div>
-                  <Progress value={course.progress} className="h-3" />
+                  <Progress value={67} className="h-2" />
                   <div className="text-sm text-muted-foreground text-right">
-                    {course.progress}% complete
+                    67% complete
                   </div>
                 </div>
 
-                {/* Key Metrics */}
-                <div className="grid grid-cols-3 gap-4 py-4 border-t border-b">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-blue-600">{course.earnedPoints}</div>
-                    <div className="text-xs text-muted-foreground">Points Earned</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-green-600">{course.attendanceRate}%</div>
-                    <div className="text-xs text-muted-foreground">Attendance</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-purple-600">{course.studyHours}h</div>
-                    <div className="text-xs text-muted-foreground">Weekly Study</div>
-                  </div>
-                </div>
 
-                {/* Assignment Progress */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Assignments</span>
-                    <span className="text-sm text-muted-foreground">
-                      {course.completedAssignments}/{course.assignments} completed
-                    </span>
-                  </div>
-                  <Progress 
-                    value={(course.completedAssignments / course.assignments) * 100} 
-                    className="h-2" 
-                  />
-                </div>
 
-                {/* Upcoming Deadlines */}
-                {course.upcomingDeadlines.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-medium">Upcoming Deadlines</h4>
-                    {course.upcomingDeadlines.slice(0, 2).map((deadline, index) => (
-                      <div key={index} className={`flex items-center justify-between p-3 rounded-lg border-l-4 ${
-                        deadline.priority === 'high' ? 'border-red-500 bg-red-50' :
-                        deadline.priority === 'medium' ? 'border-orange-500 bg-orange-50' :
-                        'border-blue-500 bg-blue-50'
-                      }`}>
-                        <div>
-                          <p className="text-sm font-medium">{deadline.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Due: {new Date(deadline.dueDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge variant={
-                          deadline.priority === 'high' ? 'destructive' : 'default'
-                        } className="text-xs">
-                          {deadline.priority}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Strengths and Improvements */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-green-700 mb-2">Strengths</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {course.strengths.slice(0, 2).map((strength, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs bg-green-100 text-green-700">
-                          {strength}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-orange-700 mb-2">Focus Areas</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {course.improvements.slice(0, 2).map((improvement, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs bg-orange-100 text-orange-700">
-                          {improvement}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2 pt-4">
+                <div className="flex gap-2 pt-2">
                   <Button size="sm" className="flex-1">
                     <Play className="mr-2 h-3 w-3" />
-                    Continue Learning
+                    Continue
                   </Button>
                   <Button size="sm" variant="outline">
-                    <BarChart3 className="mr-2 h-3 w-3" />
-                    Analytics
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    <Settings className="mr-2 h-3 w-3" />
-                    Settings
+                    View Details
                   </Button>
                 </div>
               </CardContent>
@@ -640,72 +375,40 @@ function StudentCoursesView({ courses }: { courses: DatabaseCourse[] }) {
       {/* Completed Courses */}
       {completedCourses.length > 0 && (
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Completed Courses ({completedCourses.length})</h2>
-          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+          <h2 className="text-2xl font-semibold mb-4">Completed Courses</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {completedCourses.map((course) => (
-              <Card key={course.id} className="border-green-200 bg-green-50 hover:shadow-lg transition-shadow">
+              <Card key={course.id} className="opacity-75 hover:opacity-100 transition-opacity">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className={`w-16 h-16 rounded-lg bg-green-500 flex items-center justify-center text-white font-bold text-2xl mb-3`}>
+                    <div className={`w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center text-white font-bold text-lg mb-3`}>
                       ✓
                     </div>
-                    <div className="text-right">
-                      <Badge className="bg-green-600 mb-2">
-                        Completed
-                      </Badge>
-                      <div className="text-2xl font-bold text-green-600">{course.currentGrade}%</div>
-                    </div>
-                  </div>
-                  <CardTitle className="text-xl text-green-800">{course.title}</CardTitle>
-                  <CardDescription className="flex items-center justify-between text-green-700">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      {course.instructor.name}
-                    </div>
-                    <Badge variant="outline" className="text-xs border-green-300">
-                      {course.code}
+                    <Badge variant="secondary" className="text-xs">
+                      Completed
                     </Badge>
+                  </div>
+                  <CardTitle className="text-lg">{course.title}</CardTitle>
+                  <CardDescription className="flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    {course.instructor.name}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-muted-foreground">
                     {course.description}
                   </p>
                   
-                  {/* Final Stats */}
-                  <div className="grid grid-cols-3 gap-4 py-4 border-t border-green-200">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">{course.earnedPoints}</div>
-                      <div className="text-xs text-green-600">Final Points</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">{course.attendanceRate}%</div>
-                      <div className="text-xs text-green-600">Attendance</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">{course.credits}</div>
-                      <div className="text-xs text-green-600">Credits Earned</div>
-                    </div>
-                  </div>
-
                   <div className="space-y-2">
-                    <Progress value={100} className="h-3" />
+                    <Progress value={100} className="h-2" />
                     <div className="text-right text-sm text-green-600 font-medium">
-                      Course Completed Successfully
+                      100% Complete
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-2 pt-2">
-                    <Button size="sm" variant="outline" className="flex-1 border-green-300 text-green-700 hover:bg-green-100">
-                      <Award className="mr-2 h-3 w-3" />
-                      View Certificate
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-green-300 text-green-700 hover:bg-green-100">
-                      <BarChart3 className="mr-2 h-3 w-3" />
-                      Final Report
-                    </Button>
-                  </div>
+                  <Button size="sm" variant="outline" className="w-full">
+                    View Certificate
+                  </Button>
                 </CardContent>
               </Card>
             ))}
