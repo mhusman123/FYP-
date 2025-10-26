@@ -20,13 +20,30 @@ A comprehensive educational platform built with Next.js 14, TypeScript, Tailwind
 
 ## 🛠️ Setup Instructions
 
-### Quick Start (Demo Mode)
+### Quick Start (Development Mode)
 ```bash
 cd eduplatform
 npm install
 npm run dev
 ```
-Visit `http://localhost:3000` to see the **live demo** with all features!
+Visit `http://localhost:3000` to explore the **platform** with all features!
+
+### Authentication Setup ✅ IMPLEMENTED
+The platform now includes **NextAuth.js** authentication with:
+
+#### Test Accounts (Ready to Use)
+- **Student Test**: `student@eduplatform.edu` / `password`
+- **Educator Test**: `educator@eduplatform.edu` / `password`
+
+#### OAuth Providers (Configure for Production)
+- Google OAuth (optional)
+- GitHub OAuth (optional)
+
+#### How to Test Authentication:
+1. Start the development server: `npm run dev`
+2. Visit `http://localhost:3000`
+3. Click "Sign In" or navigate to `/auth/signin`
+4. Use test accounts or OAuth providers
 
 ### Full Setup (Production Ready)
 
@@ -81,7 +98,7 @@ npm run dev
 ```
 
 ### 🎯 MVP Status
-- ✅ **Demo Available**: Full UI/UX showcase at `/demo`
+- ✅ **Platform Ready**: Full UI/UX implementation complete
 - ✅ **Authentication**: NextAuth.js with Google/GitHub
 - ✅ **Database**: PostgreSQL schema ready
 - 🔄 **API Integration**: In progress

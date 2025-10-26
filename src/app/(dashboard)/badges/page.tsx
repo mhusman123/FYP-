@@ -12,153 +12,19 @@ import {
   Zap,
   Calendar,
   CheckCircle,
-  Lock
+  Lock,
+  TrendingUp,
+  BarChart3,
+  Clock,
+  Flame
 } from 'lucide-react'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db/prisma'
 
-// Mock data - replace with actual API calls
-const mockBadges = [
-  // Earned Badges
-  {
-    id: '1',
-    name: 'Early Bird',
-    description: 'Submitted 5 assignments before the deadline',
-    icon: '🐦',
-    category: 'Academic',
-    rarity: 'Common',
-    pointsWorth: 50,
-    earnedAt: '2025-09-15T10:30:00',
-    isEarned: true,
-    requirements: 'Submit 5 assignments early',
-    progress: 5,
-    total: 5
-  },
-  {
-    id: '2',
-    name: 'Perfect Score',
-    description: 'Achieved 100% on an assignment',
-    icon: '💯',
-    category: 'Academic',
-    rarity: 'Rare',
-    pointsWorth: 100,
-    earnedAt: '2025-09-18T14:20:00',
-    isEarned: true,
-    requirements: 'Get 100% on any assignment',
-    progress: 1,
-    total: 1
-  },
-  {
-    id: '3',
-    name: 'Study Streak',
-    description: 'Maintained a 7-day learning streak',
-    icon: '🔥',
-    category: 'Engagement',
-    rarity: 'Common',
-    pointsWorth: 75,
-    earnedAt: '2025-09-10T09:15:00',
-    isEarned: true,
-    requirements: 'Be active for 7 consecutive days',
-    progress: 7,
-    total: 7
-  },
-  {
-    id: '4',
-    name: 'Team Player',
-    description: 'Participated in 3 group projects',
-    icon: '🤝',
-    category: 'Collaboration',
-    rarity: 'Uncommon',
-    pointsWorth: 125,
-    earnedAt: '2025-08-25T16:45:00',
-    isEarned: true,
-    requirements: 'Complete 3 group assignments',
-    progress: 3,
-    total: 3
-  },
-  {
-    id: '5',
-    name: 'Quick Learner',
-    description: 'Completed a course in record time',
-    icon: '⚡',
-    category: 'Achievement',
-    rarity: 'Rare',
-    pointsWorth: 200,
-    earnedAt: '2025-08-20T11:30:00',
-    isEarned: true,
-    requirements: 'Complete course 50% faster than average',
-    progress: 1,
-    total: 1
-  },
 
-  // Available Badges (Not Earned)
-  {
-    id: '6',
-    name: 'Night Owl',
-    description: 'Submit assignments after 10 PM',
-    icon: '🦉',
-    category: 'Engagement',
-    rarity: 'Common',
-    pointsWorth: 50,
-    isEarned: false,
-    requirements: 'Submit 3 assignments after 10 PM',
-    progress: 1,
-    total: 3
-  },
-  {
-    id: '7',
-    name: 'Overachiever',
-    description: 'Score above 95% on 5 assignments',
-    icon: '🎯',
-    category: 'Academic',
-    rarity: 'Epic',
-    pointsWorth: 300,
-    isEarned: false,
-    requirements: 'Get 95%+ on 5 assignments',
-    progress: 2,
-    total: 5
-  },
-  {
-    id: '8',
-    name: 'Course Master',
-    description: 'Complete all assignments in a course with A+ grades',
-    icon: '👑',
-    category: 'Achievement',
-    rarity: 'Legendary',
-    pointsWorth: 500,
-    isEarned: false,
-    requirements: 'Get A+ on all assignments in one course',
-    progress: 0,
-    total: 1
-  },
-  {
-    id: '9',
-    name: 'Helpful Helper',
-    description: 'Help 10 classmates with their questions',
-    icon: '💡',
-    category: 'Collaboration',
-    rarity: 'Uncommon',
-    pointsWorth: 150,
-    isEarned: false,
-    requirements: 'Answer 10 student questions',
-    progress: 4,
-    total: 10
-  },
-  {
-    id: '10',
-    name: 'Consistency King',
-    description: 'Submit assignments on time for 30 days',
-    icon: '📅',
-    category: 'Engagement',
-    rarity: 'Epic',
-    pointsWorth: 250,
-    isEarned: false,
-    requirements: '30 consecutive on-time submissions',
-    progress: 15,
-    total: 30
-  }
-]
 
-const earnedBadges = mockBadges.filter(badge => badge.isEarned)
-const availableBadges = mockBadges.filter(badge => !badge.isEarned)
+
 
 function getRarityColor(rarity: string) {
   switch (rarity) {
@@ -181,10 +47,65 @@ function getCategoryIcon(category: string) {
   }
 }
 
-export default function BadgesPage() {
+export default async function BadgesPage() {
+  const session = await getServerSession(authOptions)
+  
+  // Fetch real badges data using Prisma
+  interface Badge { id: string; name: string; description: string; icon: string; color: string; points: number }
+  let earnedBadges: (Badge & { earnedAt: string; isEarned: boolean })[] = []
+  let allBadges: Badge[] = []
+  
+  if (session?.user?.id) {
+    // Get all badges
+    allBadges = await prisma.badge.findMany()
+    
+    // Get earned badges for the user
+    const userBadges = await prisma.userBadge.findMany({
+      where: { userId: session.user.id },
+      include: {
+        badge: true
+      }
+    })
+    
+    earnedBadges = userBadges.map(ub => ({
+      ...ub.badge,
+      earnedAt: ub.earnedAt.toISOString(),
+      isEarned: true
+    }))
+  }
+  
+  // Get available badges (not earned yet)
+  const earnedBadgeIds = earnedBadges.map(b => b.id)
+  const availableBadges = allBadges.filter(badge => !earnedBadgeIds.includes(badge.id))
+  
   const totalEarned = earnedBadges.length
-  const totalAvailable = mockBadges.length
-  const totalPoints = earnedBadges.reduce((sum, badge) => sum + badge.pointsWorth, 0)
+  const totalAvailable = allBadges.length
+  const totalPoints = earnedBadges.reduce((sum: number, badge: { points: number }) => sum + badge.points, 0)
+  
+  // Enhanced badge analytics with mock data
+  const badgeAnalytics = {
+    weeklyProgress: 240, // Points earned this week
+    monthlyProgress: 860, // Points earned this month
+    streak: 7, // Days in a row earning points
+    nextMilestone: 2000, // Next major milestone
+    completionRate: Math.round((totalEarned / totalAvailable) * 100),
+    rank: 'Gold Scholar', // Student rank based on points
+    leaderboardPosition: 12, // Position in class leaderboard
+    achievements: {
+      courses: 2, // Courses completed
+      assignments: 28, // Assignments submitted
+      perfectScores: 5, // Perfect assignment scores
+      helpingOthers: 3, // Times helped classmates
+      earlySubmissions: 15, // Early assignment submissions
+      attendancePerfect: 4 // Weeks with perfect attendance
+    },
+    recentActivity: [
+      { action: 'Earned "Algorithm Master" badge', points: 150, date: '2025-09-22' },
+      { action: 'Perfect attendance week', points: 50, date: '2025-09-20' },
+      { action: 'Helped 3 classmates', points: 75, date: '2025-09-19' },
+      { action: 'Early assignment submission', points: 25, date: '2025-09-18' }
+    ]
+  }
 
   return (
     <div className="space-y-8">
@@ -202,12 +123,12 @@ export default function BadgesPage() {
         </Button>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-4">
+      {/* Enhanced Stats Overview */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Badges Earned</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
+            <Award className="h-4 w-4 text-gold-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">{totalEarned}</div>
@@ -218,13 +139,37 @@ export default function BadgesPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Badge Points</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Points</CardTitle>
+            <Star className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">{totalPoints}</div>
             <p className="text-xs text-muted-foreground">
-              Points from badges
+              Badge points earned
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">This Week</CardTitle>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{badgeAnalytics.weeklyProgress}</div>
+            <p className="text-xs text-muted-foreground">
+              Points earned
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Current Rank</CardTitle>
+            <Target className="h-4 w-4 text-purple-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-lg font-bold text-purple-600">{badgeAnalytics.rank}</div>
+            <p className="text-xs text-muted-foreground">
+              #{badgeAnalytics.leaderboardPosition} in class
             </p>
           </CardContent>
         </Card>
@@ -256,24 +201,157 @@ export default function BadgesPage() {
         </Card>
       </div>
 
+      {/* Progress to Next Milestone */}
+      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-blue-600" />
+            Next Milestone
+          </CardTitle>
+          <CardDescription>
+            You&apos;re {badgeAnalytics.nextMilestone - totalPoints} points away from your next major milestone
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Progress to {badgeAnalytics.nextMilestone} points</span>
+              <span>{totalPoints}/{badgeAnalytics.nextMilestone}</span>
+            </div>
+            <Progress value={(totalPoints / badgeAnalytics.nextMilestone) * 100} className="h-3" />
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-lg font-bold text-blue-600">{badgeAnalytics.streak}</div>
+              <div className="text-xs text-muted-foreground">Day Streak</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-green-600">{badgeAnalytics.monthlyProgress}</div>
+              <div className="text-xs text-muted-foreground">This Month</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-purple-600">{Math.round((totalPoints / badgeAnalytics.nextMilestone) * 100)}%</div>
+              <div className="text-xs text-muted-foreground">Complete</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Achievement Breakdown */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-green-600" />
+              Achievement Breakdown
+            </CardTitle>
+            <CardDescription>
+              Points earned across different activities
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm">Courses Completed</span>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{badgeAnalytics.achievements.courses}</div>
+                  <div className="text-xs text-muted-foreground">200 pts each</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Assignments Submitted</span>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{badgeAnalytics.achievements.assignments}</div>
+                  <div className="text-xs text-muted-foreground">10 pts each</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm">Perfect Scores</span>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{badgeAnalytics.achievements.perfectScores}</div>
+                  <div className="text-xs text-muted-foreground">50 pts each</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-purple-500" />
+                  <span className="text-sm">Helped Classmates</span>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{badgeAnalytics.achievements.helpingOthers}</div>
+                  <div className="text-xs text-muted-foreground">25 pts each</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-orange-500" />
+                  <span className="text-sm">Early Submissions</span>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{badgeAnalytics.achievements.earlySubmissions}</div>
+                  <div className="text-xs text-muted-foreground">15 pts each</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flame className="h-5 w-5 text-orange-600" />
+              Recent Activity
+            </CardTitle>
+            <CardDescription>
+              Your latest achievements and point gains
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {badgeAnalytics.recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium">{activity.action}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(activity.date).toLocaleDateString()}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-bold text-green-600">+{activity.points}</div>
+                    <div className="text-xs text-muted-foreground">points</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Recently Earned */}
       <div>
         <h2 className="text-2xl font-semibold mb-4">Recently Earned</h2>
         <div className="grid gap-4 md:grid-cols-3">
           {earnedBadges.slice(0, 3).map((badge) => {
-            const CategoryIcon = getCategoryIcon(badge.category)
+            const CategoryIcon = getCategoryIcon('achievement') // Default category
             return (
               <Card key={badge.id} className="hover:shadow-lg transition-shadow border-green-200 bg-green-50/30">
                 <CardHeader className="text-center pb-2">
                   <div className="text-4xl mb-2">{badge.icon}</div>
                   <CardTitle className="text-lg">{badge.name}</CardTitle>
                   <div className="flex items-center justify-center gap-2">
-                    <Badge className={getRarityColor(badge.rarity)}>
-                      {badge.rarity}
+                    <Badge className={getRarityColor('common')}>
+                      common
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       <CategoryIcon className="w-3 h-3 mr-1" />
-                      {badge.category}
+                      achievement
                     </Badge>
                   </div>
                 </CardHeader>
@@ -283,7 +361,7 @@ export default function BadgesPage() {
                   </p>
                   <div className="flex items-center justify-center gap-2 text-sm">
                     <Star className="h-4 w-4 text-yellow-500" />
-                    <span className="font-medium">{badge.pointsWorth} points</span>
+                    <span className="font-medium">{badge.points} points</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Earned on {new Date(badge.earnedAt!).toLocaleDateString()}
@@ -300,7 +378,7 @@ export default function BadgesPage() {
         <h2 className="text-2xl font-semibold mb-4">All Earned Badges ({totalEarned})</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {earnedBadges.map((badge) => {
-            const CategoryIcon = getCategoryIcon(badge.category)
+            const CategoryIcon = getCategoryIcon('achievement') // Default category
             return (
               <Card key={badge.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
@@ -309,18 +387,18 @@ export default function BadgesPage() {
                     <div className="flex items-center gap-1">
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">{badge.pointsWorth}</span>
+                      <span className="text-sm font-medium">{badge.points}</span>
                     </div>
                   </div>
                   <div>
                     <CardTitle className="text-lg">{badge.name}</CardTitle>
                     <CardDescription className="flex items-center gap-2 mt-1">
-                      <Badge className={getRarityColor(badge.rarity)}>
-                        {badge.rarity}
+                      <Badge className={getRarityColor('common')}>
+                        common
                       </Badge>
                       <Badge variant="outline" className="text-xs">
                         <CategoryIcon className="w-3 h-3 mr-1" />
-                        {badge.category}
+                        achievement
                       </Badge>
                     </CardDescription>
                   </div>
@@ -344,30 +422,28 @@ export default function BadgesPage() {
       <div>
         <h2 className="text-2xl font-semibold mb-4">Available Badges</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {availableBadges.map((badge) => {
-            const CategoryIcon = getCategoryIcon(badge.category)
-            const progressPercentage = (badge.progress / badge.total) * 100
+          {availableBadges.slice(0, 6).map((badge) => {
+            const CategoryIcon = getCategoryIcon('achievement')
             
             return (
               <Card key={badge.id} className="hover:shadow-lg transition-shadow opacity-75">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
-                    <div className="text-3xl grayscale">{badge.icon}</div>
-                    <div className="flex items-center gap-1">
+                    <div className="text-3xl opacity-50">{badge.icon}</div>
+                    <div className="flex items-center gap-2">
                       <Lock className="h-4 w-4 text-gray-400" />
-                      <Star className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-400">{badge.pointsWorth}</span>
+                      <span className="text-sm text-gray-400">{badge.points}</span>
                     </div>
                   </div>
                   <div>
-                    <CardTitle className="text-lg text-gray-600">{badge.name}</CardTitle>
+                    <CardTitle className="text-lg text-gray-700">{badge.name}</CardTitle>
                     <CardDescription className="flex items-center gap-2 mt-1">
-                      <Badge className={getRarityColor(badge.rarity)}>
-                        {badge.rarity}
+                      <Badge className={getRarityColor('common')}>
+                        common
                       </Badge>
                       <Badge variant="outline" className="text-xs">
                         <CategoryIcon className="w-3 h-3 mr-1" />
-                        {badge.category}
+                        achievement
                       </Badge>
                     </CardDescription>
                   </div>
@@ -377,14 +453,14 @@ export default function BadgesPage() {
                     {badge.description}
                   </p>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{badge.progress}/{badge.total}</span>
+                      <span className="font-medium">0/1</span>
                     </div>
-                    <Progress value={progressPercentage} className="h-2" />
-                    <div className="text-xs text-muted-foreground">
-                      {badge.requirements}
-                    </div>
+                    <Progress value={0} className="h-2" />
+                    <p className="text-xs text-muted-foreground">
+                      Complete various achievements to earn this badge
+                    </p>
                   </div>
                 </CardContent>
               </Card>

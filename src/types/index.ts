@@ -146,6 +146,9 @@ export interface Course {
   educatorId: string;
   semester: string;
   year: number;
+  credits: number;
+  prerequisites: string[];
+  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
   isActive: boolean;
   students: User[];
   assignments: Assignment[];

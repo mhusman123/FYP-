@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -30,7 +31,9 @@ import {
   BarChart3,
   Users,
   ClipboardCheck,
-  AlertTriangle
+  AlertTriangle,
+  FileCheck,
+  Bot
 } from 'lucide-react'
 
 interface User {
@@ -53,6 +56,7 @@ const studentNavItems = [
   { href: '/submissions', label: 'Submissions', icon: Upload },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/badges', label: 'My Badges', icon: Award },
+  { href: '/submission-feedback', label: 'AI Feedback', icon: Bot },
   { href: '/grade-requests', label: 'Grade Requests', icon: ClipboardCheck },
 ]
 
@@ -60,7 +64,8 @@ const educatorNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/courses', label: 'My Courses', icon: BookOpen },
   { href: '/assignments', label: 'Assignments', icon: FileText },
-  { href: '/grading', label: 'Grading Queue', icon: ClipboardCheck },
+  { href: '/grading', label: 'Grading', icon: FileCheck },
+  { href: '/autograding', label: 'Autograding', icon: Bot },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/students', label: 'Students', icon: Users },
   { href: '/plagiarism', label: 'Plagiarism Reports', icon: AlertTriangle },
@@ -128,8 +133,12 @@ export function Navigation({ user }: NavigationProps) {
 
           {/* Settings & Logout */}
           <div className="px-4 py-4 border-t space-y-1">
+            <NavItem href="/" label="Landing Page" icon={Home} />
             <NavItem href="/settings" label="Settings" icon={Settings} />
-            <button className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted w-full">
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted w-full"
+            >
               <LogOut className="h-4 w-4" />
               Logout
             </button>
@@ -161,11 +170,17 @@ export function Navigation({ user }: NavigationProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/">
+                    <Home className="h-4 w-4 mr-2" />
+                    Landing Page
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </DropdownMenuItem>

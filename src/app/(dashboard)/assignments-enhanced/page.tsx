@@ -549,9 +549,9 @@ function StudentAssignmentCard({ assignment }: { assignment: Assignment }) {
                 View Submission
               </Button>
               {assignment.hasAutograding && (
-                <Button size="sm" variant="outline" onClick={() => window.location.href = '/submission-feedback'}>
+                <Button size="sm" variant="outline">
                   <Bot className="mr-1 h-3 w-3" />
-                  View AI Feedback
+                  View Autograding Report
                 </Button>
               )}
             </>

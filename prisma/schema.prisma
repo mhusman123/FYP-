@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -44,12 +44,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -97,16 +97,19 @@ model VerificationToken {
 }
 
 model Course {
-  id          String   @id @default(cuid())
-  name        String
-  code        String   @unique
-  description String?
-  semester    String
-  year        Int
-  isActive    Boolean  @default(true)
-  educatorId  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  code          String   @unique
+  description   String?
+  semester      String
+  year          Int
+  credits       Int      @default(3)
+  prerequisites Json     @default("[]") // Array of course codes that are prerequisites
+  difficulty    String   @default("INTERMEDIATE") // BEGINNER, INTERMEDIATE, ADVANCED
+  isActive      Boolean  @default(true)
+  educatorId    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   educator    User                 @relation("CourseEducator", fields: [educatorId], references: [id])
   enrollments CourseEnrollment[]
@@ -132,10 +135,10 @@ model Assignment {
   id               String   @id @default(cuid())
   title            String
   description      String
-  instructions     String   @db.Text
+  instructions     String
   dueDate          DateTime
   maxPoints        Int
-  allowedFileTypes String[]
+  allowedFileTypes Json
   maxFileSize      Int      @default(10485760) // 10MB default
   isPublished      Boolean  @default(false)
   courseId         String
@@ -215,8 +218,8 @@ model GradeAdjustmentRequest {
   submissionId         String
   studentId            String
   reason               AdjustmentReason
-  description          String           @db.Text
-  supportingDocuments  String[]         @default([])
+  description          String
+  supportingDocuments  Json             @default("[]")
   requestedAt          DateTime         @default(now())
   status               AdjustmentStatus @default(PENDING)
   reviewedBy           String?

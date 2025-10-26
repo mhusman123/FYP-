@@ -1,23 +1,32 @@
 import { Navigation } from '@/components/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
-// Mock user data - replace with actual auth
-const mockUser = {
-  id: '1',
-  name: 'John Doe',
-  email: 'john.doe@university.edu',
-  role: 'STUDENT' as const,
-  avatar: '/placeholder-avatar.jpg',
-  totalPoints: 1250
-}
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions)
+  
+  if (!session) {
+    redirect('/auth/signin')
+  }
+
+  // Transform session user to navigation user format
+  const user = {
+    id: session.user?.id || '1',
+    name: session.user?.name || 'User',
+    email: session.user?.email || '',
+    role: (session.user?.role as 'STUDENT' | 'EDUCATOR' | 'ADMIN') || 'STUDENT',
+    avatar: session.user?.image || undefined,
+    totalPoints: 1250 // This would come from database in real app
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      <Navigation user={mockUser} />
+      <Navigation user={user} />
       
       {/* Main Content */}
       <div className="lg:pl-64">
