@@ -5,8 +5,9 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Home } from "lucide-react";
+import { Suspense } from "react";
 
-export default function AuthError() {
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -24,6 +25,14 @@ export default function AuthError() {
   };
 
   return (
+    <CardDescription>
+      {getErrorMessage(error)}
+    </CardDescription>
+  );
+}
+
+export default function AuthError() {
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
@@ -31,9 +40,9 @@ export default function AuthError() {
             <AlertCircle className="h-12 w-12 text-destructive" />
           </div>
           <CardTitle className="text-2xl font-bold text-destructive">Authentication Error</CardTitle>
-          <CardDescription>
-            {getErrorMessage(error)}
-          </CardDescription>
+          <Suspense fallback={<CardDescription>Loading...</CardDescription>}>
+            <ErrorContent />
+          </Suspense>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center space-y-4">

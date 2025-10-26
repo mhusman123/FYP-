@@ -84,6 +84,7 @@ model User {
   userBadges          UserBadge[]
   adjustmentRequests  GradeAdjustmentRequest[]   @relation("StudentRequests")
   reviewedRequests    GradeAdjustmentRequest[]   @relation("ReviewerRequests")
+  chatHistory         ChatHistory[]
 
   @@map("users")
 }
@@ -232,4 +233,17 @@ model GradeAdjustmentRequest {
   reviewer   User?      @relation("ReviewerRequests", fields: [reviewedBy], references: [id])
 
   @@map("grade_adjustment_requests")
+}
+
+model ChatHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  prompt    String
+  reply     String
+  language  String   @default("en") // 'en' for English, 'ur' for Urdu
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("chat_history")
 }

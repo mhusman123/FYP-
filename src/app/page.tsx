@@ -9,20 +9,13 @@ import {
   GraduationCap, 
   BookOpen, 
   Trophy, 
-  FileText, 
-  Award, 
   BarChart3, 
   Users, 
-  Clock, 
   CheckCircle, 
   Star, 
   ArrowRight,
   Shield,
-  Zap,
-  Target,
-  Heart,
-  Globe,
-  TrendingUp
+  Zap
 } from 'lucide-react'
 
 export default async function Home() {
@@ -237,7 +230,7 @@ export default async function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base italic">
-                  "EduPlatform has revolutionized how I manage my computer science courses. The autograding system saves me hours every week!"
+                  &quot;EduPlatform has revolutionized how I manage my computer science courses. The autograding system saves me hours every week!&quot;
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
@@ -261,7 +254,7 @@ export default async function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base italic">
-                  "The gamification features keep me motivated! I love earning badges and seeing my progress on the leaderboard."
+                  &quot;The gamification features keep me motivated! I love earning badges and seeing my progress on the leaderboard.&quot;
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
@@ -285,7 +278,7 @@ export default async function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base italic">
-                  "The analytics dashboard gives me incredible insights into my students' learning patterns. It's a game-changer!"
+                  &quot;The analytics dashboard gives me incredible insights into my students&apos; learning patterns. It&apos;s a game-changer!&quot;
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
