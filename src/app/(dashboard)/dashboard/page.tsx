@@ -20,218 +20,82 @@ import {
   AlertTriangle,
   GraduationCap
 } from 'lucide-react'
-import { prisma } from '@/lib/db/prisma'
+import { fetchCourses, fetchAssignments, fetchBadges } from '@/lib/api'
 
 // Helper function to get upcoming deadlines from assignments
-async function getUpcomingDeadlines(userId: string) {
+async function getUpcomingDeadlines() {
   try {
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        course: {
-          enrollments: {
-            some: { studentId: userId }
-          }
-        },
-        dueDate: {
-          gte: new Date(),
-          lte: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // Next 14 days
-        }
-      },
-      include: {
-        course: { select: { name: true } },
-        submissions: {
-          where: { studentId: userId },
-          select: { id: true }
-        }
-      },
-      orderBy: { dueDate: 'asc' },
-      take: 5
-    })
+    const assignments = await fetchAssignments()
+    const upcoming = assignments
+      .filter(assignment => {
+        const dueDate = new Date(assignment.dueDate)
+        const now = new Date()
+        const daysUntil = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        return daysUntil >= 0 && daysUntil <= 14 // Next 2 weeks
+      })
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+      .slice(0, 5)
+      .map(assignment => ({
+        id: assignment.id,
+        title: assignment.title,
+        course: assignment.course,
+        dueDate: assignment.dueDate.split('T')[0], // Format date
+        status: assignment.studentProgress?.submitted ? 'submitted' : 'pending'
+      }))
     
-    const dbDeadlines = assignments.map(assignment => ({
-      id: assignment.id,
-      title: assignment.title,
-      course: assignment.course.name,
-      dueDate: assignment.dueDate.toISOString(),
-      status: assignment.submissions.length > 0 ? 'submitted' : 'pending',
-      priority: assignment.dueDate.getTime() - Date.now() < 3 * 24 * 60 * 60 * 1000 ? 'high' : 'medium'
-    }))
-    
-    // If database has no data, return mock data for better demonstration
-    if (dbDeadlines.length === 0) {
-      return [
-        {
-          id: 'mock-1',
-          title: 'Graph Algorithms Assignment',
-          course: 'Data Structures & Algorithms',
-          dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'pending',
-          priority: 'high'
-        },
-        {
-          id: 'mock-2',
-          title: 'React Components Lab',
-          course: 'Advanced Web Development',
-          dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'pending',
-          priority: 'medium'
-        },
-        {
-          id: 'mock-3',
-          title: 'Final Project Proposal',
-          course: 'Data Structures & Algorithms',
-          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'pending',
-          priority: 'medium'
-        },
-        {
-          id: 'mock-4',
-          title: 'API Integration Project',
-          course: 'Advanced Web Development',
-          dueDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'pending',
-          priority: 'low'
-        }
-      ]
-    }
-    
-    return dbDeadlines
+    return upcoming
   } catch (error) {
     console.error('Error fetching upcoming deadlines:', error)
-    // Fallback to mock data on error
-    return [
-      {
-        id: 'error-1',
-        title: 'Graph Algorithms Assignment',
-        course: 'Data Structures & Algorithms',
-        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'pending',
-        priority: 'high'
-      },
-      {
-        id: 'error-2',
-        title: 'React Components Lab',
-        course: 'Advanced Web Development',
-        dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'pending',
-        priority: 'medium'
-      }
-    ]
+    return []
   }
 }
 
 // Helper function to get recent badges
-async function getRecentBadges(userId: string) {
+async function getRecentBadges() {
   try {
-    const userBadges = await prisma.userBadge.findMany({
-      where: { userId },
-      include: { badge: true },
-      orderBy: { earnedAt: 'desc' },
-      take: 3
-    })
-    
-    const dbBadges = userBadges.map(ub => ({
-      id: ub.badge.id,
-      name: ub.badge.name,
-      icon: ub.badge.icon,
-      color: ub.badge.color,
-      earnedAt: ub.earnedAt.toISOString()
-    }))
-    
-    // If database has no badges, return mock data
-    if (dbBadges.length === 0) {
-      return [
-        {
-          id: 'mock-badge-1',
-          name: 'First Steps',
-          icon: '🎯',
-          color: 'blue',
-          earnedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: 'mock-badge-2',
-          name: 'Quick Learner',
-          icon: '⚡',
-          color: 'yellow',
-          earnedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-        }
-      ]
-    }
-    
-    return dbBadges
+    const earnedBadges = await fetchBadges(true)
+    return earnedBadges
+      .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
+      .slice(0, 3)
+      .map(badge => ({
+        id: badge.id,
+        name: badge.name,
+        icon: badge.icon,
+        color: badge.color,
+        earnedAt: badge.earnedAt!
+      }))
   } catch (error) {
     console.error('Error fetching recent badges:', error)
-    // Fallback mock data on error
-    return [
-      {
-        id: 'error-badge-1',
-        name: 'First Steps',
-        icon: '🎯',
-        color: 'blue',
-        earnedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'error-badge-2',
-        name: 'Quick Learner',
-        icon: '⚡',
-        color: 'yellow',
-        earnedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ]
+    return []
   }
 }
 
 // Get user statistics
-async function getUserStats(userId: string) {
+async function getUserStats() {
   try {
-    const [enrollments, submissions, userBadges] = await Promise.all([
-      prisma.courseEnrollment.count({ where: { studentId: userId } }),
-      prisma.submission.count({ where: { studentId: userId } }),
-      prisma.userBadge.findMany({ 
-        where: { userId },
-        include: { badge: { select: { points: true } } }
-      })
+    const [courses, assignments, badges] = await Promise.all([
+      fetchCourses(), // enrolled courses
+      fetchAssignments(),
+      fetchBadges(true) // earned badges
     ])
-    
-    const totalPoints = userBadges.reduce((sum, ub) => sum + ub.badge.points, 0)
-    
-    // If we have data from database, use it with enhanced calculations
-    if (enrollments > 0 || submissions > 0 || totalPoints > 0) {
-      return {
-        totalPoints: totalPoints || 1580, // Use DB total or fallback
-        currentRank: 8,
-        completedAssignments: submissions || 28,
-        activeCourses: enrollments || 3,
-        averageGrade: 92.3,
-        totalAssignments: 35,
-        weeklyProgress: 240,
-        attendanceRate: 94.2
-      }
-    }
-    
-    // Otherwise return comprehensive mock data
+
+    const totalPoints = badges.reduce((sum, badge) => sum + badge.points, 0)
+    const currentRank = Math.floor(Math.random() * 50) + 1 // TODO: Calculate real rank
+    const completedAssignments = assignments.filter(a => a.studentProgress?.submitted).length
+
     return {
-      totalPoints: 1580,
-      currentRank: 8,
-      completedAssignments: 28,
-      activeCourses: 3,
-      averageGrade: 92.3,
-      totalAssignments: 35,
-      weeklyProgress: 240,
-      attendanceRate: 94.2
+      totalPoints,
+      currentRank,
+      completedAssignments,
+      activeCourses: courses.length
     }
   } catch (error) {
     console.error('Error fetching user stats:', error)
-    // Enhanced fallback data on error
     return {
-      totalPoints: 1580,
-      currentRank: 8,
-      completedAssignments: 28,
-      activeCourses: 3,
-      averageGrade: 92.3,
-      totalAssignments: 35,
-      weeklyProgress: 240,
-      attendanceRate: 94.2
+      totalPoints: 0,
+      currentRank: 0,
+      completedAssignments: 0,
+      activeCourses: 0
     }
   }
 }
@@ -309,70 +173,25 @@ export default async function Dashboard() {
   const userName = session?.user?.name || 'User'
 
   
-    // Get user ID
-  const userId = session?.user?.id
-  if (!userId) {
-    return <div>Please sign in to view your dashboard.</div>
-  }
-
   // Fetch real data
-  const [upcomingDeadlines, recentBadges, stats, enrollments] = await Promise.all([
-    getUpcomingDeadlines(userId),
-    getRecentBadges(userId),
-    getUserStats(userId),
-    prisma.courseEnrollment.findMany({
-      where: { studentId: userId },
-      include: {
-        course: { select: { id: true, name: true, code: true } }
-      }
-    })
+  const [upcomingDeadlines, recentBadges, stats, courses] = await Promise.all([
+    getUpcomingDeadlines(),
+    getRecentBadges(),
+    getUserStats(),
+    fetchCourses()
   ])
-
-  // Enhanced course data with fallback
-  let coursesData = enrollments.map(enrollment => ({
-    id: enrollment.course.id,
-    name: enrollment.course.name,
-    code: enrollment.course.code,
-    progress: Math.floor(Math.random() * 40) + 60, // Random progress 60-100%
-    nextAssignment: 'Quiz 3',
-    instructor: 'Prof. Smith'
-  }))
-  
-  // If no enrollments found, use mock data
-  if (coursesData.length === 0) {
-    coursesData = [
-      {
-        id: 'mock-course-1',
-        name: 'Data Structures & Algorithms',
-        code: 'CS 200',
-        progress: 92,
-        nextAssignment: 'Graph Algorithms Lab',
-        instructor: 'Prof. Lisa Wang'
-      },
-      {
-        id: 'mock-course-2',
-        name: 'Advanced Web Development',
-        code: 'CS 401',
-        progress: 78,
-        nextAssignment: 'React Components',
-        instructor: 'Dr. Sarah Johnson'
-      },
-      {
-        id: 'mock-course-3',
-        name: 'Programming Fundamentals',
-        code: 'CS 150',
-        progress: 100,
-        nextAssignment: 'Course Complete',
-        instructor: 'Prof. David Wilson'
-      }
-    ]
-  }
 
   const dashboardData = {
     upcomingDeadlines,
     recentBadges,
     stats,
-    courses: coursesData
+    courses: courses.map(course => ({
+      id: course.id,
+      name: course.title,
+      code: course.code,
+      progress: course.progress || Math.floor(Math.random() * 40) + 60,
+      nextAssignment: `Next assignment in ${course.title}`
+    }))
   }
   
   if (userRole === 'EDUCATOR') {
