@@ -1,4 +1,5 @@
 import { Navigation } from '@/components/navigation'
+import { AIMentorModal } from '@/components/features/ai-mentor/ai-mentor-modal'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -34,6 +35,9 @@ export default async function DashboardLayout({
           {children}
         </main>
       </div>
+
+      {/* AI Mentor Floating Button */}
+      <AIMentorModal />
     </div>
   )
 }
