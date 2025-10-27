@@ -17,6 +17,7 @@ import {
   CheckCircle,
   AlertTriangle
 } from 'lucide-react'
+import { AiInsightsPanel } from '@/components/features/ai-insights'
 
 // Mock analytics data
 const analyticsData = {
@@ -158,6 +159,16 @@ export default function Analytics() {
             Export Report
           </Button>
         </div>
+      </div>
+
+      {/* AI Insights Panel Section */}
+      <div className="border-t pt-6">
+        <AiInsightsPanel />
+      </div>
+
+      {/* Divider */}
+      <div className="border-t pt-6">
+        <h2 className="text-2xl font-bold mb-4">Traditional Analytics</h2>
       </div>
 
       {/* Overview Stats */}

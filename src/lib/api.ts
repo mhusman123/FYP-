@@ -378,3 +378,58 @@ export async function awardBadge(badgeId: string, userId: string): Promise<{ suc
     return { success: false, message: 'Failed to award badge' }
   }
 }
+
+// AI Insights
+export interface AiInsightsData {
+  averageGrade: number
+  lateSubmissions: number
+  riskStudents: number
+  atRiskStudents: Array<{
+    id: string
+    name: string
+    averageGrade: number
+    lateSubmissions: number
+  }>
+  trend: number[]
+  completionRate: number
+  gradeDistribution: {
+    'A (90-100)': number
+    'B (80-89)': number
+    'C (70-79)': number
+    'D (60-69)': number
+    'F (<60)': number
+  }
+  insights: Array<{
+    type: string
+    message: string
+    severity: string
+  }>
+  period: string
+  totalSubmissions: number
+  totalStudents: number
+  totalCourses: number
+  trendChange: number
+}
+
+export async function fetchAiInsights(
+  period: 'week' | 'month' | 'semester' = 'week',
+  courseId?: string
+): Promise<AiInsightsData | null> {
+  try {
+    const params = new URLSearchParams({ period })
+    if (courseId) {
+      params.append('courseId', courseId)
+    }
+
+    const response = await fetch(`/api/ai/insights?${params.toString()}`)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch AI insights: ${response.statusText}`)
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching AI insights:', error)
+    return null
+  }
+}
