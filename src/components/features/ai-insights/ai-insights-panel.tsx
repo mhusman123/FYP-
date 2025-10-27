@@ -150,9 +150,9 @@ export function AiInsightsPanel() {
   }))
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-slide-down">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-blue-600" />
@@ -167,6 +167,7 @@ export function AiInsightsPanel() {
             variant={period === 'week' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setPeriod('week')}
+            className="transition-all duration-300"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Week
@@ -175,6 +176,7 @@ export function AiInsightsPanel() {
             variant={period === 'month' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setPeriod('month')}
+            className="transition-all duration-300"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Month
@@ -183,11 +185,12 @@ export function AiInsightsPanel() {
             variant={period === 'semester' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setPeriod('semester')}
+            className="transition-all duration-300"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Semester
           </Button>
-          <Button onClick={fetchInsights} variant="ghost" size="sm">
+          <Button onClick={fetchInsights} variant="ghost" size="sm" className="transition-all duration-300">
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
@@ -195,7 +198,7 @@ export function AiInsightsPanel() {
 
       {/* Key Metrics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg hover:scale-105 animate-slide-up">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Average Grade
@@ -208,7 +211,7 @@ export function AiInsightsPanel() {
                 insights.trendChange >= 0 ? 'text-green-600' : 'text-red-600'
               }`}>
                 {insights.trendChange >= 0 ? (
-                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <TrendingUp className="h-4 w-4 mr-1 animate-ai-spark" />
                 ) : (
                   <TrendingDown className="h-4 w-4 mr-1" />
                 )}
@@ -221,7 +224,7 @@ export function AiInsightsPanel() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg hover:scale-105 animate-slide-up" style={{animationDelay: '100ms'}}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Late Submissions
@@ -238,7 +241,7 @@ export function AiInsightsPanel() {
           </CardContent>
         </Card>
 
-        <Card className={insights.riskStudents > 0 ? 'border-red-200 bg-red-50' : ''}>
+        <Card className={`transition-all duration-300 hover:shadow-lg hover:scale-105 animate-slide-up ${insights.riskStudents > 0 ? 'border-red-200 bg-red-50' : ''}`} style={{animationDelay: '200ms'}}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Students at Risk
@@ -257,7 +260,7 @@ export function AiInsightsPanel() {
           </CardContent>
         </Card>
 
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-green-200 bg-green-50 transition-all duration-300 hover:shadow-lg hover:scale-105 animate-slide-up" style={{animationDelay: '300ms'}}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Completion Rate
@@ -268,7 +271,7 @@ export function AiInsightsPanel() {
               <div className="text-3xl font-bold text-green-600">
                 {insights.completionRate}%
               </div>
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <CheckCircle2 className="h-8 w-8 text-green-600 animate-ai-spark" />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
               Assignment completion rate
@@ -324,7 +327,7 @@ export function AiInsightsPanel() {
       {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Grade Trend Chart */}
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg animate-slide-up">
           <CardHeader>
             <CardTitle>Grade Trend</CardTitle>
             <CardDescription>
@@ -354,7 +357,7 @@ export function AiInsightsPanel() {
         </Card>
 
         {/* Grade Distribution Chart */}
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg animate-slide-up" style={{animationDelay: '100ms'}}>
           <CardHeader>
             <CardTitle>Grade Distribution</CardTitle>
             <CardDescription>
@@ -382,7 +385,7 @@ export function AiInsightsPanel() {
 
       {/* At-Risk Students Table */}
       {insights.atRiskStudents.length > 0 && (
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg animate-slide-up">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5 text-red-600" />
@@ -393,7 +396,7 @@ export function AiInsightsPanel() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-hidden">
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-muted/50">
@@ -405,7 +408,7 @@ export function AiInsightsPanel() {
                 </thead>
                 <tbody>
                   {insights.atRiskStudents.map((student) => (
-                    <tr key={student.id} className="border-b last:border-0 hover:bg-muted/30">
+                    <tr key={student.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors duration-200">
                       <td className="px-4 py-3 font-medium">{student.name}</td>
                       <td className="px-4 py-3">
                         <Badge variant={student.averageGrade < 50 ? 'destructive' : 'outline'}>

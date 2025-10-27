@@ -120,3 +120,77 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* AI Response Animations */
+@keyframes ai-spark {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(59, 130, 246, 0.5));
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2) drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+  }
+}
+
+@keyframes ai-glow {
+  0%, 100% {
+    box-shadow: 0 0 0px rgba(59, 130, 246, 0), 0 0 20px rgba(59, 130, 246, 0);
+  }
+  50% {
+    box-shadow: 0 0 4px rgba(59, 130, 246, 0.6), 0 0 24px rgba(59, 130, 246, 0.4);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .animate-ai-spark {
+    animation: ai-spark 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-ai-glow {
+    animation: ai-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+}

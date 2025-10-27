@@ -1,5 +1,6 @@
-import { Navigation } from '@/components/navigation'
+import { DashboardNavigation } from '@/components/dashboard-navigation'
 import { AIMentorModal } from '@/components/features/ai-mentor/ai-mentor-modal'
+import { AIWrapperProvider } from '@/components/ai-wrapper-provider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -26,18 +27,20 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation user={user} />
-      
-      {/* Main Content */}
-      <div className="lg:pl-64">
-        <main className="py-6 px-4 lg:px-6">
-          {children}
-        </main>
-      </div>
+    <AIWrapperProvider>
+      <div className="min-h-screen bg-background">
+        <DashboardNavigation user={user} />
+        
+        {/* Main Content */}
+        <div className="lg:pl-64">
+          <main className="py-6 px-4 lg:px-6">
+            {children}
+          </main>
+        </div>
 
-      {/* AI Mentor Floating Button */}
-      <AIMentorModal />
-    </div>
+        {/* AI Mentor Floating Button */}
+        <AIMentorModal />
+      </div>
+    </AIWrapperProvider>
   )
 }

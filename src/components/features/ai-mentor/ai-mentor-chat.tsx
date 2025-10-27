@@ -216,19 +216,19 @@ export function AIMentorChat({ className }: AIMentorChatProps) {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex gap-3 ${message.isUser ? 'justify-end' : 'justify-start'}`}
+            className={`flex gap-3 ${message.isUser ? 'justify-end' : 'justify-start'} animate-slide-up`}
           >
             {!message.isUser && (
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-blue-600" />
+                <Bot className="w-5 h-5 text-blue-600 animate-ai-spark" />
               </div>
             )}
             
             <Card
-              className={`max-w-[80%] p-3 ${
+              className={`max-w-[80%] p-3 transition-all duration-300 ${
                 message.isUser
                   ? 'bg-blue-600 text-white'
-                  : 'bg-muted'
+                  : 'bg-muted animate-ai-glow'
               }`}
             >
               <div className="flex flex-col gap-2">
