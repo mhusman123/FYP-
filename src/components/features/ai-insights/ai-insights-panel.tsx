@@ -161,6 +161,9 @@ export function AiInsightsPanel() {
           <p className="text-muted-foreground">
             Analytics and predictions on student performance
           </p>
+          <p className="text-xs text-blue-600 mt-2 font-semibold">
+            🇵🇰 Built for Pakistan&apos;s underserved schools — EduAI Wrapper Edition
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -275,6 +278,37 @@ export function AiInsightsPanel() {
             </div>
             <p className="text-xs text-muted-foreground mt-2">
               Assignment completion rate
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-blue-200 bg-blue-50 transition-all duration-300 hover:shadow-lg hover:scale-105 animate-slide-up" style={{animationDelay: '400ms'}}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+              🇵🇒 National Benchmark
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-semibold text-gray-700">
+                  Class Avg vs National
+                </div>
+                <div className="text-2xl font-bold text-blue-600 mt-1">
+                  {insights.averageGrade}% vs 57%
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-blue-600 font-medium">
+                  +{((insights.averageGrade - 57) > 0 ? '+' : '')}{(insights.averageGrade - 57).toFixed(0)}%
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  vs Literacy Rate
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Pakistan&apos;s national literacy rate: 57%
             </p>
           </CardContent>
         </Card>

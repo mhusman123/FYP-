@@ -5,73 +5,74 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Seeding database...')
 
-  // Create sample educators
+  // 🇵🇰 Create sample educators (Pakistani names)
   const educator1 = await prisma.user.upsert({
-    where: { email: 'prof.smith@university.edu' },
+    where: { email: 'prof.fatima@federal.edu.pk' },
     update: {},
     create: {
-      email: 'prof.smith@university.edu',
-      name: 'Dr. Sarah Smith',
+      email: 'prof.fatima@federal.edu.pk',
+      name: 'Dr. Fatima Khan',
       role: 'EDUCATOR',
       totalPoints: 0,
     },
   })
 
   const educator2 = await prisma.user.upsert({
-    where: { email: 'prof.johnson@university.edu' },
+    where: { email: 'prof.hassan@federal.edu.pk' },
     update: {},
     create: {
-      email: 'prof.johnson@university.edu',
-      name: 'Prof. Michael Johnson',
+      email: 'prof.hassan@federal.edu.pk',
+      name: 'Prof. Hassan Ahmed',
       role: 'EDUCATOR',
       totalPoints: 0,
     },
   })
 
-  // Create sample students
+  // 🇵🇰 Create sample students (Pakistani names)
   const student1 = await prisma.user.upsert({
-    where: { email: 'john.doe@student.edu' },
+    where: { email: 'ali.malik@student.edu.pk' },
     update: {},
     create: {
-      email: 'john.doe@student.edu',
-      name: 'John Doe',
+      email: 'ali.malik@student.edu.pk',
+      name: 'Ali Malik',
       role: 'STUDENT',
       totalPoints: 1250,
     },
   })
 
   const student2 = await prisma.user.upsert({
-    where: { email: 'jane.smith@student.edu' },
+    where: { email: 'ayesha.khan@student.edu.pk' },
     update: {},
     create: {
-      email: 'jane.smith@student.edu',
-      name: 'Jane Smith',
+      email: 'ayesha.khan@student.edu.pk',
+      name: 'Ayesha Khan',
       role: 'STUDENT',
       totalPoints: 1580,
     },
   })
 
   const student3 = await prisma.user.upsert({
-    where: { email: 'alex.wilson@student.edu' },
+    where: { email: 'ahmed.hussain@student.edu.pk' },
     update: {},
     create: {
-      email: 'alex.wilson@student.edu',
-      name: 'Alex Wilson',
+      email: 'ahmed.hussain@student.edu.pk',
+      name: 'Ahmed Hussain',
       role: 'STUDENT',
       totalPoints: 920,
     },
   })
 
-  // Create comprehensive CS curriculum courses
+  // 🇵🇰 Create comprehensive CS curriculum courses
+  // Available at Federal Board & provincial schools across Pakistan
   
   // Foundational Courses (100-200 level)
   const cs110 = await prisma.course.upsert({
     where: { code: 'CS-110' },
     update: {},
     create: {
-      name: 'Introduction to Computer Science',
+      name: 'Introduction to Computer Science (Urdu: کمپیوٹر سائنس کا تعارف)',
       code: 'CS-110',
-      description: 'Fundamental concepts of computer science, problem-solving, and computational thinking.',
+      description: 'Fundamental concepts of computer science, problem-solving, and computational thinking. Designed for Pakistani students.',
       semester: 'Fall',
       year: 2025,
       credits: 3,
