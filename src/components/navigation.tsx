@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { AIWrapperContext } from '@/components/ai-wrapper-provider'
+import { Sparkles } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,6 +77,7 @@ const educatorNavItems = [
 export function Navigation({ user }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const aiContext = useContext(AIWrapperContext)
   
   const navItems = user.role === 'STUDENT' ? studentNavItems : educatorNavItems
 
@@ -106,7 +109,7 @@ export function Navigation({ user }: NavigationProps) {
           </div>
 
           {/* User Info */}
-          <div className="px-6 py-4 border-b">
+          <div className="px-6 py-4 border-b space-y-3">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarImage src={user.avatar} alt={user.name} />
@@ -122,6 +125,31 @@ export function Navigation({ user }: NavigationProps) {
                 )}
               </div>
             </div>
+            {/* AI Wrapper Toggle */}
+            {aiContext && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={aiContext.isAIWrapperActive ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => aiContext.setIsAIWrapperActive(!aiContext.isAIWrapperActive)}
+                  className={cn(
+                    'transition-all duration-300',
+                    aiContext.isAIWrapperActive && 'bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/50'
+                  )}
+                >
+                  <Sparkles className={cn(
+                    'h-4 w-4 mr-2 transition-all duration-300',
+                    aiContext.isAIWrapperActive && 'fill-white animate-pulse'
+                  )} />
+                  {aiContext.isAIWrapperActive ? 'AI Enabled' : 'AI Disabled'}
+                </Button>
+                {aiContext.isAIWrapperActive && (
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 animate-pulse">
+                    Active
+                  </Badge>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Navigation */}

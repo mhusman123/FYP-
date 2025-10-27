@@ -19,15 +19,15 @@ export function AIMentorModal() {
       {/* Floating Action Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 z-50"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 z-50 transition-all duration-300 hover:scale-110 hover:shadow-xl animate-pulse"
         aria-label="Ask AI Mentor"
       >
-        <Bot className="h-6 w-6" />
+        <Bot className="h-6 w-6 animate-bounce" />
       </Button>
 
       {/* Modal Dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl h-[600px] p-0 gap-0">
+        <DialogContent className="max-w-3xl h-[600px] p-0 gap-0 animate-slide-up">
           <DialogHeader className="sr-only">
             <DialogTitle>AI Mentor Chat</DialogTitle>
           </DialogHeader>
