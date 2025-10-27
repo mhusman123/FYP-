@@ -21,6 +21,7 @@ import {
   GraduationCap
 } from 'lucide-react'
 import { fetchCourses, fetchAssignments, fetchBadges } from '@/lib/api'
+import { AiInsightsPanel } from '@/components/features/ai-insights'
 
 // Helper function to get upcoming deadlines from assignments
 async function getUpcomingDeadlines() {
@@ -460,6 +461,11 @@ function EducatorDashboard({ userName }: { userName: string }) {
         <p className="text-muted-foreground">
           Here&apos;s your teaching overview and pending tasks.
         </p>
+      </div>
+
+      {/* AI Insights Panel */}
+      <div className="border-t border-b py-6">
+        <AiInsightsPanel />
       </div>
 
       {/* Stats Overview */}

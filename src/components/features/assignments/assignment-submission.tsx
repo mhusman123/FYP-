@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -19,7 +19,9 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  X
+  X,
+  Sparkles,
+  Loader2
 } from 'lucide-react'
 
 const submissionSchema = z.object({
@@ -51,18 +53,28 @@ interface Assignment {
     submittedAt: string
     status: 'SUBMITTED' | 'GRADED' | 'UNDER_REVIEW' | 'RETURNED'
     grade?: number
+    feedback?: string
   }
+}
+
+interface AiAutogradeResult {
+  score: number
+  feedback: string
+  submissionId: string
+  aiFeedbackId: string
 }
 
 interface AssignmentSubmissionProps {
   assignment: Assignment
-  onSubmit: (data: SubmissionFormData) => Promise<void>
+  onSubmit: (data: SubmissionFormData) => Promise<{ fileUrl: string; submissionId: string }>
 }
 
 export function AssignmentSubmission({ assignment, onSubmit }: AssignmentSubmissionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [dragActive, setDragActive] = useState(false)
+  const [isAutograding, setIsAutograding] = useState(false)
+  const [autogradeResult, setAutogradeResult] = useState<AiAutogradeResult | null>(null)
 
   const {
     register,
@@ -79,15 +91,67 @@ export function AssignmentSubmission({ assignment, onSubmit }: AssignmentSubmiss
   const timeUntilDue = new Date(assignment.dueDate).getTime() - new Date().getTime()
   const daysUntilDue = Math.ceil(timeUntilDue / (1000 * 60 * 60 * 24))
 
+  // Load existing AI feedback if submission exists
+  useEffect(() => {
+    if (assignment.submission?.id && assignment.submission.grade) {
+      fetch(`/api/ai/autograde?submissionId=${assignment.submission.id}`)
+        .then(res => {
+          if (res.ok) return res.json()
+          return null
+        })
+        .then(data => {
+          if (data) {
+            setAutogradeResult({
+              score: data.score,
+              feedback: data.feedback,
+              submissionId: assignment.submission!.id,
+              aiFeedbackId: data.aiFeedbackId || 'existing',
+            })
+          }
+        })
+        .catch(err => console.error('Error loading AI feedback:', err))
+    }
+  }, [assignment.submission])
+
   const handleFormSubmit = async (data: SubmissionFormData) => {
     setIsSubmitting(true)
+    setAutogradeResult(null)
     try {
       // Simulate upload progress
       for (let i = 0; i <= 100; i += 10) {
         setUploadProgress(i)
         await new Promise(resolve => setTimeout(resolve, 100))
       }
-      await onSubmit(data)
+      
+      // Submit assignment and get file URL and submission ID
+      const result = await onSubmit(data)
+      
+      // Trigger AI autograding
+      setIsAutograding(true)
+      try {
+        const response = await fetch('/api/ai/autograde', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            assignmentId: assignment.id,
+            fileUrl: result.fileUrl,
+            submissionId: result.submissionId,
+          }),
+        })
+        
+        if (response.ok) {
+          const autogradeData = await response.json()
+          setAutogradeResult(autogradeData)
+        } else {
+          console.error('Autograding failed:', await response.text())
+        }
+      } catch (error) {
+        console.error('Autograding error:', error)
+      } finally {
+        setIsAutograding(false)
+      }
     } catch (error) {
       console.error('Submission failed:', error)
     } finally {
@@ -335,8 +399,80 @@ export function AssignmentSubmission({ assignment, onSubmit }: AssignmentSubmiss
                     {assignment.submission.grade}/{assignment.maxPoints}
                   </span>
                 </div>
+                {assignment.submission.feedback && (
+                  <div className="mt-3 pt-3 border-t">
+                    <p className="text-sm font-medium mb-2">Feedback:</p>
+                    <p className="text-sm whitespace-pre-line">{assignment.submission.feedback}</p>
+                  </div>
+                )}
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI Autograder Running */}
+      {isAutograding && (
+        <Card className="border-2 border-primary/50">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  AI Autograder Running...
+                  <Sparkles className="h-5 w-5 text-yellow-500" />
+                </CardTitle>
+                <CardDescription>
+                  Your submission is being analyzed. This will take a few moments.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Processing...</span>
+              </div>
+              <Progress value={undefined} className="w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI Autograder Results */}
+      {autogradeResult && (
+        <Card className="border-2 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CardTitle>AI Autograder Results</CardTitle>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Sparkles className="h-3 w-3 text-yellow-500" />
+                  AI Graded
+                </Badge>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                  {autogradeResult.score}
+                </div>
+                <div className="text-sm text-muted-foreground">out of 100</div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <Sparkles className="h-4 w-4 text-yellow-500" />
+              <AlertDescription>
+                <div className="font-medium mb-2">AI Wrapper Autograder Feedback</div>
+                <div className="text-sm whitespace-pre-line">
+                  {autogradeResult.feedback}
+                </div>
+              </AlertDescription>
+            </Alert>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Feedback ID: {autogradeResult.aiFeedbackId}</span>
+              <span>Submission ID: {autogradeResult.submissionId}</span>
+            </div>
           </CardContent>
         </Card>
       )}
