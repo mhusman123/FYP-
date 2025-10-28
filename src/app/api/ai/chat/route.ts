@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
 import { detectLanguage, translateToUrdu, SupportedLanguage } from '@/lib/translation';
+import { withAiLogging } from '@/lib/ai-wrapper';
 
 interface ChatRequest {
   prompt: string;
@@ -95,52 +96,79 @@ export async function POST(req: NextRequest) {
     // Build system message based on user role
     const systemMessage = buildSystemMessage(user.role, user.name || 'Student');
 
-    // Call OpenAI API
-    let aiResponse: string;
-    try {
-      aiResponse = await callOpenAI(systemMessage, prompt, openaiApiKey);
-    } catch (error) {
-      console.error('[AI Chat] OpenAI API error:', error);
+    // Wrap AI call with logging
+    const result = await withAiLogging(
+      async () => {
+        // Call OpenAI API
+        let aiResponse: string;
+        try {
+          aiResponse = await callOpenAI(systemMessage, prompt, openaiApiKey);
+        } catch (error) {
+          console.error('[AI Chat] OpenAI API error:', error);
+          throw new Error('Failed to get response from AI');
+        }
+
+        // Translate response if requested and language is Urdu
+        let finalResponse = aiResponse;
+        let finalLanguage = detectedLang;
+
+        if (translateResponse && detectedLang === 'ur') {
+          try {
+            finalResponse = await translateToUrdu(aiResponse);
+            finalLanguage = 'ur';
+          } catch (error) {
+            console.warn('[AI Chat] Translation failed, using English response:', error);
+            // Keep English response if translation fails
+          }
+        }
+
+        // Store conversation in database
+        const chatHistory = await prisma.chatHistory.create({
+          data: {
+            userId: user.id,
+            prompt: prompt,
+            reply: finalResponse,
+            language: finalLanguage,
+          },
+        });
+
+        // Return response
+        return NextResponse.json<ChatResponse>({
+          message: finalResponse,
+          language: finalLanguage,
+          conversationId: chatHistory.id,
+        });
+      },
+      {
+        type: 'chat',
+        userId: user.id,
+        metadata: {
+          language: detectedLang,
+          translateResponse,
+          promptLength: prompt.length,
+        },
+      }
+    );
+
+    if (result.error) {
       return NextResponse.json(
         {
           error: 'AI service error',
-          message: 'Failed to get response from AI. Please try again later.',
+          message: result.error,
           language: detectedLang,
         },
         { status: 500 }
       );
     }
 
-    // Translate response if requested and language is Urdu
-    let finalResponse = aiResponse;
-    let finalLanguage = detectedLang;
-
-    if (translateResponse && detectedLang === 'ur') {
-      try {
-        finalResponse = await translateToUrdu(aiResponse);
-        finalLanguage = 'ur';
-      } catch (error) {
-        console.warn('[AI Chat] Translation failed, using English response:', error);
-        // Keep English response if translation fails
-      }
+    // Add latency headers
+    const response = result.data!;
+    response.headers.set('X-AI-Latency', String(result.latency));
+    if (result.tokens) {
+      response.headers.set('X-AI-Tokens', String(result.tokens));
     }
 
-    // Store conversation in database
-    const chatHistory = await prisma.chatHistory.create({
-      data: {
-        userId: user.id,
-        prompt: prompt,
-        reply: finalResponse,
-        language: finalLanguage,
-      },
-    });
-
-    // Return response
-    return NextResponse.json<ChatResponse>({
-      message: finalResponse,
-      language: finalLanguage,
-      conversationId: chatHistory.id,
-    });
+    return response;
 
   } catch (error) {
     console.error('[AI Chat] Unexpected error:', error);
