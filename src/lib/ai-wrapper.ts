@@ -190,8 +190,14 @@ export async function getAiUsageStats(options?: {
 /**
  * Middleware for API routes to extract user ID from session
  */
-export async function extractUserId(_req: NextRequest): Promise<string | undefined> {
+export async function extractUserId(): Promise<string | undefined> {
   // This would typically use getServerSession, but we'll keep it simple
   // and let the individual routes handle session management
   return undefined;
 }
+
+export * from './ai-wrapper/index';
+export * from './ai-wrapper/types';
+export * from './ai-wrapper/analytics';
+export * from './ai-wrapper/eval';
+export * from './ai-wrapper/security';
