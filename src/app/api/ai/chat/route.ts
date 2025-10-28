@@ -1,19 +1,28 @@
 /**
  * AI Mentor Chat API Endpoint
- * Provides bilingual (English + Urdu) study assistance using OpenAI
+ * Provides bilingual (English + Urdu) study assistance via the AiWrapperCore
  */
 
+import { randomUUID } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
 import { detectLanguage, translateToUrdu, SupportedLanguage } from '@/lib/translation';
-import { withAiLogging } from '@/lib/ai-wrapper';
+import { withAiLogging, aiWrapperCore } from '@/lib/ai-wrapper';
+import { type AiWrapperRequest, type AIProviderKey } from '@/lib/ai-wrapper/types';
 
 interface ChatRequest {
   prompt: string;
   language?: SupportedLanguage;
   translateResponse?: boolean;
+  temperature?: number;
+  topP?: number;
+  modelHint?: {
+    provider?: AIProviderKey;
+    model?: string;
+  };
+  metadata?: Record<string, unknown>;
 }
 
 interface ChatResponse {
@@ -22,28 +31,10 @@ interface ChatResponse {
   conversationId?: string;
 }
 
-/**
- * POST /api/ai/chat
- * 
- * Request Body:
- * {
- *   prompt: string;
- *   language?: 'en' | 'ur';
- *   translateResponse?: boolean;
- * }
- * 
- * Response:
- * {
- *   message: string;
- *   language: 'en' | 'ur';
- *   conversationId?: string;
- * }
- */
 export async function POST(req: NextRequest) {
   try {
-    // Authenticate user
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Unauthorized - Please sign in' },
@@ -51,7 +42,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get user from database
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       select: { id: true, role: true, name: true },
@@ -64,7 +54,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Parse request body
     const body: ChatRequest = await req.json();
     const { prompt, language, translateResponse } = body;
 
@@ -75,69 +64,53 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Detect language of prompt
     const detectedLang = language || detectLanguage(prompt);
-    
-    // Check if OpenAI API key is configured
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    
-    if (!openaiApiKey) {
-      console.error('[AI Chat] OpenAI API key not configured');
-      return NextResponse.json(
-        { 
-          error: 'AI service not configured',
-          message: 'The AI Mentor service is currently unavailable. Please contact your administrator.',
-          language: detectedLang,
-        },
-        { status: 503 }
-      );
-    }
-
-    // Build system message based on user role
     const systemMessage = buildSystemMessage(user.role, user.name || 'Student');
+    const provider = body.modelHint?.provider ?? 'openai';
 
-    // Wrap AI call with logging
-    const result = await withAiLogging(
+    type LoggedExecution = Awaited<ReturnType<typeof aiWrapperCore.execute>> & { tokens?: number };
+
+    const aiRequest: AiWrapperRequest = {
+      id: randomUUID(),
+      task: 'mentor_chat',
+      modality: 'text',
+      input: {
+        prompt,
+        messages: [
+          { role: 'system', content: systemMessage },
+          { role: 'user', content: prompt },
+        ],
+        temperature: body.temperature ?? 0.7,
+        topP: body.topP ?? 1,
+        extra: {
+          generationConfig: body.metadata?.generationConfig,
+          safetySettings: body.metadata?.safetySettings,
+        },
+      },
+      modelHint: body.modelHint,
+      userId: user.id,
+      locale: detectedLang,
+      options: {
+        guardrails: true,
+        responseFormat: 'text',
+      },
+      metadata: {
+        translateResponse,
+        promptLength: prompt.length,
+        ...body.metadata,
+      },
+    };
+
+    const result = await withAiLogging<LoggedExecution>(
       async () => {
-        // Call OpenAI API
-        let aiResponse: string;
-        try {
-          aiResponse = await callOpenAI(systemMessage, prompt, openaiApiKey);
-        } catch (error) {
-          console.error('[AI Chat] OpenAI API error:', error);
-          throw new Error('Failed to get response from AI');
-        }
-
-        // Translate response if requested and language is Urdu
-        let finalResponse = aiResponse;
-        let finalLanguage = detectedLang;
-
-        if (translateResponse && detectedLang === 'ur') {
-          try {
-            finalResponse = await translateToUrdu(aiResponse);
-            finalLanguage = 'ur';
-          } catch (error) {
-            console.warn('[AI Chat] Translation failed, using English response:', error);
-            // Keep English response if translation fails
-          }
-        }
-
-        // Store conversation in database
-        const chatHistory = await prisma.chatHistory.create({
-          data: {
-            userId: user.id,
-            prompt: prompt,
-            reply: finalResponse,
-            language: finalLanguage,
-          },
+        const execution = await aiWrapperCore.execute(aiRequest, {
+          httpRequest: req,
         });
 
-        // Return response
-        return NextResponse.json<ChatResponse>({
-          message: finalResponse,
-          language: finalLanguage,
-          conversationId: chatHistory.id,
-        });
+        return {
+          ...execution,
+          tokens: execution.response.tokensUsed,
+        };
       },
       {
         type: 'chat',
@@ -146,6 +119,7 @@ export async function POST(req: NextRequest) {
           language: detectedLang,
           translateResponse,
           promptLength: prompt.length,
+          provider,
         },
       }
     );
@@ -161,19 +135,59 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Add latency headers
-    const response = result.data!;
+    const execution = result.data!;
+    const aiExecutionResponse = execution.response;
+
+    if (!aiExecutionResponse.success) {
+      return NextResponse.json(
+        {
+          error: 'Request blocked by guardrails',
+          details: aiExecutionResponse.output,
+        },
+        { status: 400 }
+      );
+    }
+
+    const aiMessage = String(aiExecutionResponse.output.text ?? '').trim();
+
+    let finalResponse = aiMessage;
+    let finalLanguage = detectedLang;
+
+    if (translateResponse && detectedLang === 'ur') {
+      try {
+        finalResponse = await translateToUrdu(aiMessage);
+        finalLanguage = 'ur';
+      } catch (error) {
+        console.warn('[AI Chat] Translation failed, using English response:', error);
+      }
+    }
+
+    const chatHistory = await prisma.chatHistory.create({
+      data: {
+        userId: user.id,
+        prompt,
+        reply: finalResponse,
+        language: finalLanguage,
+      },
+    });
+
+    const response = NextResponse.json<ChatResponse>({
+      message: finalResponse,
+      language: finalLanguage,
+      conversationId: chatHistory.id,
+    });
+
     response.headers.set('X-AI-Latency', String(result.latency));
-    if (result.tokens) {
-      response.headers.set('X-AI-Tokens', String(result.tokens));
+    const tokens = aiExecutionResponse.tokensUsed ?? execution.tokens;
+    if (typeof tokens === 'number') {
+      response.headers.set('X-AI-Tokens', String(tokens));
     }
 
     return response;
-
   } catch (error) {
     console.error('[AI Chat] Unexpected error:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
         message: 'An unexpected error occurred. Please try again.',
       },
@@ -275,45 +289,4 @@ Your role is to help ${userName} with their studies.`;
   };
 
   return baseMessage + (roleSpecificGuidance[role] || roleSpecificGuidance.STUDENT);
-}
-
-/**
- * Call OpenAI API with GPT-3.5/4
- */
-async function callOpenAI(
-  systemMessage: string,
-  userPrompt: string,
-  apiKey: string
-): Promise<string> {
-  const model = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-  
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: systemMessage },
-        { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(`OpenAI API error: ${response.status} - ${JSON.stringify(errorData)}`);
-  }
-
-  const data = await response.json();
-  
-  if (!data.choices?.[0]?.message?.content) {
-    throw new Error('Invalid response from OpenAI API');
-  }
-
-  return data.choices[0].message.content;
 }
