@@ -8,6 +8,27 @@ The AI Wrapper system provides a unified interface for all AI-powered features i
 - **Automatic logging** of all AI requests with metrics
 - **Performance tracking** (latency, token usage)
 - **Error handling** and monitoring
+- **Provider orchestration** with pluggable clients (OpenAI, Anthropic, OpenRouter, Vertex, Local)
+- **Multi-modal pipelines** for text, image, audio, and video tasks
+- **Security guardrails** for prompt injection and sensitive data detection
+- **Plugin system** for enterprise connectors and tool integrations
+- **Evaluation harness** with latency and quality metrics
+
+## Core Technical Capabilities
+
+| Capability | Implementation | Key Files |
+|------------|----------------|-----------|
+| Base Model Integration | Provider clients wrap HTTP APIs and expose a unified `invoke` signature. | `src/lib/ai-wrapper/clients/openai.ts`, `src/lib/ai-wrapper/clients/anthropic.ts`, `src/lib/ai-wrapper/clients/vertex.ts` |
+| Abstraction Layer | `AiWrapperCore` normalizes requests, enforces schemas, and routes through pipelines with shared guardrails. | `src/lib/ai-wrapper/index.ts`, `src/lib/ai-wrapper/types.ts` |
+| Multi-Modal Support | Dedicated strategies for text and media handle preprocessing, invoke the right model, and normalize outputs. | `src/lib/ai-wrapper/pipelines/text.ts`, `src/lib/ai-wrapper/pipelines/multimodal.ts` |
+| Orchestration & Agents | Workflow engine coordinates planner-executor-verifier agents via shared toolkits. | `src/lib/ai-wrapper/orchestration/orchestrator.ts` |
+| Data Handling | Guardrails sanitize prompts and block risky payloads before reaching providers. | `src/lib/ai-wrapper/security/guardrails.ts` |
+| Evaluation & Benchmarking | Metrics runner scores exact match and latency budgets for test suites. | `src/lib/ai-wrapper/eval/evaluator.ts` |
+| Scalability & Deployment | Provider config resolves from env-only inputs, enabling containerized deployments with zero code changes. | `src/lib/ai-wrapper/config/runtime.ts` |
+| Security & Compliance | Guardrails log findings and can block requests pre-invoke; metadata is redacted before logging. | `src/lib/ai-wrapper/security/guardrails.ts`, `src/lib/ai-wrapper.ts` |
+| Extensibility | Registry manages lifecycle for plugins that contribute tools, data, or telemetry sinks. | `src/lib/ai-wrapper/plugins/registry.ts` |
+| Monitoring & Analytics | Telemetry snapshot aggregates latency, error, and token trends directly from `AiLogs`. | `src/lib/ai-wrapper/analytics/metrics.ts` |
+| Documentation & Schemas | Zod schema enforces request contracts for SDKs and partner integrations. | `src/lib/ai-wrapper/schemas/request.ts` |
 
 ## Architecture
 
@@ -178,6 +199,56 @@ if (result.error) {
   console.log(`Success! Latency: ${result.latency}ms`);
 }
 ```
+
+### Programmatic Access (New)
+
+```typescript
+import { aiWrapperCore, baseRequestSchema } from '@/lib/ai-wrapper';
+
+const request = baseRequestSchema.parse({
+  id: crypto.randomUUID(),
+  task: 'mentor_chat',
+  modality: 'text',
+  input: {
+    prompt: 'Design a sorting lesson for Grade 8',
+  },
+  modelHint: { provider: 'vertex', model: 'gemini-1.5-pro' },
+  options: { guardrails: true, responseFormat: 'rich' },
+});
+
+const { response, steps, evaluation } = await aiWrapperCore.execute(request, {
+  runEvaluation: true,
+  evaluationSamples: [
+    {
+      id: 'sample-1',
+      label: 'baseline rubric',
+      expected: { text: 'Lesson includes objectives, activity, assessment.' },
+      metadata: { latencyMs: 1800 },
+    },
+  ],
+});
+
+console.log(response.output.text);
+console.table(steps.map((step) => ({ stage: step.stage, duration: step.durationMs })));
+```
+
+### Gemini (Google AI Studio) Configuration
+
+Set one of the following environment variables before starting the app:
+
+```bash
+# Preferred: AI Studio API key (Generative Language REST)
+export GEMINI_API_KEY="your-ai-studio-key"
+
+# Alternate names supported by the wrapper
+export GOOGLE_AI_STUDIO_API_KEY="your-ai-studio-key"
+export VERTEX_API_KEY="your-ai-studio-key"
+
+# Optional: override default endpoint
+export GEMINI_BASE_URL="https://generativelanguage.googleapis.com/v1beta"
+```
+
+With the key in place, any request that sets `modelHint.provider` to `vertex` will automatically route through the Gemini client. Multi-modal prompts accept inline image/audio/video attachments and map them to Gemini's `generateContent` endpoint without additional boilerplate.
 
 ### What Gets Logged
 
