@@ -267,3 +267,15 @@ model AiFeedback {
   @@unique([submissionId])
   @@map("ai_feedback")
 }
+
+model AiLogs {
+  id        String   @id @default(cuid())
+  type      String   // 'chat', 'autograde', 'insights', 'core'
+  latency   Int      // in milliseconds
+  tokens    Int?     // token count if available
+  userId    String?  // optional user tracking
+  metadata  Json?    // additional metadata (request params, errors, etc.)
+  createdAt DateTime @default(now())
+
+  @@map("ai_logs")
+}
