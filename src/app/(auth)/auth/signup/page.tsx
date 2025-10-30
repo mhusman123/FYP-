@@ -79,24 +79,67 @@ export default function SignUpPage() {
     setError("");
 
     try {
-      // Using credentials provider for authentication
-      // In a real app, you'd make an API call to create the user first
+      console.log('Starting registration...', { email: formData.email, name: formData.name });
+      
+      // First, create the user account
+      const registerResponse = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        }),
+      });
+
+      console.log('Registration response status:', registerResponse.status);
+
+      let registerData;
+      try {
+        registerData = await registerResponse.json();
+      } catch (jsonError) {
+        console.error('Failed to parse registration response:', jsonError);
+        setError("Server error. Please try again later.");
+        return;
+      }
+
+      if (!registerResponse.ok) {
+        console.error('Registration failed:', registerData);
+        setError(registerData.error || registerData.details || "Failed to create account. Please try again.");
+        return;
+      }
+
+      console.log('Registration successful, attempting sign in...');
+
+      // Then, sign in with the new credentials
       const result = await signIn("credentials", {
         email: formData.email,
-        name: formData.name,
-        role: formData.role,
+        password: formData.password,
         redirect: false,
         callbackUrl: "/dashboard"
       });
 
+      console.log('Sign in result:', result);
+
       if (result?.error) {
-        setError("Failed to create account. Please try again.");
-      } else {
+        console.error('Sign in failed:', result.error);
+        setError("Account created successfully! Please try signing in manually.");
+        // Redirect to signin page after 2 seconds
+        setTimeout(() => {
+          window.location.href = "/auth/signin";
+        }, 2000);
+      } else if (result?.ok) {
+        console.log('Sign in successful, redirecting to dashboard...');
         // Redirect to dashboard on success
         window.location.href = "/dashboard";
       }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+    } catch (error) {
+      console.error("Signup error details:", error);
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      setError(`Error: ${errorMessage}. Please try again.`);
     } finally {
       setIsLoading(false);
     }
