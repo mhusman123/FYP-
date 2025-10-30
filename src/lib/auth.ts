@@ -1,81 +1,92 @@
 import { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/db/prisma"
+import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    // Test credentials provider
+    // Email/Password credentials provider
     CredentialsProvider({
-      name: "Test Account",
+      name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
-        role: { label: "Role", type: "select" }
+        email: { label: "Email", type: "email", placeholder: "your@email.com" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Test accounts for platform demonstration
-        const testUsers = [
-          {
-            id: "test-student",
-            email: "student@eduplatform.edu",
-            name: "Test Student",
-            role: "STUDENT",
-            image: "/placeholder-avatar.jpg"
-          },
-          {
-            id: "test-educator", 
-            email: "educator@eduplatform.edu",
-            name: "Test Educator",
-            role: "EDUCATOR",
-            image: "/placeholder-avatar.jpg"
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.error("Missing email or password")
+            return null
           }
-        ]
 
-        const user = testUsers.find(u => u.email === credentials?.email)
-        if (user) {
+          // Find user by email
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email }
+          })
+
+          if (!user) {
+            console.error("User not found:", credentials.email)
+            return null
+          }
+
+          if (!user.password) {
+            console.error("User has no password set:", credentials.email)
+            return null
+          }
+
+          // Verify password
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          )
+
+          if (!isPasswordValid) {
+            console.error("Invalid password for user:", credentials.email)
+            return null
+          }
+
+          console.log("User authenticated successfully:", user.email)
           return {
             id: user.id,
-            email: user.email,
+            email: user.email!,
             name: user.name,
             role: user.role,
             image: user.image
           }
+        } catch (error) {
+          console.error("Authorization error:", error)
+          return null
         }
-        return null
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id
         token.role = user.role || "STUDENT"
+        token.email = user.email
+        token.name = user.name
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub!
+        session.user.id = token.id as string
         session.user.role = token.role as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string
       }
       return session
     }
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error"
-  }
+  },
+  debug: process.env.NODE_ENV === "development",
 }
