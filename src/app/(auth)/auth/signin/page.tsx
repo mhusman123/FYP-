@@ -48,11 +48,20 @@ function SignInForm() {
     setIsLoading(true);
     
     try {
-      await signIn("credentials", {
+      const result = await signIn("credentials", {
         email,
         password,
+        redirect: false,
         callbackUrl
       });
+
+      if (result?.error) {
+        // Redirect to signin page with error
+        window.location.href = `/auth/signin?error=CredentialsSignin`;
+      } else if (result?.ok) {
+        // Successful login - redirect to callback URL
+        window.location.href = callbackUrl;
+      }
     } catch (error) {
       console.error("Sign in error:", error);
     } finally {
@@ -137,11 +146,21 @@ function SignInForm() {
                   <Button
                     variant="outline"
                     className="w-full h-12 text-left justify-start"
-                    onClick={() => signIn("credentials", { 
-                      email: "student@eduplatform.edu",
-                      password: "password",
-                      callbackUrl
-                    })}
+                    onClick={async () => {
+                      setIsLoading(true);
+                      const result = await signIn("credentials", { 
+                        email: "student@eduplatform.edu",
+                        password: "password",
+                        redirect: false,
+                        callbackUrl
+                      });
+                      if (result?.ok) {
+                        window.location.href = callbackUrl;
+                      } else {
+                        window.location.href = `/auth/signin?error=CredentialsSignin`;
+                      }
+                      setIsLoading(false);
+                    }}
                     disabled={isLoading}
                   >
                     <div className="flex items-center gap-3">
@@ -158,11 +177,21 @@ function SignInForm() {
                   <Button
                     variant="outline"
                     className="w-full h-12 text-left justify-start"
-                    onClick={() => signIn("credentials", { 
-                      email: "educator@eduplatform.edu",
-                      password: "password",
-                      callbackUrl
-                    })}
+                    onClick={async () => {
+                      setIsLoading(true);
+                      const result = await signIn("credentials", { 
+                        email: "educator@eduplatform.edu",
+                        password: "password",
+                        redirect: false,
+                        callbackUrl
+                      });
+                      if (result?.ok) {
+                        window.location.href = callbackUrl;
+                      } else {
+                        window.location.href = `/auth/signin?error=CredentialsSignin`;
+                      }
+                      setIsLoading(false);
+                    }}
                     disabled={isLoading}
                   >
                     <div className="flex items-center gap-3">
