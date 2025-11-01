@@ -204,9 +204,11 @@ export function Navigation({ user }: NavigationProps) {
                     Landing Page
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
                   <LogOut className="h-4 w-4 mr-2" />
