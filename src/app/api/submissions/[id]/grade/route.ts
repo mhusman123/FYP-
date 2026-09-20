@@ -16,15 +16,16 @@ import {
 // POST /api/submissions/[id]/grade - Grade a submission (Educators only)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['EDUCATOR', 'ADMIN'])
 
     const submission = await prisma.submission.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         assignment: {
           include: {
@@ -54,7 +55,7 @@ export async function POST(
     }
 
     const gradedSubmission = await prisma.submission.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         grade: data.grade,
         feedback: data.feedback,

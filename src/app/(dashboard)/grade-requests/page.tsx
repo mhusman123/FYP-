@@ -4,18 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { GradeAdjustmentRequest } from '@/components/features/grade-adjustment/grade-adjustment-request'
-import { 
-  ClipboardCheck, 
-  Calendar, 
-  Clock, 
-  CheckCircle, 
+import {
+  ClipboardCheck,
+  Calendar,
+  Clock,
+  CheckCircle,
   AlertCircle,
   XCircle,
   FileText,
   Eye,
   Plus,
   HelpCircle,
-  Download
+  Download,
+  X
 } from 'lucide-react'
 
 // Mock data - replace with actual API calls

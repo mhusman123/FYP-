@@ -17,14 +17,15 @@ import {
 // GET /api/submissions/[id] - Get a single submission
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
 
     const submission = await prisma.submission.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         assignment: {
           include: {
@@ -107,15 +108,16 @@ export async function GET(
 // PUT /api/submissions/[id] - Update a submission (Students only, before grading)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['STUDENT'])
 
     const submission = await prisma.submission.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         assignment: {
           select: { dueDate: true }
@@ -142,7 +144,7 @@ export async function PUT(
     const isLate = new Date() > submission.assignment.dueDate
 
     const updatedSubmission = await prisma.submission.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...data,
         isLate,
@@ -171,15 +173,16 @@ export async function PUT(
 // DELETE /api/submissions/[id] - Delete a submission (Students only, before grading)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['STUDENT'])
 
     const submission = await prisma.submission.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!submission) {
@@ -196,10 +199,10 @@ export async function DELETE(
     }
 
     await prisma.submission.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
-    return formatSuccessResponse({ id: params.id }, 'Submission deleted successfully')
+    return formatSuccessResponse({ id }, 'Submission deleted successfully')
   } catch (error) {
     return formatErrorResponse(error, 'Failed to delete submission')
   }

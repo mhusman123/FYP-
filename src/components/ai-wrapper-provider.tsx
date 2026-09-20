@@ -10,14 +10,16 @@ interface AIWrapperContextType {
 export const AIWrapperContext = createContext<AIWrapperContextType | undefined>(undefined)
 
 export function AIWrapperProvider({ children }: { children: React.ReactNode }) {
-  const [isAIWrapperActive, setIsAIWrapperActive] = useState(false)
+  const [isAIWrapperActive, setIsAIWrapperActive] = useState(true)
   const [mounted, setMounted] = useState(false)
 
-  // Load preference from localStorage on mount
+  // Load preference from localStorage on mount (defaults to true)
   useEffect(() => {
     const stored = localStorage.getItem('aiWrapperActive')
     if (stored !== null) {
       setIsAIWrapperActive(JSON.parse(stored))
+    } else {
+      setIsAIWrapperActive(true)
     }
     setMounted(true)
   }, [])

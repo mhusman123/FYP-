@@ -4,7 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Clock, Users, TrendingUp, Play, Settings, BarChart3, FileText } from 'lucide-react'
+import {
+  BookOpen,
+  Clock,
+  Users,
+  TrendingUp,
+  Play,
+  Settings,
+  BarChart3,
+  FileText
+} from 'lucide-react'
 import { fetchCourses } from '@/lib/api'
 const educatorCourses = [
   {

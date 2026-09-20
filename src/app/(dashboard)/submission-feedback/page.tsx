@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Bot, 
-  CheckCircle, 
+import {
+  Bot,
+  CheckCircle,
   XCircle,
   Clock,
   FileText,
@@ -20,7 +20,8 @@ import {
   ArrowRight,
   Lightbulb,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  X
 } from 'lucide-react'
 
 interface AutogradingResult {

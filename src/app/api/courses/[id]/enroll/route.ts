@@ -13,15 +13,16 @@ import {
 // POST /api/courses/[id]/enroll - Enroll in a course (Students only)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['STUDENT'])
 
     const course = await prisma.course.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!course) {
@@ -37,7 +38,7 @@ export async function POST(
     const existingEnrollment = await prisma.courseEnrollment.findUnique({
       where: {
         courseId_studentId: {
-          courseId: params.id,
+          courseId: id,
           studentId: session.user.id
         }
       }
@@ -50,7 +51,7 @@ export async function POST(
 
     const enrollment = await prisma.courseEnrollment.create({
       data: {
-        courseId: params.id,
+        courseId: id,
         studentId: session.user.id
       },
       include: {
@@ -73,9 +74,10 @@ export async function POST(
 // DELETE /api/courses/[id]/enroll - Unenroll from a course (Students only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['STUDENT'])
@@ -83,7 +85,7 @@ export async function DELETE(
     const enrollment = await prisma.courseEnrollment.findUnique({
       where: {
         courseId_studentId: {
-          courseId: params.id,
+          courseId: id,
           studentId: session.user.id
         }
       }
@@ -96,7 +98,7 @@ export async function DELETE(
     await prisma.courseEnrollment.delete({
       where: {
         courseId_studentId: {
-          courseId: params.id,
+          courseId: id,
           studentId: session.user.id
         }
       }

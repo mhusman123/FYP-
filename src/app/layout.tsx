@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EduPlatform - Educational Management System",
-  description: "A comprehensive educational platform for students and educators",
+  title: "Sindh School of Technology - Educational Management System",
+  description: "A comprehensive educational platform for students and educators at Sindh School of Technology",
 };
 
 export default function RootLayout({
@@ -24,9 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-[#00141f]">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${geistMono.variable} font-sans antialiased bg-[#00141f]`}
       >
         <AuthProvider>
           {children}

@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  AlertTriangle, 
-  Search, 
+import {
+  AlertTriangle,
+  Search,
   Filter,
   Eye,
   Download,
@@ -16,7 +16,8 @@ import {
   Clock,
   Shield,
   Zap,
-  BarChart3
+  BarChart3,
+  X
 } from 'lucide-react'
 
 // Mock plagiarism report data

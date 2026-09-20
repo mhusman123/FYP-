@@ -4,8 +4,11 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Home } from "lucide-react";
-import { Suspense } from "react";
+import {
+  AlertCircle,
+  Home
+} from 'lucide-react';
+import { Suspense } from 'react';
 
 function ErrorContent() {
   const searchParams = useSearchParams();

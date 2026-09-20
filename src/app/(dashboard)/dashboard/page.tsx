@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { 
-  BookOpen, 
-  Calendar, 
-  Trophy, 
-  TrendingUp, 
+import {
+  BookOpen,
+  Calendar,
+  Trophy,
+  TrendingUp,
   Clock,
   FileText,
   Award,
@@ -250,8 +250,8 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back, {userName}!</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Welcome back, {userName}!</h1>
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mt-1">
           Here&apos;s what&apos;s happening with your courses today.
         </p>
       </div>
@@ -260,12 +260,12 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Points</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Total Points</CardTitle>
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalPoints}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{stats.totalPoints}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Rank #{stats.rank} of {stats.totalStudents}
             </p>
           </CardContent>
@@ -273,12 +273,12 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Grade</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Average Grade</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.averageGrade}%</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{stats.averageGrade}%</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               +2.5% from last month
             </p>
           </CardContent>
@@ -286,14 +286,14 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Assignments</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Assignments</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               {stats.completedAssignments}/{stats.totalAssignments}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {Math.round((stats.completedAssignments / (stats.totalAssignments || 1)) * 100)}% complete
             </p>
           </CardContent>
@@ -301,12 +301,12 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Active Courses</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{courses.length}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{courses.length}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Fall 2025 semester
             </p>
           </CardContent>
@@ -317,11 +317,11 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         {/* Upcoming Deadlines */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" />
               Upcoming Deadlines
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Don&apos;t miss these important dates
             </CardDescription>
           </CardHeader>
@@ -329,19 +329,19 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
             {upcomingDeadlines.map((deadline) => (
               <div key={deadline.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="space-y-1">
-                  <p className="font-medium">{deadline.title}</p>
-                  <p className="text-sm text-muted-foreground">{deadline.course}</p>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
+                  <p className="text-sm font-semibold text-foreground leading-tight">{deadline.title}</p>
+                  <p className="text-xs font-medium text-muted-foreground">{deadline.course}</p>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 font-normal">
+                    <Clock className="h-3.5 w-3.5" />
                     Due {new Date(deadline.dueDate).toLocaleDateString()}
                   </p>
                 </div>
-                <Badge variant={deadline.status === 'submitted' ? 'default' : 'destructive'}>
+                <Badge variant={deadline.status === 'submitted' ? 'default' : 'destructive'} className="text-xs font-semibold">
                   {deadline.status === 'submitted' ? 'Submitted' : 'Pending'}
                 </Badge>
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/assignments">View All Assignments</Link>
             </Button>
           </CardContent>
@@ -350,11 +350,11 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         {/* Course Progress */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <Target className="h-5 w-5 text-primary" />
               Course Progress
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Your progress in enrolled courses
             </CardDescription>
           </CardHeader>
@@ -363,18 +363,18 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
               <div key={course.id} className="space-y-2">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">{course.name}</p>
-                    <p className="text-sm text-muted-foreground">{course.code}</p>
+                    <p className="text-sm font-semibold text-foreground leading-tight">{course.name}</p>
+                    <p className="text-xs font-mono font-medium text-muted-foreground">{course.code}</p>
                   </div>
-                  <span className="text-sm font-medium">{course.progress}%</span>
+                  <span className="text-sm font-bold text-foreground">{course.progress}%</span>
                 </div>
                 <Progress value={course.progress} className="h-2" />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   Next: {course.nextAssignment}
                 </p>
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/courses">View All Courses</Link>
             </Button>
           </CardContent>
@@ -383,11 +383,11 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         {/* Recent Badges */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <Award className="h-5 w-5 text-primary" />
               Recent Achievements
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Badges you&apos;ve earned recently
             </CardDescription>
           </CardHeader>
@@ -396,15 +396,15 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
               <div key={badge.id} className="flex items-center gap-3 p-3 border rounded-lg">
                 <div className="text-2xl">{badge.icon}</div>
                 <div className="flex-1">
-                  <p className="font-medium">{badge.name}</p>
-                  <p className="text-sm text-muted-foreground">{badge.description}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm font-semibold text-foreground leading-tight">{badge.name}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{badge.description}</p>
+                  <p className="text-xs text-muted-foreground font-normal">
                     Earned on {badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString() : 'Recently'}
                   </p>
                 </div>
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/badges">View All Badges</Link>
             </Button>
           </CardContent>
@@ -413,33 +413,33 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight">Quick Actions</CardTitle>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Common tasks and shortcuts
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/submissions">
-                <FileText className="h-4 w-4 mr-2" />
+                <FileText className="h-4 w-4 mr-2 text-primary" />
                 Submit Assignment
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/assignments">
-                <Calendar className="h-4 w-4 mr-2" />
+                <Calendar className="h-4 w-4 mr-2 text-primary" />
                 View Schedule
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/leaderboard">
-                <Trophy className="h-4 w-4 mr-2" />
+                <Trophy className="h-4 w-4 mr-2 text-primary" />
                 Check Leaderboard
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/grade-requests">
-                <Award className="h-4 w-4 mr-2" />
+                <Award className="h-4 w-4 mr-2 text-primary" />
                 Request Grade Review
               </Link>
             </Button>
@@ -457,8 +457,8 @@ function EducatorDashboard({ userName }: { userName: string }) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back, {userName}!</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Welcome back, {userName}!</h1>
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mt-1">
           Here&apos;s your teaching overview and pending tasks.
         </p>
       </div>
@@ -472,12 +472,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Total Students</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{teachingStats.totalStudents}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{teachingStats.totalStudents}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Across {teachingStats.totalCourses} courses
             </p>
           </CardContent>
@@ -485,12 +485,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Grades</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Pending Grades</CardTitle>
             <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{teachingStats.pendingSubmissions}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{teachingStats.pendingSubmissions}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Submissions to review
             </p>
           </CardContent>
@@ -498,12 +498,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Grade</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Average Grade</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{teachingStats.averageGrade}%</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{teachingStats.averageGrade}%</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               +2.1% from last month
             </p>
           </CardContent>
@@ -511,12 +511,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground">Completion Rate</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{teachingStats.completionRate}%</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{teachingStats.completionRate}%</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Student assignment completion
             </p>
           </CardContent>
@@ -527,11 +527,11 @@ function EducatorDashboard({ userName }: { userName: string }) {
         {/* Pending Grading Queue */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ClipboardCheck className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <ClipboardCheck className="h-5 w-5 text-primary" />
               Grading Queue
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Submissions requiring your attention
             </CardDescription>
           </CardHeader>
@@ -539,12 +539,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
             {pendingGrading.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex-1">
-                  <p className="font-medium">{item.studentName}</p>
-                  <p className="text-sm text-muted-foreground">{item.assignment}</p>
-                  <p className="text-xs text-muted-foreground">{item.course}</p>
+                  <p className="text-sm font-semibold text-foreground leading-tight">{item.studentName}</p>
+                  <p className="text-xs font-medium text-muted-foreground">{item.assignment}</p>
+                  <p className="text-xs text-muted-foreground font-normal">{item.course}</p>
                 </div>
                 <div className="text-right space-y-1">
-                  <Badge variant={item.priority === 'high' ? 'destructive' : 'secondary'}>
+                  <Badge variant={item.priority === 'high' ? 'destructive' : 'secondary'} className="text-xs font-semibold">
                     {item.priority}
                   </Badge>
                   <p className="text-xs text-muted-foreground">
@@ -553,7 +553,7 @@ function EducatorDashboard({ userName }: { userName: string }) {
                 </div>
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/grading">View Grading Queue</Link>
             </Button>
           </CardContent>
@@ -562,11 +562,11 @@ function EducatorDashboard({ userName }: { userName: string }) {
         {/* Active Courses */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
               Teaching Courses
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Your active courses this semester
             </CardDescription>
           </CardHeader>
@@ -575,19 +575,19 @@ function EducatorDashboard({ userName }: { userName: string }) {
               <div key={course.id} className="p-3 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="font-medium">{course.name}</p>
-                    <p className="text-sm text-muted-foreground">{course.code}</p>
+                    <p className="text-sm font-semibold text-foreground leading-tight">{course.name}</p>
+                    <p className="text-xs font-mono font-medium text-muted-foreground">{course.code}</p>
                   </div>
-                  <span className="text-sm font-medium">{course.students} students</span>
+                  <span className="text-xs font-semibold text-foreground">{course.students} students</span>
                 </div>
                 {course.pendingGrades > 0 && (
-                  <p className="text-xs text-orange-600">
+                  <p className="text-xs font-medium text-orange-600">
                     {course.pendingGrades} submissions need grading
                   </p>
                 )}
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/courses">Manage All Courses</Link>
             </Button>
           </CardContent>
@@ -596,11 +596,11 @@ function EducatorDashboard({ userName }: { userName: string }) {
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" />
               Recent Activity
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Latest updates from your courses
             </CardDescription>
           </CardHeader>
@@ -615,12 +615,12 @@ function EducatorDashboard({ userName }: { userName: string }) {
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">{activity.message}</p>
+                  <p className="text-sm font-medium text-foreground leading-snug">{activity.message}</p>
                   <p className="text-xs text-muted-foreground">{activity.time}</p>
                 </div>
               </div>
             ))}
-            <Button className="w-full" variant="outline" asChild>
+            <Button className="w-full font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/analytics">View Analytics Dashboard</Link>
             </Button>
           </CardContent>
@@ -629,33 +629,33 @@ function EducatorDashboard({ userName }: { userName: string }) {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight">Quick Actions</CardTitle>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               Common teaching tasks
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/grading">
-                <ClipboardCheck className="h-4 w-4 mr-2" />
+                <ClipboardCheck className="h-4 w-4 mr-2 text-primary" />
                 Review Submissions
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/students">
-                <Users className="h-4 w-4 mr-2" />
+                <Users className="h-4 w-4 mr-2 text-primary" />
                 Manage Students
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/analytics">
-                <BarChart3 className="h-4 w-4 mr-2" />
+                <BarChart3 className="h-4 w-4 mr-2 text-primary" />
                 View Analytics
               </Link>
             </Button>
-            <Button className="w-full justify-start" variant="outline" asChild>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/grade-requests">
-                <AlertTriangle className="h-4 w-4 mr-2" />
+                <AlertTriangle className="h-4 w-4 mr-2 text-primary" />
                 Grade Requests
               </Link>
             </Button>

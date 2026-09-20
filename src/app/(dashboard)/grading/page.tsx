@@ -3,15 +3,16 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  FileText, 
-  Clock, 
-  Download, 
+import {
+  FileText,
+  Clock,
+  Download,
   Eye,
   CheckCircle,
   AlertTriangle,
   Filter,
-  Search
+  Search,
+  X
 } from 'lucide-react'
 
 // Mock data for grading queue

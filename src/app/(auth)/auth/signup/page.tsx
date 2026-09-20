@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,17 +10,18 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { 
-  GraduationCap, 
-  User, 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
+import {
+  GraduationCap,
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
   ArrowLeft,
   CheckCircle,
-  AlertCircle
-} from "lucide-react";
+  AlertCircle,
+  Sparkles
+} from 'lucide-react';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ export default function SignUpPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setError(""); // Clear error when user starts typing
+    setError("");
   };
 
   const validateForm = () => {
@@ -62,7 +63,7 @@ export default function SignUpPage() {
       return false;
     }
     if (!formData.role) {
-      setError("Please select your role");
+      setError("Please select a role");
       return false;
     }
     return true;
@@ -79,128 +80,107 @@ export default function SignUpPage() {
     setError("");
 
     try {
-      console.log('Starting registration...', { email: formData.email, name: formData.name });
-      
-      // First, create the user account
-      const registerResponse = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
           password: formData.password,
-          role: formData.role,
+          role: formData.role
         }),
       });
 
-      console.log('Registration response status:', registerResponse.status);
+      const data = await response.json();
 
-      let registerData;
-      try {
-        registerData = await registerResponse.json();
-      } catch (jsonError) {
-        console.error('Failed to parse registration response:', jsonError);
-        setError("Server error. Please try again later.");
-        return;
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
       }
 
-      if (!registerResponse.ok) {
-        console.error('Registration failed:', registerData);
-        setError(registerData.error || registerData.details || "Failed to create account. Please try again.");
-        return;
-      }
-
-      console.log('Registration successful, attempting sign in...');
-
-      // Then, sign in with the new credentials
       const result = await signIn("credentials", {
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
-        redirect: false,
-        callbackUrl: "/dashboard"
+        redirect: false
       });
 
-      console.log('Sign in result:', result);
-
       if (result?.error) {
-        console.error('Sign in failed:', result.error);
-        setError("Account created successfully! Please try signing in manually.");
-        // Redirect to signin page after 2 seconds
         setTimeout(() => {
           window.location.href = "/auth/signin";
         }, 2000);
       } else if (result?.ok) {
-        console.log('Sign in successful, redirecting to dashboard...');
-        // Redirect to dashboard on success
         window.location.href = "/dashboard";
       }
     } catch (error) {
       console.error("Signup error details:", error);
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
-      setError(`Error: ${errorMessage}. Please try again.`);
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between relative overflow-hidden">
+      {/* Ambient Cyber Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-b from-cyan-600/15 via-blue-700/10 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#0ea5e915_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e915_1px,transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
+
       {/* Header */}
-      <div className="flex items-center justify-between p-6">
-        <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+      <header className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between p-4 sm:p-6">
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-cyan-300 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-cyan-500/30 backdrop-blur-sm"
+        >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Home</span>
         </Link>
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg">
-            <GraduationCap className="h-6 w-6 text-white" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            EduPlatform
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Sindh School of Technology"
+            className="h-9 sm:h-11 w-auto max-w-[220px] object-contain drop-shadow-[0_2px_12px_rgba(6,182,212,0.3)]"
+          />
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="flex items-center justify-center px-4 pb-12">
-        <div className="w-full max-w-md space-y-8">
+      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md space-y-6">
           {/* Sign Up Card */}
-          <Card className="border-0 shadow-xl">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-3xl font-bold">Join EduPlatform</CardTitle>
-              <CardDescription className="text-base">
+          <Card className="bg-[#001724]/90 border border-cyan-500/30 text-white shadow-2xl backdrop-blur-xl rounded-2xl overflow-hidden">
+            <CardHeader className="text-center pb-3 border-b border-cyan-500/20 bg-gradient-to-b from-white/5 to-transparent">
+              <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/40 mx-auto mb-2">
+                <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+                <span>New Account Registration</span>
+              </div>
+              <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Join SST Portal</CardTitle>
+              <CardDescription className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-1">
                 Create your account and start your educational journey
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 p-6">
               {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
+                <Alert variant="destructive" className="bg-red-950/70 border-red-500/50 text-red-200">
+                  <AlertCircle className="h-4 w-4 text-red-400" />
+                  <AlertDescription className="text-xs font-medium">{error}</AlertDescription>
                 </Alert>
               )}
 
-              {/* Demo Notice */}
-              <div className="text-center">
-                <Badge variant="secondary" className="px-3 py-1">
-                  ℹ️ Demo Mode - Try demo accounts or create a test account
-                </Badge>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3.5">
                 {/* Full Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="name" className="text-xs font-semibold text-slate-300">Full Name</Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <User className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       id="name"
                       type="text"
                       placeholder="Enter your full name"
-                      className="pl-10"
+                      className="pl-10 text-xs sm:text-sm bg-[#00121d] border-cyan-900/60 text-white placeholder:text-slate-500 focus:border-cyan-400 h-10 rounded-xl"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
                       required
@@ -209,15 +189,15 @@ export default function SignUpPage() {
                 </div>
 
                 {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-xs font-semibold text-slate-300">Email Address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter your email address"
-                      className="pl-10"
+                      placeholder="name@example.com"
+                      className="pl-10 text-xs sm:text-sm bg-[#00121d] border-cyan-900/60 text-white placeholder:text-slate-500 focus:border-cyan-400 h-10 rounded-xl"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       required
@@ -226,23 +206,23 @@ export default function SignUpPage() {
                 </div>
 
                 {/* Role Selection */}
-                <div className="space-y-2">
-                  <Label htmlFor="role">I am a...</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="role" className="text-xs font-semibold text-slate-300">I am a...</Label>
                   <Select value={formData.role} onValueChange={(value) => handleInputChange("role", value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="text-xs sm:text-sm bg-[#00121d] border-cyan-900/60 text-white h-10 rounded-xl">
                       <SelectValue placeholder="Select your role" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="STUDENT">
-                        <div className="flex items-center gap-2">
-                          <GraduationCap className="h-4 w-4" />
+                    <SelectContent className="bg-[#001724] border-cyan-500/30 text-white">
+                      <SelectItem value="STUDENT" className="focus:bg-[#8D1B2D] focus:text-white">
+                        <div className="flex items-center gap-2 text-xs sm:text-sm font-medium">
+                          <GraduationCap className="h-4 w-4 text-cyan-300" />
                           <span>Student</span>
                         </div>
                       </SelectItem>
-                      <SelectItem value="EDUCATOR">
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          <span>Educator/Teacher</span>
+                      <SelectItem value="EDUCATOR" className="focus:bg-[#8D1B2D] focus:text-white">
+                        <div className="flex items-center gap-2 text-xs sm:text-sm font-medium">
+                          <User className="h-4 w-4 text-cyan-300" />
+                          <span>Educator / Teacher</span>
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -250,15 +230,15 @@ export default function SignUpPage() {
                 </div>
 
                 {/* Password */}
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className="text-xs font-semibold text-slate-300">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
-                      className="pl-10 pr-10"
+                      placeholder="At least 8 characters"
+                      className="pl-10 pr-10 text-xs sm:text-sm bg-[#00121d] border-cyan-900/60 text-white placeholder:text-slate-500 focus:border-cyan-400 h-10 rounded-xl"
                       value={formData.password}
                       onChange={(e) => handleInputChange("password", e.target.value)}
                       required
@@ -267,31 +247,24 @@ export default function SignUpPage() {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 text-slate-400 hover:text-white hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Password must be at least 8 characters long
                   </div>
                 </div>
 
                 {/* Confirm Password */}
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="confirmPassword" className="text-xs font-semibold text-slate-300">Confirm Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      className="pl-10 pr-10"
+                      placeholder="Re-enter your password"
+                      className="pl-10 pr-10 text-xs sm:text-sm bg-[#00121d] border-cyan-900/60 text-white placeholder:text-slate-500 focus:border-cyan-400 h-10 rounded-xl"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                       required
@@ -300,71 +273,36 @@ export default function SignUpPage() {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      className="absolute right-0 top-0 h-full px-3 text-slate-400 hover:text-white hover:bg-transparent"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Creating Account..." : "Create Account"}
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-semibold text-xs sm:text-sm h-11 rounded-xl shadow-lg transition-all mt-2" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating Account..." : "Register Account"}
                 </Button>
               </form>
 
               {/* Sign In Link */}
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
+              <div className="text-center pt-2">
+                <p className="text-xs text-slate-400">
                   Already have an account?{" "}
-                  <Link href="/auth/signin" className="text-primary hover:text-primary/80 font-medium">
+                  <Link href="/auth/signin" className="text-cyan-300 hover:text-cyan-200 font-semibold underline underline-offset-2">
                     Sign in here
                   </Link>
                 </p>
               </div>
-
-              {/* Terms */}
-              <div className="text-xs text-center text-muted-foreground">
-                By creating an account, you agree to our{" "}
-                <Link href="#" className="hover:text-primary">Terms of Service</Link>
-                {" "}and{" "}
-                <Link href="#" className="hover:text-primary">Privacy Policy</Link>.
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Benefits Card */}
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-6">
-              <div className="text-center mb-4">
-                <h3 className="font-semibold text-gray-900">What you&apos;ll get</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-600">Free 30-day trial with all features</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-600">AI-powered autograding system</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-600">Advanced analytics and insights</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-600">24/7 customer support</span>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

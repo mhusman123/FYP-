@@ -1,15 +1,12 @@
 'use client'
 
-import { useState, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { AIWrapperContext } from '@/components/ai-wrapper-provider'
-import { Sparkles } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +32,13 @@ import {
   ClipboardCheck,
   AlertTriangle,
   FileCheck,
-  Bot
+  Bot,
+  ChevronDown,
+  Sparkles,
+  User as UserIcon,
+  Camera,
+  Phone,
+  Lock
 } from 'lucide-react'
 
 interface User {
@@ -52,189 +55,397 @@ interface NavigationProps {
 }
 
 const studentNavItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/courses', label: 'My Courses', icon: BookOpen },
-  { href: '/assignments', label: 'Assignments', icon: FileText },
-  { href: '/submissions', label: 'Submissions', icon: Upload },
-  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { href: '/badges', label: 'My Badges', icon: Award },
-  { href: '/submission-feedback', label: 'AI Feedback', icon: Bot },
-  { href: '/grade-requests', label: 'Grade Requests', icon: ClipboardCheck },
+  { href: '/dashboard', label: 'DASHBOARD', icon: Home },
+  { href: '/courses', label: 'MY COURSES', icon: BookOpen },
+  { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
+  { href: '/submissions', label: 'SUBMISSIONS', icon: Upload },
+  { href: '/leaderboard', label: 'LEADERBOARD', icon: Trophy },
+  { href: '/badges', label: 'MY BADGES', icon: Award },
+  { href: '/submission-feedback', label: 'AI FEEDBACK', icon: Bot },
+  { href: '/grade-requests', label: 'GRADE REQUESTS', icon: ClipboardCheck },
 ]
 
 const educatorNavItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/courses', label: 'My Courses', icon: BookOpen },
-  { href: '/assignments', label: 'Assignments', icon: FileText },
-  { href: '/grading', label: 'Grading', icon: FileCheck },
-  { href: '/autograding', label: 'Autograding', icon: Bot },
-  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/students', label: 'Students', icon: Users },
-  { href: '/plagiarism', label: 'Plagiarism Reports', icon: AlertTriangle },
-  { href: '/grade-requests', label: 'Grade Requests', icon: ClipboardCheck },
+  { href: '/dashboard', label: 'DASHBOARD', icon: Home },
+  { href: '/courses', label: 'MY COURSES', icon: BookOpen },
+  { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
+  { href: '/grading', label: 'GRADING', icon: FileCheck },
+  { href: '/autograding', label: 'AUTOGRADING', icon: Bot },
+  { href: '/analytics', label: 'ANALYTICS', icon: BarChart3 },
+  { href: '/students', label: 'STUDENTS', icon: Users },
+  { href: '/plagiarism', label: 'PLAGIARISM REPORTS', icon: AlertTriangle },
+  { href: '/grade-requests', label: 'GRADE REQUESTS', icon: ClipboardCheck },
 ]
 
 export function Navigation({ user }: NavigationProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState(user)
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false)
+  const [hasLogoImg, setHasLogoImg] = useState(true)
+  const [avatarError, setAvatarError] = useState(false)
   const pathname = usePathname()
-  const aiContext = useContext(AIWrapperContext)
   
-  const navItems = user.role === 'STUDENT' ? studentNavItems : educatorNavItems
+  const navItems = currentUser.role === 'STUDENT' ? studentNavItems : educatorNavItems
 
-  const NavItem = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }) => (
-    <Link
-      href={href}
-      className={cn(
-        'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors',
-        pathname === href
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-      )}
-      onClick={() => setIsMobileMenuOpen(false)}
-    >
-      <Icon className="h-4 w-4" />
-      {label}
-    </Link>
-  )
+  // Sync state if user prop changes
+  useEffect(() => {
+    setCurrentUser(user)
+    setAvatarError(false)
+  }, [user])
+
+  // Real-time listener for instantaneous profile picture updates across portal
+  useEffect(() => {
+    const handleProfileUpdate = (event: Event) => {
+      const customEv = event as CustomEvent<{ name?: string; avatar?: string; email?: string }>
+      if (customEv.detail) {
+        setCurrentUser(prev => ({
+          ...prev,
+          name: customEv.detail.name ?? prev.name,
+          avatar: customEv.detail.avatar !== undefined ? customEv.detail.avatar : prev.avatar,
+          email: customEv.detail.email ?? prev.email,
+        }))
+        setAvatarError(false)
+      }
+    }
+    window.addEventListener('user-profile-updated', handleProfileUpdate)
+    return () => {
+      window.removeEventListener('user-profile-updated', handleProfileUpdate)
+    }
+  }, [])
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-background lg:border-r">
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center gap-2 px-6 py-4 border-b">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">EduPlatform</span>
-          </div>
-
-          {/* User Info */}
-          <div className="px-6 py-4 border-b space-y-3">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                {user.role === 'STUDENT' && user.totalPoints !== undefined && (
-                  <Badge variant="secondary" className="mt-1">
-                    {user.totalPoints} pts
-                  </Badge>
+      {/* Single Unified Upper Bar */}
+      <header className="sticky top-0 z-40 w-full bg-[#001724]/40 backdrop-blur-md border-b border-cyan-500/20 shadow-md text-white">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-1 sm:gap-2 lg:gap-4">
+            
+            {/* Left: Brand Logo */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Link href="/dashboard" className="flex items-center gap-2 group">
+                {hasLogoImg ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src="/logo.png"
+                    alt="Sindh School of Technology"
+                    className="h-7 sm:h-8 md:h-9 w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[180px] object-contain hover:opacity-90 transition-opacity drop-shadow-md"
+                    onError={() => setHasLogoImg(false)}
+                  />
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-lg bg-[#8D1B2D] flex items-center justify-center text-white shadow-sm">
+                      <GraduationCap className="h-5 w-5" />
+                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-white hidden sm:inline">
+                      Sindh School of Technology
+                    </span>
+                  </div>
                 )}
-              </div>
+              </Link>
             </div>
-            {/* AI Wrapper Toggle */}
-            {aiContext && (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant={aiContext.isAIWrapperActive ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => aiContext.setIsAIWrapperActive(!aiContext.isAIWrapperActive)}
-                  className={cn(
-                    'transition-all duration-300',
-                    aiContext.isAIWrapperActive && 'bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/50'
-                  )}
-                >
-                  <Sparkles className={cn(
-                    'h-4 w-4 mr-2 transition-all duration-300',
-                    aiContext.isAIWrapperActive && 'fill-white animate-pulse'
-                  )} />
-                  {aiContext.isAIWrapperActive ? 'AI Enabled' : 'AI Disabled'}
-                </Button>
-                {aiContext.isAIWrapperActive && (
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 animate-pulse">
-                    Active
-                  </Badge>
-                )}
+
+            {/* Center: Clean Text Navigation Buttons (No Slider, No Icons/Stickers) */}
+            <nav className="hidden md:flex flex-1 items-center justify-center px-1">
+              <div className="flex items-center justify-center gap-0.5 md:gap-1 lg:gap-1.5">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        'px-1.5 py-1 md:px-2 md:py-1 lg:px-2.5 lg:py-1 text-[10px] md:text-[11px] lg:text-[11.5px] xl:text-xs font-bold tracking-tight md:tracking-normal rounded-sm transition-all whitespace-nowrap cursor-pointer',
+                        isActive
+                          ? 'bg-cyan-500/15 text-cyan-300 border-b-2 border-cyan-400 font-bold shadow-xs'
+                          : 'text-slate-300 hover:text-white hover:bg-white/10'
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                })}
               </div>
-            )}
-          </div>
+            </nav>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-4 space-y-1">
-            {navItems.map((item) => (
-              <NavItem key={item.href} {...item} />
-            ))}
-          </nav>
+            {/* Right: Circular User Profile Dropdown Button & Mobile Menu Toggle */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              
+              {/* Circular User Profile Dropdown Button */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#8D1B2D] p-0.5 border-2 border-cyan-400/60 hover:border-cyan-300 hover:scale-105 transition-all cursor-pointer shadow-md focus:outline-hidden focus:ring-2 focus:ring-cyan-400/80 flex items-center justify-center flex-shrink-0 overflow-hidden"
+                    title={currentUser.name}
+                    aria-label="User profile menu"
+                  >
+                    {currentUser.avatar && !avatarError ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={currentUser.avatar}
+                        alt={currentUser.name}
+                        className="h-full w-full rounded-full object-cover"
+                        onError={() => setAvatarError(true)}
+                      />
+                    ) : (
+                      <span className="text-white font-extrabold text-sm sm:text-base select-none">
+                        {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                      </span>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
 
-          {/* Settings & Logout */}
-          <div className="px-4 py-4 border-t space-y-1">
-            <NavItem href="/" label="Landing Page" icon={Home} />
-            <NavItem href="/settings" label="Settings" icon={Settings} />
-            <button 
-              onClick={() => signOut({ callbackUrl: '/' })}
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted w-full"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="w-72 bg-[#001724] border border-cyan-500/30 text-white shadow-2xl rounded-xl p-2 z-50 animate-in fade-in-80 zoom-in-95"
+                >
+                  {/* User Profile Header */}
+                  <div className="p-3 bg-[#001f30] rounded-lg border border-cyan-500/20 mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full border-2 border-[#8D1B2D] shadow-sm flex-shrink-0 overflow-hidden bg-[#8D1B2D] flex items-center justify-center">
+                        {currentUser.avatar && !avatarError ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={currentUser.avatar}
+                            alt={currentUser.name}
+                            className="h-full w-full object-cover"
+                            onError={() => setAvatarError(true)}
+                          />
+                        ) : (
+                          <span className="text-sm text-white font-bold">
+                            {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                          </span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <p className="text-xs font-bold text-white truncate leading-tight">
+                            {currentUser.name}
+                          </p>
+                          <Badge className="bg-[#8D1B2D] text-white text-[9px] px-1.5 py-0 uppercase font-mono font-semibold border-none">
+                            {currentUser.role}
+                          </Badge>
+                        </div>
+                        <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                          {currentUser.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    {currentUser.totalPoints !== undefined && (
+                      <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
+                        <span className="text-slate-400 flex items-center gap-1">
+                          <Sparkles className="h-3 w-3 text-cyan-300" /> Academic Points:
+                        </span>
+                        <span className="font-bold text-cyan-300">{currentUser.totalPoints} pts</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <DropdownMenuLabel className="text-[10px] uppercase font-bold tracking-wider text-cyan-400 px-2 py-1">
+                    Profile & Account Settings
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <UserIcon className="h-4 w-4 text-cyan-300" />
+                      <span>Edit Profile & Photo</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <Phone className="h-4 w-4 text-cyan-300" />
+                      <span>Change Email & Contact</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <Lock className="h-4 w-4 text-cyan-300" />
+                      <span>Password & Security</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="bg-white/10 my-1" />
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <BarChart3 className="h-4 w-4 text-cyan-300" />
+                      <span>Portal Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <Home className="h-4 w-4 text-cyan-300" />
+                      <span>Public Landing Page</span>
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="bg-white/10 my-1" />
+
+                  {/* Sign Out Action */}
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-rose-300 hover:text-rose-100 hover:bg-rose-500/20 rounded-lg cursor-pointer transition-colors"
+                  >
+                    <LogOut className="h-4 w-4 text-rose-400" />
+                    <span>Sign Out from Portal</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Mobile Hamburger Drawer Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsMobileDrawerOpen(true)}
+                className="flex md:hidden items-center justify-center h-8 w-8 rounded-lg border border-cyan-500/30 bg-[#002E40] text-white hover:bg-[#003850] transition-colors"
+                aria-label="Open mobile portal navigation"
+              >
+                <Menu className="h-4 w-4" />
+              </button>
+            </div>
+
           </div>
         </div>
-      </aside>
-
-      {/* Mobile Header */}
-      <header className="lg:hidden bg-background border-b px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-6 w-6 text-primary" />
-            <span className="text-lg font-bold">EduPlatform</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {user.role === 'STUDENT' && user.totalPoints !== undefined && (
-              <Badge variant="secondary">{user.totalPoints} pts</Badge>
-            )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/">
-                    <Home className="h-4 w-4 mr-2" />
-                    Landing Page
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <nav className="mt-4 space-y-1">
-            {navItems.map((item) => (
-              <NavItem key={item.href} {...item} />
-            ))}
-          </nav>
-        )}
       </header>
+
+      {/* Mobile Slide-over Drawer (for Small Screens) */}
+      {isMobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end animate-in fade-in duration-200">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsMobileDrawerOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Drawer Sidebar */}
+          <aside className="relative z-10 w-80 max-w-[85vw] h-full bg-[#001724] text-white border-l border-cyan-500/20 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
+            
+            {/* Drawer Header: Profile */}
+            <div className="p-4 border-b border-cyan-500/20 bg-[#00121d] flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="h-10 w-10 rounded-full border-2 border-cyan-500/40 shadow-xs flex-shrink-0 overflow-hidden bg-[#8D1B2D] flex items-center justify-center">
+                  {currentUser.avatar && !avatarError ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={currentUser.avatar}
+                      alt={currentUser.name}
+                      className="h-full w-full object-cover"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <span className="text-sm text-white font-bold">
+                      {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <p className="text-sm font-bold tracking-tight truncate text-white leading-tight">
+                      {currentUser.name}
+                    </p>
+                    <Badge className="bg-[#8D1B2D] text-white text-[9px] px-1.5 py-0 uppercase font-mono font-semibold border-none">
+                      {currentUser.role}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-400 truncate leading-tight mt-0.5 font-normal">
+                    {currentUser.email}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="h-8 w-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10"
+                aria-label="Close menu"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Drawer Body: Navigation Links */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-1">
+              <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-1">
+                Portal Navigation
+              </p>
+
+              {navItems.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileDrawerOpen(false)}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-lg transition-colors',
+                      isActive
+                        ? 'bg-cyan-500/15 text-cyan-300 border-l-2 border-cyan-400 font-bold shadow-xs'
+                        : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    )}
+                  >
+                    <Icon className={cn('h-4 w-4', isActive ? 'text-cyan-300' : 'text-cyan-400/70')} />
+                    <span>{item.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Drawer Footer: Fast Links & Sign Out */}
+            <div className="p-4 border-t border-cyan-500/20 bg-[#00121d] space-y-2">
+              <Link
+                href="/"
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md text-slate-300 hover:text-white hover:bg-white/10"
+              >
+                <Home className="h-4 w-4 text-cyan-300" />
+                <span>Public Landing Page</span>
+              </Link>
+              
+              <Link
+                href="/settings"
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md text-slate-300 hover:text-white hover:bg-white/10"
+              >
+                <Settings className="h-4 w-4 text-cyan-300" />
+                <span>Account Settings</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileDrawerOpen(false)
+                  signOut({ callbackUrl: '/' })
+                }}
+                className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md bg-[#8D1B2D] text-white hover:bg-[#741322] w-full text-left"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+
+          </aside>
+        </div>
+      )}
     </>
   )
 }

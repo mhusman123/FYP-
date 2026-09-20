@@ -16,14 +16,15 @@ import {
 // GET /api/courses/[id] - Get a single course
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
 
     const course = await prisma.course.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         educator: {
           select: { id: true, name: true, email: true }
@@ -99,15 +100,16 @@ export async function GET(
 // PUT /api/courses/[id] - Update a course (Educators only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['EDUCATOR', 'ADMIN'])
 
     const course = await prisma.course.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { educatorId: true }
     })
 
@@ -127,7 +129,7 @@ export async function PUT(
       const existingCourse = await prisma.course.findFirst({
         where: { 
           code: data.code,
-          id: { not: params.id }
+          id: { not: id }
         }
       })
 
@@ -138,7 +140,7 @@ export async function PUT(
     }
 
     const updatedCourse = await prisma.course.update({
-      where: { id: params.id },
+      where: { id },
       data,
       include: {
         educator: {
@@ -186,15 +188,16 @@ export async function PUT(
 // DELETE /api/courses/[id] - Delete a course (Educators only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['EDUCATOR', 'ADMIN'])
 
     const course = await prisma.course.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { educatorId: true }
     })
 
@@ -208,10 +211,10 @@ export async function DELETE(
     }
 
     await prisma.course.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
-    return formatSuccessResponse({ id: params.id }, 'Course deleted successfully')
+    return formatSuccessResponse({ id }, 'Course deleted successfully')
   } catch (error) {
     return formatErrorResponse(error, 'Failed to delete course')
   }

@@ -16,14 +16,15 @@ import {
 // GET /api/assignments/[id] - Get a single assignment
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
 
     const assignment = await prisma.assignment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         course: {
           select: {
@@ -165,15 +166,16 @@ export async function GET(
 // PUT /api/assignments/[id] - Update an assignment (Educators only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['EDUCATOR', 'ADMIN'])
 
     const assignment = await prisma.assignment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         course: {
           select: { educatorId: true }
@@ -193,7 +195,7 @@ export async function PUT(
     const data = await validateRequestBody(request, updateAssignmentSchema)
 
     const updatedAssignment = await prisma.assignment.update({
-      where: { id: params.id },
+      where: { id },
       data,
       include: {
         course: {
@@ -240,15 +242,16 @@ export async function PUT(
 // DELETE /api/assignments/[id] - Delete an assignment (Educators only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     requireAuth(session)
     requireRole(session, ['EDUCATOR', 'ADMIN'])
 
     const assignment = await prisma.assignment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         course: {
           select: { educatorId: true }
@@ -266,10 +269,10 @@ export async function DELETE(
     }
 
     await prisma.assignment.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
-    return formatSuccessResponse({ id: params.id }, 'Assignment deleted successfully')
+    return formatSuccessResponse({ id }, 'Assignment deleted successfully')
   } catch (error) {
     return formatErrorResponse(error, 'Failed to delete assignment')
   }
