@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 
 interface LandingHeaderProps {
-  session: any
+  session?: unknown | null
 }
 
 export function LandingHeader({ session }: LandingHeaderProps) {

@@ -135,7 +135,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const updateData: any = {}
+    const updateData: Record<string, unknown> = {}
 
     if (name !== undefined && name.trim().length > 0) {
       updateData.name = name.trim()

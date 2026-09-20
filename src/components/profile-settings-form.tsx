@@ -235,8 +235,9 @@ export function ProfileSettingsForm({ initialUser }: ProfileSettingsFormProps) {
 
       // Refresh server components to propagate updated name and avatar in navigation
       router.refresh()
-    } catch (err: any) {
-      setErrorMessage(err.message || 'An unexpected error occurred while saving')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred while saving'
+      setErrorMessage(msg)
     } finally {
       setLoading(false)
     }

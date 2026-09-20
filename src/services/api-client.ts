@@ -2,14 +2,14 @@
  * Unified API Client with error handling and response formatting
  */
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
   message?: string;
 }
 
-export async function apiClient<T = any>(
+export async function apiClient<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
@@ -39,10 +39,11 @@ export async function apiClient<T = any>(
       data: json?.data !== undefined ? json.data : json,
       message: json?.message,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Network request failed';
     return {
       success: false,
-      error: error.message || 'Network request failed',
+      error: msg,
     };
   }
 }
