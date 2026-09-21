@@ -18,7 +18,10 @@ import {
   BarChart3,
   ClipboardCheck,
   AlertTriangle,
-  GraduationCap
+  GraduationCap,
+  Brain,
+  Sparkles,
+  Zap
 } from 'lucide-react'
 import { fetchCourses, fetchAssignments, fetchBadges } from '@/lib/api'
 import { AiInsightsPanel } from '@/components/features/ai-insights'
@@ -258,6 +261,57 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
         </p>
       </div>
 
+      {/* AI Learning & Mastery Arena Banner */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gradient-to-br from-indigo-950/80 via-slate-900 to-indigo-900/60 p-5 rounded-2xl border border-indigo-500/30 text-white shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div className="space-y-2 relative z-10">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-indigo-600 text-white border-0 text-[11px] px-2.5 py-0.5 font-bold">
+                <Brain className="h-3 w-3 mr-1 text-cyan-300" />
+                Socratic AI 1-on-1 Mentor
+              </Badge>
+              <span className="text-xs text-indigo-300 font-semibold">GPT-4o / DeepSeek-R1</span>
+            </div>
+            <h3 className="text-lg font-bold text-white tracking-tight">Need 1-on-1 Conceptual Guidance?</h3>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md">
+              Ask deep questions, get step-by-step calculus & code derivations, and receive pedagogical hints without spoilers.
+            </p>
+          </div>
+          <div className="pt-4 relative z-10">
+            <Button asChild className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold text-xs h-9 px-4 rounded-xl shadow cursor-pointer">
+              <Link href="/ai-tutor">
+                <Brain className="h-3.5 w-3.5 mr-1.5 text-cyan-200" />
+                Launch Socratic Mentor (+10 pts)
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-cyan-950/80 via-slate-900 to-blue-900/60 p-5 rounded-2xl border border-cyan-500/30 text-white shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div className="space-y-2 relative z-10">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-cyan-600 text-white border-0 text-[11px] px-2.5 py-0.5 font-bold">
+                <Zap className="h-3 w-3 mr-1 text-amber-300" />
+                Dynamic AI Quiz Arena
+              </Badge>
+              <span className="text-xs text-cyan-300 font-semibold">Adaptive Exam Generator</span>
+            </div>
+            <h3 className="text-lg font-bold text-white tracking-tight">Test Your Mastery & Earn Points</h3>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md">
+              Generate timed practice tests across STEM, Computer Science, and Sindh history with instant scoring and explanations.
+            </p>
+          </div>
+          <div className="pt-4 relative z-10">
+            <Button asChild className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs h-9 px-4 rounded-xl shadow cursor-pointer">
+              <Link href="/quiz-generator">
+                <Zap className="h-3.5 w-3.5 mr-1.5 text-amber-300" />
+                Start Quiz Arena (+25 pts/Q)
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -421,6 +475,18 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-500/30" variant="outline" asChild>
+              <Link href="/ai-tutor">
+                <Brain className="h-4 w-4 mr-2 text-indigo-500" />
+                Socratic AI 1-on-1 Mentor
+              </Link>
+            </Button>
+            <Button className="w-full justify-start font-semibold text-xs tracking-normal bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border-cyan-500/30" variant="outline" asChild>
+              <Link href="/quiz-generator">
+                <Zap className="h-4 w-4 mr-2 text-amber-500" />
+                AI Quiz Arena (Practice Tests)
+              </Link>
+            </Button>
             <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
               <Link href="/submissions">
                 <FileText className="h-4 w-4 mr-2 text-primary" />
@@ -437,12 +503,6 @@ function StudentDashboard({ userName, data }: { userName: string; data?: Dashboa
               <Link href="/leaderboard">
                 <Trophy className="h-4 w-4 mr-2 text-primary" />
                 Check Leaderboard
-              </Link>
-            </Button>
-            <Button className="w-full justify-start font-semibold text-xs tracking-normal" variant="outline" asChild>
-              <Link href="/grade-requests">
-                <Award className="h-4 w-4 mr-2 text-primary" />
-                Request Grade Review
               </Link>
             </Button>
           </CardContent>

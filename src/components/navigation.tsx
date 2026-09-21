@@ -38,7 +38,9 @@ import {
   User as UserIcon,
   Camera,
   Phone,
-  Lock
+  Lock,
+  Brain,
+  Zap
 } from 'lucide-react'
 
 interface User {
@@ -56,6 +58,8 @@ interface NavigationProps {
 
 const studentNavItems = [
   { href: '/dashboard', label: 'DASHBOARD', icon: Home },
+  { href: '/ai-tutor', label: 'AI TUTOR', icon: Brain },
+  { href: '/quiz-generator', label: 'QUIZ ARENA', icon: Sparkles },
   { href: '/courses', label: 'MY COURSES', icon: BookOpen },
   { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
   { href: '/submissions', label: 'SUBMISSIONS', icon: Upload },
@@ -67,6 +71,8 @@ const studentNavItems = [
 
 const educatorNavItems = [
   { href: '/dashboard', label: 'DASHBOARD', icon: Home },
+  { href: '/ai-tutor', label: 'AI TUTOR', icon: Brain },
+  { href: '/quiz-generator', label: 'QUIZ ARENA', icon: Sparkles },
   { href: '/courses', label: 'MY COURSES', icon: BookOpen },
   { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
   { href: '/grading', label: 'GRADING', icon: FileCheck },
