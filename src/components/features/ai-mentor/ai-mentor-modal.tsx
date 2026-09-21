@@ -27,11 +27,29 @@ export function AIMentorModal() {
 
       {/* Modal Dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl h-[600px] p-0 gap-0 animate-slide-up">
+        <DialogContent className="max-w-3xl h-[620px] p-0 gap-0 animate-slide-up overflow-hidden flex flex-col">
+          <div className="bg-[#17143A] px-4 py-2.5 border-b border-indigo-500/20 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-cyan-400" />
+              <span className="text-xs sm:text-sm font-bold text-white">SST AI Pedagogical Assistant</span>
+            </div>
+            <div className="flex items-center gap-2 pr-6">
+              <Button asChild size="sm" variant="ghost" className="h-7 text-[11px] font-semibold text-cyan-300 hover:text-white hover:bg-white/10 px-2 rounded-lg" onClick={() => setIsOpen(false)}>
+                <a href="/ai-hub">
+                  AI Hub ↗
+                </a>
+              </Button>
+              <Button asChild size="sm" variant="ghost" className="h-7 text-[11px] font-semibold text-amber-300 hover:text-white hover:bg-white/10 px-2 rounded-lg" onClick={() => setIsOpen(false)}>
+                <a href="/quiz-generator">
+                  Quiz Arena ↗
+                </a>
+              </Button>
+            </div>
+          </div>
           <DialogHeader className="sr-only">
             <DialogTitle>AI Mentor Chat</DialogTitle>
           </DialogHeader>
-          <AIMentorChat className="h-full" />
+          <AIMentorChat className="flex-1" />
         </DialogContent>
       </Dialog>
     </>

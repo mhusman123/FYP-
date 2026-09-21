@@ -58,8 +58,6 @@ interface NavigationProps {
 
 const studentNavItems = [
   { href: '/dashboard', label: 'DASHBOARD', icon: Home },
-  { href: '/ai-tutor', label: 'AI TUTOR', icon: Brain },
-  { href: '/quiz-generator', label: 'QUIZ ARENA', icon: Sparkles },
   { href: '/courses', label: 'MY COURSES', icon: BookOpen },
   { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
   { href: '/submissions', label: 'SUBMISSIONS', icon: Upload },
@@ -71,8 +69,6 @@ const studentNavItems = [
 
 const educatorNavItems = [
   { href: '/dashboard', label: 'DASHBOARD', icon: Home },
-  { href: '/ai-tutor', label: 'AI TUTOR', icon: Brain },
-  { href: '/quiz-generator', label: 'QUIZ ARENA', icon: Sparkles },
   { href: '/courses', label: 'MY COURSES', icon: BookOpen },
   { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
   { href: '/grading', label: 'GRADING', icon: FileCheck },
@@ -249,8 +245,19 @@ export function Navigation({ user }: NavigationProps) {
                   </div>
 
                   <DropdownMenuLabel className="text-[10px] uppercase font-bold tracking-wider text-indigo-300 px-2 py-1">
-                    Profile & Account Settings
+                    AI & Account Tools
                   </DropdownMenuLabel>
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/ai-hub"
+                      className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-cyan-300 hover:text-white hover:bg-cyan-500/20 rounded-lg cursor-pointer transition-colors"
+                    >
+                      <Sparkles className="h-4 w-4 text-cyan-400" />
+                      <span>AI Innovation Hub</span>
+                      <Badge className="ml-auto bg-cyan-600/80 text-[10px] text-white py-0 px-1.5 border-0">AI</Badge>
+                    </Link>
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link
