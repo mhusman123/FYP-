@@ -13,49 +13,66 @@
 
 ---
 
+## 📑 Table of Contents
+1. [🌟 Executive Summary & Vision](#-executive-summary--vision)
+2. [🏛️ Comprehensive Academic Spectrum (Grade 1 to PhD)](#️-comprehensive-academic-spectrum-grade-1-to-phd)
+3. [🚀 Core Architectural Features & Modules](#-core-architectural-features--modules)
+4. [🧭 Platform Navigation & Button Anatomy](#-platform-navigation--button-anatomy)
+5. [📄 Complete 72+ Pages Directory & Site Map](#-complete-72-pages-directory--site-map)
+6. [🔐 Student & Educator Registration & Login Guide](#-student--educator-registration--login-guide)
+7. [🤖 Step-by-Step Guide: How to Use All AI Features](#-step-by-step-guide-how-to-use-all-ai-features)
+8. [🛠️ Technology Stack & System Architecture](#️-technology-stack--system-architecture)
+9. [💻 Installation & How to Run the Platform](#-installation--how-to-run-the-platform)
+10. [🔮 Future Roadmap (Next Horizons for SST AI)](#-future-roadmap-next-horizons-for-sst-ai)
+11. [👨‍💻 Author & Final Year Project Information](#-author--final-year-project-information)
+
+---
+
 ## 🌟 Executive Summary & Vision
 
-The **Sindh School of Technology (SST) Universal EdTech Platform** was developed as a comprehensive Final Year Project (FYP) and engineered to evolve into a universal academic intelligence infrastructure. 
+The **Sindh School of Technology (SST) Universal EdTech Platform** was conceived and built as an advanced Final Year Project (FYP) and engineered to serve as a universal academic intelligence infrastructure for educational institutions worldwide.
 
-Designed to scale across **Schools, Colleges, and Universities**, the platform serves the entire academic journey—from **Grade 1 Primary students to Postdoctoral & PhD Researchers, Professors, Lecturers, and Institutional Leaders**.
-
-By synthesizing state-of-the-art **Large Language Models (LLMs)**, **Socratic Pedagogical Engines**, **Dynamic Exam Simulators**, **Automated Rubric Autograders**, and **Gamified Academic Economics**, this platform democratizes world-class, personalized education while preserving regional cultural heritage (Indus Valley & Sindh Studies) and enabling multilingual digital transformation (English, Urdu, Sindhi).
+Designed to scale seamlessly across **Schools, Colleges, and Universities**, the platform caters to learners and educators at every level:
+- **School & College Students**: Conceptual STEM guidance, exam preparation (MDCAT/ECAT/O-A Levels), and homework autograding.
+- **Undergraduate & Graduate Scholars**: Algorithm complexity analysis, code verification, and laboratory derivations.
+- **PhD Candidates & Researchers**: Literature survey structuring, LaTeX math synthesis, and methodology critique.
+- **Teachers, Lecturers & Professors**: Automated rubric grading, class analytics, dynamic test generation, and compassionate grade adjustment protocols.
 
 ---
 
 ## 🏛️ Comprehensive Academic Spectrum (Grade 1 to PhD)
 
-| Academic Level | Target Audience | Primary Features & Modules Utilized |
+| Academic Tier | Target Audience | Key Platform Capabilities |
 | :--- | :--- | :--- |
-| **Primary & Elementary** *(Grades 1–5)* | Young Learners & Teachers | Visual foundational exercises, interactive vocabulary, gamified badge rewards, curiosity prompts. |
-| **Middle & High School** *(Grades 6–10 / Matric)* | Secondary Students & Tutors | Socratic STEM explanations, chapter summaries, science lab conceptual guides, homework hints. |
-| **College & Intermediate** *(O/A Levels & FSc)* | College Students & Lecturers | MDCAT / ECAT exam simulators, 20/35/50 question timed challenges, differential calculus derivations. |
-| **Undergraduate (BSc/BS/BE)** | University Students & TAs | Algorithm complexity analysis, Python/JS syntax debugging, autograding with rubric feedback. |
-| **Postgraduate (MS/MPhil)** | Master's Scholars & Advisors | Advanced topic synthesis, literature survey structuring, technical essay evaluation, plagiarism checks. |
-| **Doctoral & Postdoc (PhD)** | Researchers & Professors | Mathematical proofs, LaTeX formatting, research methodology critique, grant/proposal draft review. |
-| **Educators & Professors** | Faculty & Evaluators | Automated assignment grading, class performance analytics, grade adjustment workflows, question bank generation. |
+| **Primary & Elementary** *(Grades 1–5)* | Young Learners & Elementary Teachers | Visual foundational exercises, vocabulary builders, gamified badge achievements, and curiosity prompts. |
+| **Middle & Secondary** *(Grades 6–10 / Matric)* | High School Students & Tutors | Socratic STEM problem solving, chapter summaries, science lab guides, and homework hints. |
+| **College & Intermediate** *(O/A Levels & FSc)* | College Students & Lecturers | MDCAT & ECAT timed practice arenas (20, 35, 50 questions), and differential calculus derivations. |
+| **Undergraduate (BSc/BS/BE)** | University Students & TAs | Algorithm complexity analysis (Big-O), Python/JS syntax debugging, and autograding with rubric feedback. |
+| **Postgraduate (MS/MPhil)** | Master's Scholars & Advisors | Advanced topic synthesis, technical essay evaluation, literature surveys, and originality/plagiarism checks. |
+| **Doctoral & Postdoc (PhD)** | Researchers & Professors | Mathematical proofs with LaTeX rendering, research methodology critique, and grant/paper draft review. |
+| **Faculty & Administrators** | Teachers, Professors & Deans | Automated grading queues, class performance analytics, grade adjustment reviews, and question bank generation. |
 
 ---
 
-## 🚀 Key Architectural Features & Modules
+## 🚀 Core Architectural Features & Modules
 
 ### 1. 🧠 Socratic AI Mentor
 - **Pedagogical Inquiry Over Spoilers**: Guided step-by-step reasoning that asks probing questions rather than dumping final answers.
-- **Deep Domain Coverage**:
+- **Domain Coverage**:
   - **Mathematics & Calculus**: Step-by-step differentiation (Chain/Product/Quotient rules), integration by parts, limits, and linear algebra with LaTeX rendering.
-  - **Physics & Mechanics**: Classical Newtonian mechanics, wave optics, electricity, thermodynamics, and numerical problem solving.
+  - **Physics & Mechanics**: Classical Newtonian mechanics, wave optics, electricity, thermodynamics, and numerical calculations.
   - **Chemistry & Materials**: Ionic vs covalent bonding, pH and buffer equilibrium, stoichiometry, and organic reaction mechanisms.
   - **Biology & Pre-Med**: Cellular respiration (ATP synthesis, ETC), molecular genetics (DNA/RNA transcription/translation), and human physiology.
   - **Computer Science & Coding**: Data structures (Hash Maps, BSTs, Graphs), Big-O asymptotic analysis, Python and JavaScript idiomatic patterns.
   - **Sindh Studies & History**: Mohenjo-daro urban planning, Kot Diji archaeology, and Sufi philosophy (*Shah Jo Risalo*, Sachal Sarmast).
-- **Inquiry Reward System**: Students earn study points for engaging in critical inquiry and requesting conceptual hints.
+- **Inquiry Reward System**: Students earn +10 study points for engaging in critical inquiry and requesting conceptual hints.
 
 ### 2. ⚡ AI Quiz Arena & Exam Simulator
 - **Dynamic 3-Tier Exam Mode**:
   - 🏃 **Quick Sprint**: **20 Questions** (Time limit: **10 Minutes** / 600s, up to 500 points)
   - 📋 **Standard Assessment**: **35 Questions** (Time limit: **17 Minutes** / 1020s, up to 875 points)
   - 🏆 **Comprehensive Exam**: **50 Questions** (Time limit: **25 Minutes** / 1500s, up to 1250 points)
-- **Zero-Repetition Randomization**: Powered by Fisher-Yates shuffling and procedural STEM synthesis so questions and option orders are fresh on every single retake.
+- **Zero-Repetition Randomization**: Powered by Fisher-Yates shuffling and procedural STEM synthesis so questions and option orders are fresh on every single retake or page refresh.
 - **Socratic Hints on Demand**: In-quiz hints that guide students toward the answer without spoiling it.
 - **Detailed Scorecard & Review**: Comprehensive post-test breakdown with pedagogical explanations for every question.
 
@@ -81,10 +98,170 @@ By synthesizing state-of-the-art **Large Language Models (LLMs)**, **Socratic Pe
 - **Compassionate Evaluation**: Dedicated workflow allowing students facing illness, bereavement, or emergencies to request formal deadline extensions or grade re-evaluations with documented proof.
 - **Educator Decision Dashboard**: Review, approve, or adjust scores transparently.
 
-### 8. 🌐 Multi-Role Portals & Sindh Heritage Integration
-- **Student Workspace**: Personalized course overview, assignment deadlines, AI tools, and progress analytics.
-- **Educator Command Center**: Class management, grading queues, autograding configuration, and student intervention alerts.
-- **Cultural Archive**: Integrated study units on Sindh's 5,000-year civilizational heritage, indigenous engineering, and literature.
+---
+
+## 🧭 Platform Navigation & Button Anatomy
+
+The platform features an ultra-clean, unified navigation architecture. On both desktop and mobile screens, exactly **8 primary navigation buttons** remain organized and consistent:
+
+```
+[ HOME ]  [ DASHBOARD ]  [ COURSES ]  [ ASSIGNMENTS ]  [ AI HUB ]  [ AUTOGRADING ]  [ LEADERBOARD ]  [ SETTINGS ]
+```
+
+### Main Navigation Bar Buttons:
+1. **🏠 `HOME` (`/home` or `/`)**:
+   - **What you see**: Public institutional landing page with 4K campus photography, academic excellence highlights, admissions workflow, and Sindh heritage showcases.
+2. **📊 `DASHBOARD` (`/dashboard`)**:
+   - **What you see**: The student's command center displaying active enrolled courses, upcoming assignment deadlines, announcements, study points, and quick action cards.
+3. **📚 `COURSES` (`/courses`)**:
+   - **What you see**: Course catalog and syllabus browser. Students can browse, enroll in STEM & Humanities courses, view instructors, and download lecture materials.
+4. **📝 `ASSIGNMENTS` (`/assignments`)**:
+   - **What you see**: Homework tracking portal. View active, submitted, and overdue assignments with deadline countdowns and file attachment upload tools.
+5. **✨ `AI HUB` (`/ai-hub`)**:
+   - **What you see**: The centralized AI Innovation Hub housing live launchpads for **Socratic AI Mentor**, **AI Quiz Arena**, and **AI Feedback**, plus previews of upcoming research tools.
+6. **🤖 `AUTOGRADING` (`/autograding`)**:
+   - **What you see**: Formative autograding studio. Paste code snippets or essay drafts to receive immediate rubric-based scores and constructive feedback.
+7. **🏆 `LEADERBOARD` (`/leaderboard`)**:
+   - **What you see**: Gamified ranking board showing student XP, study streaks, and earned badges across subject domains.
+8. **⚙️ `SETTINGS` (`/settings`)**:
+   - **What you see**: Profile configuration, account security, theme preferences (Dark/Light mode), and notification preferences.
+
+### Topbar Action Buttons:
+- **🌓 Theme Toggle**: Instant seamless switching between dark mode and light mode.
+- **👤 User Profile & Sign Out**: Displays active user name, role badge (`Student` or `Educator`), and secure logout button.
+- **🔑 Sign In / Sign Up**: Accessible for guests to authenticate or create new accounts.
+
+### Floating Action Buttons (Accessible on Every Dashboard Page):
+- **💡 Bottom-Left Floating Button (`Socratic AI Mentor`)**: Instant floating launcher that takes the student directly to the Socratic AI Mentor conversation.
+- **🤖 Bottom-Right Floating Button (`AI Assistant`)**: Quick popup modal for instant answers and student support.
+
+---
+
+## 📄 Complete 72+ Pages Directory & Site Map
+
+The application consists of **72 production-compiled routes** organized into functional clusters:
+
+### 1. Public & Institutional Portals (18 Pages)
+- `/` & `/home` - Main institutional landing page
+- `/academic-excellence` - Curriculum standards & faculty credentials
+- `/admissions-and-fees` - Admission overview & tuition policies
+- `/admissions-and-fees/admissions-process` - Step-by-step enrollment guide
+- `/admissions-and-fees/open-days-and-visits` - Campus tour booking
+- `/admissions-and-fees/school-fees` - Transparent fee structure
+- `/our-school` & `/our-school/school-information` - Campus mission & leadership
+- `/our-school/facilities` - 4K showcases of labs, libraries, and sports pavilion
+- `/our-school/early-years-foundation-stage` - Early childhood education
+- `/our-school/primary-education` - Primary school curriculum
+- `/our-school/secondary-education` - Secondary & Matric stream
+- `/our-school/sixth-form` - College & A-Levels prep
+- `/our-school/your-childs-journey` - Holistic student development milestones
+- `/our-school/blog` & `/our-school/school-news` - Campus updates and events
+- `/sindh-education` - Dedicated archive on Sindh history & Indus civilization
+- `/why-choose-us` (with 6 subpages: Cognita family, Community, Digital learning, Extra-curricular, Values, Wellbeing)
+
+### 2. Student & Educator Core Applications (14 Pages)
+- `/dashboard` - Personalized student & teacher portal
+- `/courses` & `/courses/[id]` - Course catalog and individual course modules
+- `/assignments` & `/assignments-enhanced` - Homework submissions & status
+- `/autograding` - AI formative feedback engine
+- `/badges` - Achievement awards & badge gallery
+- `/grade-requests` - Compassionate grade adjustment workflow
+- `/grading` - Educator assessment & feedback queue
+- `/leaderboard` - Student ranking & academic XP
+- `/plagiarism` - Similarity & originality index analyzer
+- `/settings` - Profile, preferences & account settings
+- `/students` - Educator roster & student progress tracking
+- `/submission-feedback` - Detailed instructor & AI rubrics
+
+### 3. AI Learning Engines (3 Pages)
+- `/ai-hub` - Centralized AI Innovation & Technology Suite
+- `/ai-tutor` - Socratic AI Mentor (Conversational guidance with LaTeX & Code)
+- `/quiz-generator` - AI Quiz Arena & Exam Simulator (20, 35, 50 questions with timers)
+
+### 4. Authentication & System Utilities (6 Pages)
+- `/auth/signin` - Role-based login portal
+- `/auth/signup` - Student & Educator registration portal
+- `/auth/error` - Auth error diagnosis & recovery
+- `/auth-test` & `/login-debug` - Diagnostic authentication testing
+- `/registration-test` - Live database registration verification
+
+### 5. Backend REST API Endpoints (31 Routes)
+- `/api/ai/socratic-tutor` - Socratic dialogue processing (Gemini/GPT/DeepSeek)
+- `/api/ai/quiz-generate` - Dynamic randomized 20/35/50 question generator
+- `/api/ai/autograde` & `/api/ai/chat` & `/api/ai/insights` - AI feedback & analytics
+- `/api/ai/award-points` - Gamified XP & study points transaction engine
+- `/api/auth/[...nextauth]` & `/api/auth/register` - Authentication & user registration
+- `/api/courses`, `/api/assignments`, `/api/submissions`, `/api/grades`, `/api/badges` - Core LMS data APIs
+
+---
+
+## 🔐 Student & Educator Registration & Login Guide
+
+### How to Create a New Account (Sign Up):
+1. Navigate to **[http://localhost:3000/auth/signup](http://localhost:3000/auth/signup)** or click **"Register"** in the top-right corner.
+2. Fill out the registration form:
+   - **Full Name**: Enter your name (e.g. *Ali Khan* or *Dr. Sarah Ahmed*).
+   - **Email Address**: Enter a valid academic or personal email.
+   - **Password**: Create a secure password.
+   - **Account Role**: Select **Student** or **Educator / Teacher**.
+3. Click **"Create Account"**. Your profile is instantly registered and persisted in the Prisma database.
+4. You will be automatically redirected to sign in.
+
+### How to Sign In:
+1. Navigate to **[http://localhost:3000/auth/signin](http://localhost:3000/auth/signin)**.
+2. Enter your email and password.
+3. Click **"Sign In"**. NextAuth securely authenticates your session and redirects you to your personalized dashboard.
+
+### Ready-to-Use Demo Test Accounts:
+For instant evaluation without creating a new account, use these preconfigured test credentials:
+
+| Role | Email | Password | What You Can Access |
+| :--- | :--- | :--- | :--- |
+| **Student** | `student@eduplatform.edu` | `password` | Socratic Mentor, Quiz Arena, Course Enrollment, Submissions, Badges |
+| **Educator** | `educator@eduplatform.edu` | `password` | Grading Queues, Autograding Config, Grade Adjustments, Analytics |
+
+---
+
+## 🤖 Step-by-Step Guide: How to Use All AI Features
+
+### 1. Using the Socratic AI Mentor (`/ai-tutor`)
+1. Click **"AI HUB"** in the navigation bar, then select **"Open Socratic Mentor"** (or click the bottom-left floating button).
+2. **Select your AI Reasoning Engine**: Choose between *GPT-4o-mini (Fast Socratic)*, *DeepSeek-R1 (Deep Math/Logic)*, or *Gemini 1.5 Flash*.
+3. **Select your Subject Area**: Pick *CS & Mathematics*, *Physics*, *Chemistry*, *Biology*, or *Sindh Studies*.
+4. **Type your Question**: For example:
+   - *Math*: "How do I differentiate y = (3x^2 + 5)^4 using the Chain Rule?"
+   - *Biology*: "What is the role of ATP Synthase in the electron transport chain?"
+   - *Chemistry*: "Why is water a polar molecule while CO2 is non-polar?"
+   - *Physics*: "If a satellite orbits Earth at constant speed, why is it accelerating?"
+   - *CS*: "How do Hash Maps resolve hash collisions in Python?"
+   - *Sindh Studies*: "Explain the urban sanitation system of Mohenjo-daro."
+5. **Interactive Guidance**: The mentor provides formulas, concepts, and asks a probing question to guide your thinking. Click any of the **Suggested Follow-up Chips** to continue exploring!
+
+### 2. Launching the AI Quiz Arena (`/quiz-generator`)
+1. Click **"Launch Quiz Arena"** from the AI Hub or the top banner.
+2. **Configure your Exam**:
+   - **Subject**: Choose your discipline.
+   - **Topic**: Type any specific chapter (e.g. *Derivatives, Newton's Laws, Python BSTs*).
+   - **Difficulty**: Choose *Beginner*, *Intermediate (O/A Levels & FSc)*, or *Advanced (MDCAT/ECAT)*.
+   - **Question Tier**:
+     - **20 Questions** (Quick Sprint - 10 Minutes timer)
+     - **35 Questions** (Standard Assessment - 17 Minutes timer)
+     - **50 Questions** (Comprehensive Exam - 25 Minutes timer)
+3. Click **"Generate AI Quiz & Start Challenge"**.
+4. **Take the Test**:
+   - Watch the live timer countdown.
+   - Click **"Need a Socratic Hint?"** if you are stuck.
+   - Select your answers and click **"Next Question"**.
+5. **Submit & Review**:
+   - View your total score percentage and points earned (+25 pts per correct answer).
+   - Click **"Claim Points"** to add points to your leaderboard profile.
+   - Review comprehensive academic explanations for every question.
+
+### 3. Using the AI Formative Feedback & Autograder (`/autograding`)
+1. Click **"AUTOGRADING"** in the navigation bar.
+2. Paste your assignment essay draft or programming source code into the editor.
+3. Select the evaluation rubric parameters.
+4. Click **"Evaluate Submission"** to receive an instant breakdown of your strengths, logical gaps, and recommended revisions.
 
 ---
 
@@ -121,122 +298,61 @@ graph TD
     end
 ```
 
-### Core Technologies:
-- **Framework**: [Next.js 15.5.25](https://nextjs.org/) (App Router, Server Components, Route Handlers)
-- **UI & Styling**: [React 19](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [ShadCN UI](https://ui.shadcn.com/), [Radix UI](https://www.radix-ui.com/), [Lucide Icons](https://lucide.dev/)
-- **Programming Language**: [TypeScript 5](https://www.typescriptlang.org/)
-- **Database ORM**: [Prisma ORM 6.16](https://www.prisma.io/)
-- **Database Engines**: SQLite (Development) / PostgreSQL / Supabase (Production)
-- **Authentication**: [NextAuth.js v4](https://next-auth.js.org/) (Credentials, Google OAuth, GitHub OAuth)
-- **AI Models & Engines**: Google Gemini 1.5 Flash & Pro, OpenAI GPT-4o-mini, DeepSeek-R1, and Custom Procedural Question Bank
-
 ---
 
-## 📁 Project Directory Structure
-
-```
-Sindhmitty/
-├── prisma/
-│   └── schema.prisma            # Database schemas (Users, Courses, Assignments, Submissions, Badges)
-├── public/                      # Static assets, 4K illustrations, and logos
-├── src/
-│   ├── app/                     # Next.js App Router (72+ routes)
-│   │   ├── (dashboard)/         # Protected student & educator dashboard routes
-│   │   │   ├── ai-hub/          # Centralized AI Innovation & Learning Hub
-│   │   │   ├── ai-tutor/        # Socratic AI Mentor (Conversational Interface)
-│   │   │   ├── quiz-generator/  # AI Quiz Arena & Exam Simulator (20/35/50 Qs)
-│   │   │   ├── assignments/     # Assignment submission & tracking
-│   │   │   ├── autograding/     # AI Formative Feedback & Rubric grading
-│   │   │   ├── badges/          # Gamification & achievement badges
-│   │   │   ├── courses/         # Course catalogs & enrollment
-│   │   │   ├── dashboard/       # Primary student/educator dashboard
-│   │   │   ├── grade-requests/  # Grade adjustment protocol
-│   │   │   ├── leaderboard/     # Academic leaderboard
-│   │   │   ├── plagiarism/      # Originality & integrity scanner
-│   │   │   └── settings/        # Profile & account configuration
-│   │   ├── api/                 # Backend REST API routes
-│   │   │   ├── ai/              # Socratic tutor, quiz generator, autograding endpoints
-│   │   │   ├── auth/            # NextAuth authentication & user registration
-│   │   │   ├── assignments/     # Assignment CRUD operations
-│   │   │   ├── courses/         # Course management
-│   │   │   └── submissions/     # File uploads & grade processing
-│   │   └── (marketing)/         # Public school landing pages, admissions, and heritage
-│   ├── components/              # Modular UI components & ShadCN elements
-│   │   ├── navigation.tsx       # Universal responsive navigation bar & mobile drawer
-│   │   ├── header.tsx           # Application topbar
-│   │   └── ui/                  # Reusable UI primitives (Buttons, Cards, Dialogs, Selects)
-│   ├── lib/                     # Utilities & Core Services
-│   │   ├── ai-engine.ts         # Multi-model AI gateway & procedural question generator
-│   │   ├── auth.ts              # NextAuth options & role guards
-│   │   ├── prisma.ts            # Singleton Prisma client
-│   │   └── utils.ts             # Utility helpers
-│   └── types/                   # TypeScript type definitions
-├── .env.example                 # Environment variable template
-├── package.json                 # Project dependencies & scripts
-├── tsconfig.json                # TypeScript compiler configuration
-└── README.md                    # Platform documentation
-```
-
----
-
-## 💻 Installation & Quickstart
+## 💻 Installation & How to Run the Platform
 
 ### Prerequisites:
 - **Node.js**: v18.18+ or v20+
-- **npm** or **yarn** / **pnpm**
+- **npm** (included with Node.js)
 - **Git**
 
-### 1. Clone the Repository
+### Step-by-Step Execution:
+
+#### 1. Clone the Repository
 ```bash
 git clone https://github.com/mhusman123/FYP-.git
 cd FYP-
 ```
 
-### 2. Install Dependencies
+#### 2. Install Project Dependencies
 ```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
-Create a `.env.local` file in the project root:
+#### 3. Setup Environment Variables
+Create a `.env.local` file in the root directory:
 ```env
-# Database (SQLite for local development, PostgreSQL for production)
+# Database
 DATABASE_URL="file:./dev.db"
 
 # NextAuth Configuration
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-super-secret-key-min-32-chars-long"
+NEXTAUTH_SECRET="sindh-school-secret-key-2026-prod-fallback"
 
-# AI Gateway API Keys (Gemini, OpenAI, DeepSeek)
+# AI Gateway API Keys
 GEMINI_API_KEY="your-google-gemini-api-key"
 AI_API_KEY="your-google-gemini-api-key"
 OPENAI_API_KEY="your-openai-api-key"
 DEEPSEEK_API_KEY="your-deepseek-api-key"
 
-# Node Environment
+# Development Mode
 NODE_ENV="development"
 ```
 
-### 4. Initialize Database & Generate Prisma Client
+#### 4. Initialize Database Schema
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-### 5. Launch Development Server
+#### 5. Start the Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser to access the platform.
 
----
-
-## 🔑 Test Accounts & Demo Credentials
-
-| Role | Email | Password | Access Level |
-| :--- | :--- | :--- | :--- |
-| **Student** | `student@eduplatform.edu` | `password` | Socratic Tutor, Quiz Arena, Course Enrollment, Submissions, Badges |
-| **Educator** | `educator@eduplatform.edu` | `password` | Grading Queue, Autograding Config, Grade Adjustments, Analytics |
+Open your browser and navigate to:
+👉 **[http://localhost:3000](http://localhost:3000)**
 
 ---
 
