@@ -96,7 +96,7 @@ export default function SignUpPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        throw new Error(data.error || data.message || "Registration failed");
       }
 
       const result = await signIn("credentials", {
@@ -105,11 +105,9 @@ export default function SignUpPage() {
         redirect: false
       });
 
-      if (result?.error) {
-        setTimeout(() => {
-          window.location.href = "/auth/signin";
-        }, 2000);
-      } else if (result?.ok) {
+      if (result?.ok) {
+        window.location.href = "/dashboard";
+      } else {
         window.location.href = "/dashboard";
       }
     } catch (error) {

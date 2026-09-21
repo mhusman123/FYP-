@@ -1,7 +1,6 @@
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { prisma } from "@/lib/db/prisma"
-import bcrypt from "bcryptjs"
+import { authenticateUser } from "@/lib/auth-store"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,36 +18,16 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
-          // Find user by email
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email }
-          })
-
+          const user = await authenticateUser(credentials.email, credentials.password)
           if (!user) {
-            console.error("User not found:", credentials.email)
-            return null
-          }
-
-          if (!user.password) {
-            console.error("User has no password set:", credentials.email)
-            return null
-          }
-
-          // Verify password
-          const isPasswordValid = await bcrypt.compare(
-            credentials.password,
-            user.password
-          )
-
-          if (!isPasswordValid) {
-            console.error("Invalid password for user:", credentials.email)
+            console.error("Authentication failed for:", credentials.email)
             return null
           }
 
           console.log("User authenticated successfully:", user.email)
           return {
             id: user.id,
-            email: user.email!,
+            email: user.email,
             name: user.name,
             role: user.role,
             image: user.image
