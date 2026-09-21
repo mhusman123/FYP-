@@ -63,7 +63,7 @@ const studentNavItems = [
   { href: '/submissions', label: 'SUBMISSIONS', icon: Upload },
   { href: '/leaderboard', label: 'LEADERBOARD', icon: Trophy },
   { href: '/badges', label: 'MY BADGES', icon: Award },
-  { href: '/submission-feedback', label: 'AI FEEDBACK', icon: Bot },
+  { href: '/ai-hub', label: 'AI HUB', icon: Sparkles },
   { href: '/grade-requests', label: 'GRADE REQUESTS', icon: ClipboardCheck },
 ]
 
@@ -72,7 +72,7 @@ const educatorNavItems = [
   { href: '/courses', label: 'MY COURSES', icon: BookOpen },
   { href: '/assignments', label: 'ASSIGNMENTS', icon: FileText },
   { href: '/grading', label: 'GRADING', icon: FileCheck },
-  { href: '/autograding', label: 'AUTOGRADING', icon: Bot },
+  { href: '/ai-hub', label: 'AI HUB', icon: Sparkles },
   { href: '/analytics', label: 'ANALYTICS', icon: BarChart3 },
   { href: '/students', label: 'STUDENTS', icon: Users },
   { href: '/plagiarism', label: 'PLAGIARISM REPORTS', icon: AlertTriangle },
