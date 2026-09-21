@@ -115,7 +115,7 @@ export function Navigation({ user }: NavigationProps) {
   return (
     <>
       {/* Single Unified Upper Bar */}
-      <header className="sticky top-0 z-40 w-full bg-[#001724]/40 backdrop-blur-md border-b border-cyan-500/20 shadow-md text-white">
+      <header className="sticky top-0 z-40 w-full bg-[#1E1B4B]/80 backdrop-blur-md border-b border-indigo-500/20 shadow-md text-white">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-1 sm:gap-2 lg:gap-4">
             
@@ -155,8 +155,8 @@ export function Navigation({ user }: NavigationProps) {
                       className={cn(
                         'px-1.5 py-1 md:px-2 md:py-1 lg:px-2.5 lg:py-1 text-[10px] md:text-[11px] lg:text-[11.5px] xl:text-xs font-bold tracking-tight md:tracking-normal rounded-sm transition-all whitespace-nowrap cursor-pointer',
                         isActive
-                          ? 'bg-cyan-500/15 text-cyan-300 border-b-2 border-cyan-400 font-bold shadow-xs'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10'
+                          ? 'bg-indigo-500/20 text-indigo-200 border-b-2 border-indigo-400 font-bold shadow-xs'
+                          : 'text-slate-200 hover:text-white hover:bg-white/10'
                       )}
                     >
                       {item.label}
@@ -174,7 +174,7 @@ export function Navigation({ user }: NavigationProps) {
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#8D1B2D] p-0.5 border-2 border-cyan-400/60 hover:border-cyan-300 hover:scale-105 transition-all cursor-pointer shadow-md focus:outline-hidden focus:ring-2 focus:ring-cyan-400/80 flex items-center justify-center flex-shrink-0 overflow-hidden"
+                    className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#8D1B2D] p-0.5 border-2 border-indigo-400/60 hover:border-indigo-300 hover:scale-105 transition-all cursor-pointer shadow-md focus:outline-hidden focus:ring-2 focus:ring-indigo-400/80 flex items-center justify-center flex-shrink-0 overflow-hidden"
                     title={currentUser.name}
                     aria-label="User profile menu"
                   >
@@ -197,10 +197,10 @@ export function Navigation({ user }: NavigationProps) {
                 <DropdownMenuContent
                   align="end"
                   sideOffset={8}
-                  className="w-72 bg-[#001724] border border-cyan-500/30 text-white shadow-2xl rounded-xl p-2 z-50 animate-in fade-in-80 zoom-in-95"
+                  className="w-72 bg-[#1E1B4B] border border-indigo-500/30 text-white shadow-2xl rounded-xl p-2 z-50 animate-in fade-in-80 zoom-in-95"
                 >
                   {/* User Profile Header */}
-                  <div className="p-3 bg-[#001f30] rounded-lg border border-cyan-500/20 mb-2">
+                  <div className="p-3 bg-[#17143A] rounded-lg border border-indigo-500/20 mb-2">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full border-2 border-[#8D1B2D] shadow-sm flex-shrink-0 overflow-hidden bg-[#8D1B2D] flex items-center justify-center">
                         {currentUser.avatar && !avatarError ? (
@@ -235,14 +235,14 @@ export function Navigation({ user }: NavigationProps) {
                     {currentUser.totalPoints !== undefined && (
                       <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
                         <span className="text-slate-400 flex items-center gap-1">
-                          <Sparkles className="h-3 w-3 text-cyan-300" /> Academic Points:
+                          <Sparkles className="h-3 w-3 text-indigo-300" /> Academic Points:
                         </span>
-                        <span className="font-bold text-cyan-300">{currentUser.totalPoints} pts</span>
+                        <span className="font-bold text-indigo-300">{currentUser.totalPoints} pts</span>
                       </div>
                     )}
                   </div>
 
-                  <DropdownMenuLabel className="text-[10px] uppercase font-bold tracking-wider text-cyan-400 px-2 py-1">
+                  <DropdownMenuLabel className="text-[10px] uppercase font-bold tracking-wider text-indigo-300 px-2 py-1">
                     Profile & Account Settings
                   </DropdownMenuLabel>
 
@@ -251,7 +251,7 @@ export function Navigation({ user }: NavigationProps) {
                       href="/settings"
                       className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
                     >
-                      <UserIcon className="h-4 w-4 text-cyan-300" />
+                      <UserIcon className="h-4 w-4 text-indigo-300" />
                       <span>Edit Profile & Photo</span>
                     </Link>
                   </DropdownMenuItem>
@@ -261,7 +261,7 @@ export function Navigation({ user }: NavigationProps) {
                       href="/settings"
                       className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
                     >
-                      <Phone className="h-4 w-4 text-cyan-300" />
+                      <Phone className="h-4 w-4 text-indigo-300" />
                       <span>Change Email & Contact</span>
                     </Link>
                   </DropdownMenuItem>
@@ -271,7 +271,7 @@ export function Navigation({ user }: NavigationProps) {
                       href="/settings"
                       className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
                     >
-                      <Lock className="h-4 w-4 text-cyan-300" />
+                      <Lock className="h-4 w-4 text-indigo-300" />
                       <span>Password & Security</span>
                     </Link>
                   </DropdownMenuItem>
@@ -283,7 +283,7 @@ export function Navigation({ user }: NavigationProps) {
                       href="/dashboard"
                       className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
                     >
-                      <BarChart3 className="h-4 w-4 text-cyan-300" />
+                      <BarChart3 className="h-4 w-4 text-indigo-300" />
                       <span>Portal Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
@@ -293,7 +293,7 @@ export function Navigation({ user }: NavigationProps) {
                       href="/"
                       className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer transition-colors"
                     >
-                      <Home className="h-4 w-4 text-cyan-300" />
+                      <Home className="h-4 w-4 text-indigo-300" />
                       <span>Public Landing Page</span>
                     </Link>
                   </DropdownMenuItem>
@@ -315,7 +315,7 @@ export function Navigation({ user }: NavigationProps) {
               <button
                 type="button"
                 onClick={() => setIsMobileDrawerOpen(true)}
-                className="flex md:hidden items-center justify-center h-8 w-8 rounded-lg border border-cyan-500/30 bg-[#002E40] text-white hover:bg-[#003850] transition-colors"
+                className="flex md:hidden items-center justify-center h-8 w-8 rounded-lg border border-indigo-500/30 bg-[#1E1B4B] text-white hover:bg-[#2B2664] hover:text-indigo-200 transition-colors"
                 aria-label="Open mobile portal navigation"
               >
                 <Menu className="h-4 w-4" />
@@ -337,12 +337,12 @@ export function Navigation({ user }: NavigationProps) {
           />
 
           {/* Drawer Sidebar */}
-          <aside className="relative z-10 w-80 max-w-[85vw] h-full bg-[#001724] text-white border-l border-cyan-500/20 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
+          <aside className="relative z-10 w-80 max-w-[85vw] h-full bg-[#1E1B4B] text-white border-l border-indigo-500/20 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
             
             {/* Drawer Header: Profile */}
-            <div className="p-4 border-b border-cyan-500/20 bg-[#00121d] flex items-center justify-between gap-3">
+            <div className="p-4 border-b border-indigo-500/20 bg-[#17143A] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className="h-10 w-10 rounded-full border-2 border-cyan-500/40 shadow-xs flex-shrink-0 overflow-hidden bg-[#8D1B2D] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full border-2 border-indigo-500/40 shadow-xs flex-shrink-0 overflow-hidden bg-[#8D1B2D] flex items-center justify-center">
                   {currentUser.avatar && !avatarError ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -384,7 +384,7 @@ export function Navigation({ user }: NavigationProps) {
 
             {/* Drawer Body: Navigation Links */}
             <div className="flex-1 overflow-y-auto p-4 space-y-1">
-              <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-1">
+              <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-indigo-300 mb-1">
                 Portal Navigation
               </p>
 
@@ -399,11 +399,11 @@ export function Navigation({ user }: NavigationProps) {
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-lg transition-colors',
                       isActive
-                        ? 'bg-cyan-500/15 text-cyan-300 border-l-2 border-cyan-400 font-bold shadow-xs'
+                        ? 'bg-indigo-500/20 text-indigo-200 border-l-2 border-indigo-400 font-bold shadow-xs'
                         : 'text-slate-300 hover:text-white hover:bg-white/10'
                     )}
                   >
-                    <Icon className={cn('h-4 w-4', isActive ? 'text-cyan-300' : 'text-cyan-400/70')} />
+                    <Icon className={cn('h-4 w-4', isActive ? 'text-indigo-200' : 'text-indigo-300/70')} />
                     <span>{item.label}</span>
                   </Link>
                 )
@@ -411,13 +411,13 @@ export function Navigation({ user }: NavigationProps) {
             </div>
 
             {/* Drawer Footer: Fast Links & Sign Out */}
-            <div className="p-4 border-t border-cyan-500/20 bg-[#00121d] space-y-2">
+            <div className="p-4 border-t border-indigo-500/20 bg-[#17143A] space-y-2">
               <Link
                 href="/"
                 onClick={() => setIsMobileDrawerOpen(false)}
                 className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md text-slate-300 hover:text-white hover:bg-white/10"
               >
-                <Home className="h-4 w-4 text-cyan-300" />
+                <Home className="h-4 w-4 text-indigo-300" />
                 <span>Public Landing Page</span>
               </Link>
               
@@ -426,7 +426,7 @@ export function Navigation({ user }: NavigationProps) {
                 onClick={() => setIsMobileDrawerOpen(false)}
                 className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-md text-slate-300 hover:text-white hover:bg-white/10"
               >
-                <Settings className="h-4 w-4 text-cyan-300" />
+                <Settings className="h-4 w-4 text-indigo-300" />
                 <span>Account Settings</span>
               </Link>
 

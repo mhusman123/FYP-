@@ -60,7 +60,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 border-none outline-none ring-0",
           isScrolled 
-            ? "shadow-xl bg-[#001724]/95 backdrop-blur-md" 
+            ? "shadow-xl bg-[#1A163B]/95 backdrop-blur-md" 
             : "bg-transparent shadow-none"
         )}
       >
@@ -117,7 +117,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
                 <button
                   type="button"
                   onClick={() => setIsMobileDrawerOpen(true)}
-                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-cyan-500/30 bg-[#002E40] text-white hover:bg-[#003850] hover:text-cyan-300 transition-colors cursor-pointer shadow-sm"
+                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-indigo-500/30 bg-[#1E1B4B] text-white hover:bg-[#2B2664] hover:text-indigo-200 transition-colors cursor-pointer shadow-sm"
                   aria-label="Open mobile navigation menu"
                 >
                   <Menu className="h-5 w-5 text-white" />
@@ -127,20 +127,20 @@ export function LandingHeader({ session }: LandingHeaderProps) {
           </div>
         </div>
 
-        {/* Desktop Navigation Plate (Single complete line of buttons when scrolled, or transparent secondary bar when at top) */}
+        {/* Desktop Navigation Plate (Single complete line of buttons when scrolled, or Twilight Indigo secondary bar when at top) */}
         <div 
           className={cn(
             "hidden md:flex w-full transition-all duration-300 min-h-[38px] px-4 sm:px-6 items-center justify-center border-none outline-none",
             isScrolled
               ? "py-2 bg-transparent shadow-none"
-              : "py-0.5 bg-[#002E40]/40 backdrop-blur-md shadow-md"
+              : "py-0.5 bg-[#1E1B4B]/75 backdrop-blur-md shadow-md border-b border-indigo-500/20"
           )}
         >
           <div className="max-w-7xl mx-auto w-full flex items-center justify-center gap-1.5 sm:gap-3 md:gap-5 lg:gap-6 overflow-x-auto py-0.5 scrollbar-none">
             {/* 1. Home */}
             <Link 
               href="/home" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
             >
               Home
             </Link>
@@ -148,7 +148,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             {/* 2. Why Choose Us (with arrow) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
+                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
                   <span>Why Choose Us</span>
                   <ChevronDown className="h-3 w-3 opacity-90" />
                 </button>
@@ -156,7 +156,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
               <DropdownMenuContent 
                 align="start" 
                 sideOffset={6}
-                className="w-72 p-1.5 bg-[#002E40] text-white shadow-2xl rounded-xl border border-cyan-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
+                className="w-72 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
               >
                 <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
                   <Link href="/why-choose-us/mission-and-values">Mission, Vision & Values</Link>
@@ -191,7 +191,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             {/* 3. Academic Excellence */}
             <Link 
               href="/academic-excellence" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
             >
               Academic Excellence
             </Link>
@@ -199,7 +199,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             {/* 4. Sindh Education */}
             <Link 
               href="/sindh-education" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
             >
               Sindh Education
             </Link>
@@ -207,7 +207,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             {/* 5. Our School (with arrow) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
+                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
                   <span>Our School</span>
                   <ChevronDown className="h-3 w-3 opacity-90" />
                 </button>
@@ -215,7 +215,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
               <DropdownMenuContent 
                 align="start" 
                 sideOffset={6}
-                className="w-72 p-1.5 bg-[#002E40] text-white shadow-2xl rounded-xl border border-cyan-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
+                className="w-72 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
               >
                 <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
                   <Link href="/our-school/your-childs-journey">Your Child’s Journey</Link>
@@ -250,7 +250,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             {/* 6. Admissions & Fees (with arrow) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-cyan-300 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
+                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
                   <span>Admissions & Fees</span>
                   <ChevronDown className="h-3 w-3 opacity-90" />
                 </button>
@@ -258,7 +258,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
               <DropdownMenuContent 
                 align="start" 
                 sideOffset={6}
-                className="w-64 p-1.5 bg-[#002E40] text-white shadow-2xl rounded-xl border border-cyan-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
+                className="w-64 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
               >
                 <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
                   <Link href="/admissions-and-fees/admissions-process">Admissions Process</Link>
@@ -276,7 +276,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
 
         {/* Mobile Scrolled Bar */}
         {isScrolled && (
-          <div className="flex md:hidden items-center justify-between px-4 py-2 bg-[#001724]/95">
+          <div className="flex md:hidden items-center justify-between px-4 py-2 bg-[#1A163B]/95 border-b border-indigo-500/25">
             <Link href="/" className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
