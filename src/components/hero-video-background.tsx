@@ -27,6 +27,8 @@ export function HeroVideoBackground({
           src={bgImage}
           alt="Sindh School of Technology Campus"
           aria-hidden="true"
+          loading="eager"
+          decoding="async"
           className={"absolute inset-0 w-full h-full object-cover object-center brightness-[0.88] contrast-[1.08] saturate-[1.05] transition-all duration-700 " + opacityClass}
         />
       )}

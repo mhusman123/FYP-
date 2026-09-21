@@ -33,11 +33,14 @@ export function LandingHeader({ session }: LandingHeaderProps) {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null)
 
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      if (window.scrollY > 25) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 25)
+          ticking = false
+        })
+        ticking = true
       }
     }
 
@@ -58,7 +61,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
     <>
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 border-none outline-none ring-0",
+          "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border-none outline-none ring-0",
           isScrolled 
             ? "shadow-xl bg-[#1A163B]/95 backdrop-blur-md" 
             : "bg-transparent shadow-none"
@@ -67,7 +70,7 @@ export function LandingHeader({ session }: LandingHeaderProps) {
         {/* Main Upper Bar - Floating transparent over Hero when at top, smoothly collapses on scroll */}
         <div 
           className={cn(
-            "w-full overflow-hidden transition-all duration-300 ease-in-out border-none",
+            "w-full overflow-hidden transition-[max-height,opacity,padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[max-height,opacity,padding] border-none",
             isScrolled 
               ? "max-h-0 opacity-0 pointer-events-none py-0" 
               : "max-h-24 opacity-100 py-2.5 bg-transparent"

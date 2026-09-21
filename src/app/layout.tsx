@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-[#00141f]">
+    <html lang="en" className="bg-[#00141f] scroll-smooth">
       <body
         className={`${poppins.variable} ${geistMono.variable} font-sans antialiased bg-[#00141f]`}
       >
