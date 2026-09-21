@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
@@ -200,7 +200,7 @@ Rather than just handing you the answers, I help you develop true understanding 
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
             <Brain className="h-7 w-7 text-cyan-400" />
-            Socratic AI 1-on-1 Mentor
+            Socratic AI Mentor
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
             Ask complex questions, get step-by-step guidance, and build deep conceptual understanding for exams & coursework.
@@ -271,42 +271,6 @@ Rather than just handing you the answers, I help you develop true understanding 
           </CardContent>
         </Card>
       </div>
-
-      {/* Starter Prompts (if chat is short) */}
-      {messages.length <= 2 && (
-        <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-            <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
-            Suggested Exploration Topics
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {starterPrompts.map((starter, idx) => {
-              const IconComp = starter.icon
-              return (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setSubject(starter.subject)
-                    handleSend(starter.prompt)
-                  }}
-                  className="text-left p-3.5 bg-card hover:bg-muted/50 border border-border hover:border-primary/50 rounded-xl transition-all shadow-sm hover:shadow group cursor-pointer"
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <IconComp className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-medium">
-                      {starter.badge}
-                    </Badge>
-                  </div>
-                  <p className="text-xs font-bold text-foreground leading-tight">{starter.title}</p>
-                  <p className="text-[11px] text-muted-foreground line-clamp-2 mt-1 leading-relaxed">
-                    {starter.prompt}
-                  </p>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Main Chat Stream Container */}
       <Card className="bg-card border-border shadow-lg overflow-hidden flex flex-col h-[580px]">

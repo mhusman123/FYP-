@@ -41,7 +41,7 @@ export default function QuizGeneratorPage() {
   const [subject, setSubject] = useState('Computer Science')
   const [topic, setTopic] = useState('Python Data Structures')
   const [difficulty, setDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('intermediate')
-  const [numQuestions, setNumQuestions] = useState(4)
+  const [numQuestions, setNumQuestions] = useState(20)
 
   // Arena state
   const [quizState, setQuizState] = useState<'config' | 'loading' | 'active' | 'completed'>('config')
@@ -50,7 +50,7 @@ export default function QuizGeneratorPage() {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
   const [showHint, setShowHint] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(120)
+  const [timeLeft, setTimeLeft] = useState(600)
   const [pointsClaimed, setPointsClaimed] = useState(false)
   const [claimedPointsValue, setClaimedPointsValue] = useState(0)
 
@@ -78,7 +78,12 @@ export default function QuizGeneratorPage() {
     setSubmitted(false)
     setPointsClaimed(false)
     setCurrentQIndex(0)
-    setTimeLeft(numQuestions * 35)
+    const getDuration = (cnt: number) => {
+      if (cnt <= 20) return 600; // 10 mins
+      if (cnt <= 35) return 1020; // 17 mins
+      return 1500; // 25 mins
+    };
+    setTimeLeft(getDuration(numQuestions));
 
     try {
       const res = await fetch('/api/ai/quiz-generate', {
@@ -185,7 +190,7 @@ export default function QuizGeneratorPage() {
           <Button asChild variant="outline" className="bg-white/10 hover:bg-white/20 border-white/20 text-white text-xs h-10 rounded-xl">
             <Link href="/ai-tutor">
               <Brain className="h-4 w-4 mr-1.5 text-cyan-300" />
-              1-on-1 Socratic Mentor
+              Socratic AI Mentor
             </Link>
           </Button>
         </div>
@@ -278,9 +283,9 @@ export default function QuizGeneratorPage() {
                       <SelectValue placeholder="Number of Questions" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="3">3 Quick Questions (1 min)</SelectItem>
-                      <SelectItem value="4">4 Standard Questions (2 mins)</SelectItem>
-                      <SelectItem value="5">5 Comprehensive Questions (3 mins)</SelectItem>
+                      <SelectItem value="20">20 Questions - Quick Sprint (10 Mins)</SelectItem>
+                      <SelectItem value="35">35 Questions - Standard Assessment (17 Mins)</SelectItem>
+                      <SelectItem value="50">50 Questions - Comprehensive Exam (25 Mins)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

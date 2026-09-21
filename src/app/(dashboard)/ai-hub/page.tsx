@@ -73,7 +73,7 @@ export default function AIHubPage() {
                 </Badge>
               </div>
               <CardTitle className="text-lg font-bold text-foreground">
-                Socratic AI 1-on-1 Mentor
+                Socratic AI Mentor
               </CardTitle>
               <CardDescription className="text-xs leading-relaxed">
                 Step-by-step conceptual reasoning for Calculus, Physics, Coding, and Sindh Studies. Asks probing questions rather than spoiling answers.
