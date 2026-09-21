@@ -1,7 +1,18 @@
-// Utility functions for API calls
-const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://your-domain.com/api' 
-  : 'http://localhost:3000/api'
+// Dynamic API Base URL resolution for local and Vercel cloud deployment
+function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    return '/api'
+  }
+  if (process.env.NEXTAUTH_URL) {
+    return `${process.env.NEXTAUTH_URL.replace(/\/$/, '')}/api`
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api`
+  }
+  return 'http://localhost:3000/api'
+}
+
+const API_BASE = getApiBase()
 
 // Type definitions
 export interface Course {
@@ -149,9 +160,10 @@ export async function fetchCourses(): Promise<Course[]> {
 
 export async function fetchAssignments(courseId?: string): Promise<Assignment[]> {
   try {
+    const base = getApiBase()
     const url = courseId 
-      ? `${API_BASE}/assignments?courseId=${courseId}`
-      : `${API_BASE}/assignments`
+      ? `${base}/assignments?courseId=${courseId}`
+      : `${base}/assignments`
       
     const response = await fetch(url, {
       headers: {
@@ -173,9 +185,10 @@ export async function fetchAssignments(courseId?: string): Promise<Assignment[]>
 
 export async function fetchSubmissions(assignmentId?: string): Promise<Submission[]> {
   try {
+    const base = getApiBase()
     const url = assignmentId 
-      ? `${API_BASE}/submissions?assignmentId=${assignmentId}`
-      : `${API_BASE}/submissions`
+      ? `${base}/submissions?assignmentId=${assignmentId}`
+      : `${base}/submissions`
       
     const response = await fetch(url, {
       headers: {
@@ -197,7 +210,8 @@ export async function fetchSubmissions(assignmentId?: string): Promise<Submissio
 
 export async function fetchBadges(earned = false): Promise<Badge[]> {
   try {
-    const response = await fetch(`${API_BASE}/badges${earned ? '?earned=true' : ''}`, {
+    const base = getApiBase()
+    const response = await fetch(`${base}/badges${earned ? '?earned=true' : ''}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -217,7 +231,8 @@ export async function fetchBadges(earned = false): Promise<Badge[]> {
 
 export async function fetchCurrentUser(): Promise<User | null> {
   try {
-    const response = await fetch(`${API_BASE}/users/me`, {
+    const base = getApiBase()
+    const response = await fetch(`${base}/users/me`, {
       headers: {
         'Content-Type': 'application/json',
       },

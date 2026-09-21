@@ -95,5 +95,6 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
     error: "/auth/error"
   },
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || "sindh-school-secret-key-2026-prod-fallback",
   debug: process.env.NODE_ENV === "development",
 }

@@ -180,6 +180,8 @@ function getCategoryIcon(category: string) {
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function BadgesPage() {
   // Fetch real badges data
   const allBadges = await fetchBadges(false) // Get all badges with progress

@@ -224,6 +224,8 @@ const mockCourses = [
   }
 ]
 
+export const dynamic = 'force-dynamic'
+
 export default async function CoursesPage() {
   const session = await getServerSession(authOptions)
   const userRole = session?.user?.role || 'STUDENT'
