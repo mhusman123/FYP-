@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/auth-provider";
+import { DemoBanner } from "@/components/demo-banner";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sindh School of Technology - Educational Management System",
-  description: "A comprehensive educational platform for students and educators at Sindh School of Technology",
+  title: "EduPlatform AI — Enterprise-Grade AI Learning & Exam Platform",
+  description: "An all-in-one licensable AI learning platform with Socratic tutoring, automated grading, adaptive exam generation, and plagiarism detection for schools and universities.",
 };
 
 export default function RootLayout({
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${geistMono.variable} font-sans antialiased bg-[#00141f]`}
       >
         <AuthProvider>
+          <DemoBanner />
           {children}
         </AuthProvider>
       </body>

@@ -5,22 +5,15 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
   Menu,
   X,
-  ChevronDown,
-  ChevronRight,
-  Home as HomeIcon,
   Sparkles,
-  BookOpen,
-  School,
-  CreditCard,
-  GraduationCap
+  Bot,
+  CheckCircle2,
+  HelpCircle,
+  User,
+  Layers,
+  FileCode
 } from 'lucide-react'
 
 interface LandingHeaderProps {
@@ -30,7 +23,6 @@ interface LandingHeaderProps {
 export function LandingHeader({ session }: LandingHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false)
-  const [openAccordion, setOpenAccordion] = useState<string | null>(null)
 
   useEffect(() => {
     let ticking = false
@@ -49,10 +41,6 @@ export function LandingHeader({ session }: LandingHeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const toggleAccordion = (name: string) => {
-    setOpenAccordion(openAccordion === name ? null : name)
-  }
-
   const closeDrawer = () => {
     setIsMobileDrawerOpen(false)
   }
@@ -63,11 +51,11 @@ export function LandingHeader({ session }: LandingHeaderProps) {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border-none outline-none ring-0",
           isScrolled 
-            ? "shadow-xl bg-[#1A163B]/95 backdrop-blur-md" 
+            ? "shadow-xl bg-[#1A163B]/95 backdrop-blur-md border-b border-indigo-500/20" 
             : "bg-transparent shadow-none"
         )}
       >
-        {/* Main Upper Bar - Floating transparent over Hero when at top, smoothly collapses on scroll */}
+        {/* Main Upper Bar */}
         <div 
           className={cn(
             "w-full overflow-hidden transition-[max-height,opacity,padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[max-height,opacity,padding] border-none",
@@ -82,36 +70,59 @@ export function LandingHeader({ session }: LandingHeaderProps) {
               <Link href="/" className="flex items-center gap-2 group ml-1 sm:ml-4 md:ml-6">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/logo.png"
-                  alt="Sindh School of Technology"
+                  src="/logo.png?v=9"
+                  alt="Logo"
                   className="h-8 sm:h-9 md:h-10 w-auto max-w-[190px] sm:max-w-[220px] object-contain hover:opacity-90 transition-opacity drop-shadow-md"
                 />
               </Link>
 
-              {/* Desktop Center-Right: Three Crimson Buttons (About, Features, Users) */}
-              <div className="hidden md:flex items-center gap-2 mr-2 sm:mr-6 md:mr-10 lg:mr-14">
+              {/* Desktop Center-Right: Upper Action Buttons in Unified Crimson Red & CAPITALIZED */}
+              <div className="hidden md:flex items-center gap-2 mr-1 sm:mr-4 md:mr-6 lg:mr-8">
+                {/* 1. Core Workflows */}
                 <Button 
                   size="sm" 
-                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-normal rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-semibold uppercase tracking-wider rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
                   asChild
                 >
-                  <Link href="/our-school">About</Link>
+                  <Link href="#features">CORE WORKFLOWS</Link>
                 </Button>
 
+                {/* 2. How It Works */}
                 <Button 
                   size="sm" 
-                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-normal rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-semibold uppercase tracking-wider rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
                   asChild
                 >
-                  <Link href="/our-school/facilities">Features</Link>
+                  <Link href="#how-it-works">HOW IT WORKS</Link>
                 </Button>
 
+                {/* 3. Creator */}
                 <Button 
                   size="sm" 
-                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-normal rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-semibold uppercase tracking-wider rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
                   asChild
                 >
-                  <Link href={session ? "/dashboard" : "/auth/signin"}>Users</Link>
+                  <Link href="#about">CREATOR</Link>
+                </Button>
+
+                {/* 4. Request Pilot */}
+                <Button 
+                  size="sm" 
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-semibold uppercase tracking-wider rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
+                  asChild
+                >
+                  <Link href="#pilot-request">REQUEST PILOT</Link>
+                </Button>
+
+                {/* 5. Live Demo */}
+                <Button 
+                  size="sm" 
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-semibold uppercase tracking-wider rounded-none px-2.5 h-7 shadow-sm transition-all hover:scale-[1.02] border-none" 
+                  asChild
+                >
+                  <Link href={session ? "/dashboard" : "/auth/signin"}>
+                    {session ? "PORTAL DASHBOARD" : "LIVE DEMO"}
+                  </Link>
                 </Button>
               </div>
 
@@ -120,160 +131,81 @@ export function LandingHeader({ session }: LandingHeaderProps) {
                 <button
                   type="button"
                   onClick={() => setIsMobileDrawerOpen(true)}
-                  className="flex items-center justify-center h-9 w-9 rounded-lg border border-indigo-500/30 bg-[#1E1B4B] text-white hover:bg-[#2B2664] hover:text-indigo-200 transition-colors cursor-pointer shadow-sm"
-                  aria-label="Open mobile navigation menu"
+                  className="flex items-center justify-center h-8 w-8 rounded-lg border border-indigo-500/30 bg-[#1E1B4B] text-white hover:bg-[#2B2664] transition-colors cursor-pointer shadow-sm"
+                  aria-label="Open navigation menu"
                 >
-                  <Menu className="h-5 w-5 text-white" />
+                  <Menu className="h-4 w-4 text-white" />
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Desktop Navigation Plate (Single complete line of buttons when scrolled, or Twilight Indigo secondary bar when at top) */}
+        {/* Desktop Navigation Plate - All Buttons CAPITALIZED */}
         <div 
           className={cn(
-            "hidden md:flex w-full transition-all duration-300 min-h-[38px] px-4 sm:px-6 items-center justify-center border-none outline-none",
+            "hidden md:flex w-full transition-all duration-300 min-h-[36px] px-4 sm:px-6 items-center justify-center border-none outline-none",
             isScrolled
-              ? "py-2 bg-transparent shadow-none"
-              : "py-0.5 bg-[#1E1B4B]/75 backdrop-blur-md shadow-md border-b border-indigo-500/20"
+              ? "py-1.5 bg-transparent shadow-none"
+              : "py-0.5 bg-[#1E1B4B]/80 backdrop-blur-md shadow-md border-b border-indigo-500/20"
           )}
         >
-          <div className="max-w-7xl mx-auto w-full flex items-center justify-center gap-1.5 sm:gap-3 md:gap-5 lg:gap-6 overflow-x-auto py-0.5 scrollbar-none">
-            {/* 1. Home */}
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-5 lg:gap-7 overflow-x-auto py-0.5 scrollbar-none text-[11px]">
             <Link 
-              href="/home" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              href="#overview" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap"
             >
-              Home
+              OVERVIEW
             </Link>
 
-            {/* 2. Why Choose Us (with arrow) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
-                  <span>Why Choose Us</span>
-                  <ChevronDown className="h-3 w-3 opacity-90" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                sideOffset={6}
-                className="w-72 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
-              >
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/mission-and-values">Mission, Vision & Values</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/community">SST & BSV Community</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/wellbeing-programme">Wellbeing Programme</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/digital-learning-programme">Digital Learning Programme</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/university-career-guidance-programme">University & Career Guidance</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/music-programme">Music & Arts Programme</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/extra-curricular-activities">Extra-Curricular Activities</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/summer-school">Summer School & Enrichment</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/why-choose-us/cognita-family">Our Global Cognita Family</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* 3. Academic Excellence */}
+            {/* Changed from '6 AI Workflows' to 'AI WORKFLOWS' */}
             <Link 
-              href="/academic-excellence" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              href="#features" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
             >
-              Academic Excellence
+              <Bot className="h-3 w-3 text-cyan-300" />
+              AI WORKFLOWS
             </Link>
 
-            {/* 4. Sindh Education */}
             <Link 
-              href="/sindh-education" 
-              className="px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap rounded-xs"
+              href="#product-tour" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
             >
-              Sindh Education
+              <Layers className="h-3 w-3 text-indigo-300" />
+              PRODUCT TOUR
             </Link>
 
-            {/* 5. Our School (with arrow) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
-                  <span>Our School</span>
-                  <ChevronDown className="h-3 w-3 opacity-90" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                sideOffset={6}
-                className="w-72 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
-              >
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/your-childs-journey">Your Child’s Journey</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/early-years-foundation-stage">Early Years (Ages 2–5)</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/primary-education">Primary Education (Ages 5–11)</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/secondary-education">Secondary Education (Ages 11–16)</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/sixth-form">SST Nexus – Sixth Form (Ages 16–18)</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/school-information">School Information</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/facilities">Campus Facilities</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/school-news">School News</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/our-school/blog">School Blog</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link 
+              href="#how-it-works" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
+            >
+              <CheckCircle2 className="h-3 w-3 text-emerald-300" />
+              PILOT PROCESS
+            </Link>
 
-            {/* 6. Admissions & Fees (with arrow) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-2 py-1 text-[11px] sm:text-xs font-bold text-white hover:text-indigo-200 hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer rounded-xs">
-                  <span>Admissions & Fees</span>
-                  <ChevronDown className="h-3 w-3 opacity-90" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                sideOffset={6}
-                className="w-64 p-1.5 bg-[#1E1B4B] text-white shadow-2xl rounded-xl border border-indigo-500/25 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-150"
-              >
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/admissions-and-fees/admissions-process">Admissions Process</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/admissions-and-fees/school-fees">School Fees</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer font-semibold text-xs py-2 px-3 rounded-lg text-slate-100 hover:text-white hover:bg-[#8D1B2D] focus:bg-[#8D1B2D] focus:text-white data-[highlighted]:bg-[#8D1B2D] data-[highlighted]:text-white transition-colors duration-150">
-                  <Link href="/admissions-and-fees/open-days-and-visits">Open Days & Visits</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link 
+              href="#about" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
+            >
+              <User className="h-3 w-3 text-amber-300" />
+              DEVELOPER
+            </Link>
+
+            <Link 
+              href="#changelog" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
+            >
+              <FileCode className="h-3 w-3 text-purple-300" />
+              CHANGELOG
+            </Link>
+
+            <Link 
+              href="#faq" 
+              className="px-2 py-0.5 font-bold uppercase tracking-wider text-slate-200 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1"
+            >
+              <HelpCircle className="h-3 w-3 text-sky-300" />
+              FAQ
+            </Link>
           </div>
         </div>
 
@@ -283,356 +215,190 @@ export function LandingHeader({ session }: LandingHeaderProps) {
             <Link href="/" className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo.png"
-                alt="Sindh School of Technology"
+                src="/logo.png?v=9"
+                alt="Logo"
                 className="h-7 w-auto object-contain"
               />
             </Link>
             <button
               type="button"
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="flex items-center justify-center h-8 w-8 rounded-lg border border-cyan-500/30 bg-[#002E40] text-white hover:bg-[#003850] transition-colors"
+              className="flex items-center justify-center h-7 w-7 rounded-md border border-indigo-500/30 bg-[#1E1B4B] text-white hover:bg-[#2B2664] transition-colors"
               aria-label="Open mobile navigation menu"
             >
-              <Menu className="h-4 w-4 text-white" />
+              <Menu className="h-3.5 w-3.5 text-white" />
             </button>
           </div>
         )}
       </header>
 
-      {/* Mobile Right Slide-over Sidebar Drawer */}
+      {/* Mobile Slide-over Sidebar Drawer */}
       {isMobileDrawerOpen && (
         <div className="fixed inset-0 z-50 flex justify-end md:hidden animate-in fade-in duration-200">
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
             onClick={closeDrawer}
             aria-hidden="true"
           />
 
-          {/* Sidebar Drawer Panel - Dark High-Tech Aesthetic */}
+          {/* Sidebar Drawer Panel */}
           <aside className="relative z-10 w-80 max-w-[85vw] h-full bg-[#001724] text-slate-100 border-l border-cyan-500/20 shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
             
             {/* Drawer Header */}
-            <div className="p-4 border-b border-cyan-500/20 bg-[#00121d] flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
+            <div className="p-3.5 border-b border-cyan-500/20 bg-[#00121d] flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/logo.png"
-                  alt="Sindh School of Technology"
-                  className="h-8 w-auto max-w-[160px] object-contain drop-shadow-md"
+                  src="/logo.png?v=9"
+                  alt="Logo"
+                  className="h-7 w-auto max-w-[160px] object-contain drop-shadow-md"
                 />
               </div>
 
               <button
                 type="button"
                 onClick={closeDrawer}
-                className="h-8 w-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="h-7 w-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 aria-label="Close menu"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            {/* Drawer Body: Scrollable Navigation Links */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-5">
-              
-              {/* Quick Action Buttons */}
+            {/* Drawer Body */}
+            <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+              {/* Quick Actions in Red */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-2 px-1">
-                  Quick Actions
+                <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-2 px-1">
+                  QUICK ACTIONS
                 </p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   <Link
-                    href="/our-school"
+                    href="#features"
                     onClick={closeDrawer}
-                    className="flex items-center justify-center py-2 px-2 text-center text-xs font-semibold bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-sm shadow-xs"
+                    className="flex items-center justify-center py-2 px-1 text-center text-[11px] font-bold uppercase tracking-wider bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-none shadow-xs"
                   >
-                    About
+                    FEATURES
                   </Link>
                   <Link
-                    href="/our-school/facilities"
+                    href="#pilot-request"
                     onClick={closeDrawer}
-                    className="flex items-center justify-center py-2 px-2 text-center text-xs font-semibold bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-sm shadow-xs"
+                    className="flex items-center justify-center py-2 px-1 text-center text-[11px] font-bold uppercase tracking-wider bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-none shadow-xs"
                   >
-                    Features
+                    PILOT
                   </Link>
                   <Link
                     href={session ? "/dashboard" : "/auth/signin"}
                     onClick={closeDrawer}
-                    className="flex items-center justify-center py-2 px-2 text-center text-xs font-semibold bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-sm shadow-xs"
+                    className="flex items-center justify-center py-2 px-1 text-center text-[11px] font-bold uppercase tracking-wider bg-[#8D1B2D] text-white hover:bg-[#741322] transition-colors rounded-none shadow-xs"
                   >
-                    Users
+                    DEMO
                   </Link>
                 </div>
               </div>
 
-              {/* Nautilus Plate Navigation Links */}
+              {/* Navigation Links */}
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-2 px-1">
-                  School Navigation
+                <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-2 px-1">
+                  PLATFORM NAVIGATION
                 </p>
-                
                 <div className="space-y-1">
-                  {/* 1. Home */}
                   <Link
-                    href="/home"
+                    href="#features"
                     onClick={closeDrawer}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
                   >
-                    <HomeIcon className="h-4 w-4 text-cyan-300" />
-                    <span>Home</span>
+                    <Bot className="h-3.5 w-3.5 text-cyan-400" />
+                    <span>AI WORKFLOWS</span>
                   </Link>
 
-                  {/* 2. Why Choose Us (Accordion) */}
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => toggleAccordion('why-choose-us')}
-                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-4 w-4 text-cyan-300" />
-                        <span>Why Choose Us</span>
-                      </div>
-                      <ChevronRight className={`h-4 w-4 text-slate-400 transition-transform ${openAccordion === 'why-choose-us' ? 'rotate-90' : ''}`} />
-                    </button>
-                    
-                    {openAccordion === 'why-choose-us' && (
-                      <div className="ml-7 pl-2 border-l-2 border-cyan-500/30 space-y-1 py-1">
-                        <Link
-                          href="/why-choose-us/mission-and-values"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Mission, Vision & Values
-                        </Link>
-                        <Link
-                          href="/why-choose-us/community"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          SST & BSV Community
-                        </Link>
-                        <Link
-                          href="/why-choose-us/wellbeing-programme"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Wellbeing Programme
-                        </Link>
-                        <Link
-                          href="/why-choose-us/digital-learning-programme"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Digital Learning Programme
-                        </Link>
-                        <Link
-                          href="/why-choose-us/university-career-guidance-programme"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          University & Career Guidance
-                        </Link>
-                        <Link
-                          href="/why-choose-us/music-programme"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Music & Arts Programme
-                        </Link>
-                        <Link
-                          href="/why-choose-us/extra-curricular-activities"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Extra-Curricular Activities
-                        </Link>
-                        <Link
-                          href="/why-choose-us/summer-school"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Summer School & Enrichment
-                        </Link>
-                        <Link
-                          href="/why-choose-us/cognita-family"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Our Global Cognita Family
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 3. Academic Excellence */}
                   <Link
-                    href="/academic-excellence"
+                    href="#product-tour"
                     onClick={closeDrawer}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
                   >
-                    <BookOpen className="h-4 w-4 text-cyan-300" />
-                    <span>Academic Excellence</span>
+                    <Layers className="h-3.5 w-3.5 text-indigo-400" />
+                    <span>PRODUCT TOUR</span>
                   </Link>
 
-                  {/* 4. Sindh Education */}
                   <Link
-                    href="/sindh-education"
+                    href="#how-it-works"
                     onClick={closeDrawer}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
                   >
-                    <GraduationCap className="h-4 w-4 text-cyan-300" />
-                    <span>Sindh Education</span>
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>PILOT PROCESS</span>
                   </Link>
 
-                  {/* 5. Our School (Accordion) */}
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => toggleAccordion('our-school')}
-                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <School className="h-4 w-4 text-cyan-300" />
-                        <span>Our School</span>
-                      </div>
-                      <ChevronRight className={`h-4 w-4 text-slate-400 transition-transform ${openAccordion === 'our-school' ? 'rotate-90' : ''}`} />
-                    </button>
-                    
-                    {openAccordion === 'our-school' && (
-                      <div className="ml-7 pl-2 border-l-2 border-cyan-500/30 space-y-1 py-1">
-                        <Link
-                          href="/our-school/your-childs-journey"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Your Child’s Journey
-                        </Link>
-                        <Link
-                          href="/our-school/early-years-foundation-stage"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Early Years (Ages 2–5)
-                        </Link>
-                        <Link
-                          href="/our-school/primary-education"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Primary Education (Ages 5–11)
-                        </Link>
-                        <Link
-                          href="/our-school/secondary-education"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Secondary Education (Ages 11–16)
-                        </Link>
-                        <Link
-                          href="/our-school/sixth-form"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          SST Nexus – Sixth Form (Ages 16–18)
-                        </Link>
-                        <Link
-                          href="/our-school/school-information"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          School Information
-                        </Link>
-                        <Link
-                          href="/our-school/facilities"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Campus Facilities
-                        </Link>
-                        <Link
-                          href="/our-school/school-news"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          School News
-                        </Link>
-                        <Link
-                          href="/our-school/blog"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          School Blog
-                        </Link>
-                      </div>
-                    )}
-                  </div>
+                  <Link
+                    href="#about"
+                    onClick={closeDrawer}
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
+                  >
+                    <User className="h-3.5 w-3.5 text-amber-400" />
+                    <span>DEVELOPER</span>
+                  </Link>
 
-                  {/* 6. Admissions & Fees (Accordion) */}
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => toggleAccordion('admissions-fees')}
-                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-100 hover:bg-[#002E40] rounded-lg transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <CreditCard className="h-4 w-4 text-cyan-300" />
-                        <span>Admissions & Fees</span>
-                      </div>
-                      <ChevronRight className={`h-4 w-4 text-slate-400 transition-transform ${openAccordion === 'admissions-fees' ? 'rotate-90' : ''}`} />
-                    </button>
-                    
-                    {openAccordion === 'admissions-fees' && (
-                      <div className="ml-7 pl-2 border-l-2 border-cyan-500/30 space-y-1 py-1">
-                        <Link
-                          href="/admissions-and-fees/admissions-process"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Admissions Process
-                        </Link>
-                        <Link
-                          href="/admissions-and-fees/school-fees"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          School Fees
-                        </Link>
-                        <Link
-                          href="/admissions-and-fees/open-days-and-visits"
-                          onClick={closeDrawer}
-                          className="block px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-[#8D1B2D] rounded-md transition-colors"
-                        >
-                          Open Days & Visits
-                        </Link>
-                      </div>
-                    )}
-                  </div>
+                  <Link
+                    href="#changelog"
+                    onClick={closeDrawer}
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
+                  >
+                    <FileCode className="h-3.5 w-3.5 text-purple-400" />
+                    <span>CHANGELOG</span>
+                  </Link>
+
+                  <Link
+                    href="#faq"
+                    onClick={closeDrawer}
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-200 hover:bg-[#002E40] rounded-lg transition-colors"
+                  >
+                    <HelpCircle className="h-3.5 w-3.5 text-sky-400" />
+                    <span>FAQ</span>
+                  </Link>
+
+                  <Link
+                    href="/ai-hub"
+                    onClick={closeDrawer}
+                    className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-cyan-300 hover:bg-cyan-950/60 rounded-lg transition-colors border border-cyan-500/20"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+                    <span>AI INNOVATION HUB</span>
+                  </Link>
                 </div>
               </div>
 
+              {/* Pilot Request Button */}
+              <div className="p-2.5 bg-gradient-to-br from-cyan-950/40 to-indigo-950/40 rounded-xl border border-cyan-500/20 text-center">
+                <p className="text-xs font-bold text-white mb-0.5">DEPLOY FOR YOUR INSTITUTION</p>
+                <p className="text-[10px] text-slate-400 mb-2">Free 30-day pilot tailored to your curriculum.</p>
+                <Button className="w-full bg-[#8D1B2D] hover:bg-[#741322] text-white text-[11px] font-bold uppercase tracking-wider h-7 rounded-none" asChild>
+                  <Link href="#pilot-request" onClick={closeDrawer}>
+                    REQUEST FREE PILOT
+                  </Link>
+                </Button>
+              </div>
             </div>
 
-            {/* Drawer Footer: Portal Access CTA */}
-            <div className="p-4 border-t border-cyan-500/20 bg-[#00121d] space-y-2">
+            {/* Drawer Footer */}
+            <div className="p-3 border-t border-cyan-500/20 bg-[#00121d] space-y-2">
               {session ? (
-                <Button className="w-full bg-[#002E40] hover:bg-[#003850] text-white font-semibold text-xs tracking-normal" asChild>
+                <Button className="w-full bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold uppercase tracking-wider text-xs h-8 rounded-none" asChild>
                   <Link href="/dashboard" onClick={closeDrawer}>
-                    Go to Portal Dashboard
+                    PORTAL DASHBOARD
                   </Link>
                 </Button>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" className="w-full font-semibold text-xs border-cyan-500/30 text-white bg-white/5 hover:bg-white/10" asChild>
+                  <Button variant="outline" className="w-full font-bold uppercase tracking-wider text-[11px] h-7 border-cyan-500/30 text-white bg-white/5 hover:bg-white/10" asChild>
                     <Link href="/auth/signin" onClick={closeDrawer}>
-                      Sign In
+                      SIGN IN
                     </Link>
                   </Button>
-                  <Button className="w-full bg-[#002E40] hover:bg-[#003850] text-white font-semibold text-xs" asChild>
+                  <Button className="w-full bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold uppercase tracking-wider text-[11px] h-7 rounded-none" asChild>
                     <Link href="/auth/signup" onClick={closeDrawer}>
-                      Register
+                      REGISTER
                     </Link>
                   </Button>
                 </div>

@@ -7,6 +7,7 @@ import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -124,24 +125,11 @@ export function Navigation({ user }: NavigationProps) {
             {/* Left: Brand Logo */}
             <div className="flex items-center gap-2 flex-shrink-0">
               <Link href="/dashboard" className="flex items-center gap-2 group">
-                {hasLogoImg ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src="/logo.png"
-                    alt="Sindh School of Technology"
+                <img
+                    src="/logo.png?v=9"
+                    alt="Logo"
                     className="h-7 sm:h-8 md:h-9 w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[180px] object-contain hover:opacity-90 transition-opacity drop-shadow-md"
-                    onError={() => setHasLogoImg(false)}
                   />
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-[#8D1B2D] flex items-center justify-center text-white shadow-sm">
-                      <GraduationCap className="h-5 w-5" />
-                    </div>
-                    <span className="text-xs sm:text-sm font-bold text-white hidden sm:inline">
-                      Sindh School of Technology
-                    </span>
-                  </div>
-                )}
               </Link>
             </div>
 

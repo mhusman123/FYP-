@@ -17,16 +17,6 @@ export function AIMentorModal() {
 
   return (
     <>
-      {/* Opposite Floating Button (Bottom-Left): Socratic AI 1-on-1 Tutor */}
-      <Link
-        href="/ai-tutor"
-        className="fixed bottom-6 left-6 h-13 px-4 rounded-full shadow-xl bg-gradient-to-r from-cyan-700 via-indigo-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white font-bold text-xs flex items-center gap-2.5 z-40 transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-cyan-400/30 backdrop-blur-md"
-        aria-label="Socratic AI Tutor"
-      >
-        <Brain className="h-5 w-5 text-cyan-200" />
-        <span className="hidden sm:inline font-semibold">Socratic AI Tutor</span>
-      </Link>
-
       {/* Floating Action Button (Bottom-Right): AI Assistant Chat */}
       <Button
         onClick={() => setIsOpen(true)}

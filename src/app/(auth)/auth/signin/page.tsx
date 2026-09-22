@@ -109,11 +109,10 @@ function SignInForm() {
           <span>Back to Home</span>
         </Link>
         <div className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
-            alt="Sindh School of Technology"
-            className="h-9 sm:h-11 w-auto max-w-[220px] object-contain drop-shadow-[0_2px_12px_rgba(6,182,212,0.3)]"
+            src="/logo.png?v=9"
+            alt="Logo"
+            className="h-8 sm:h-9 w-auto object-contain drop-shadow-md"
           />
         </div>
       </header>
@@ -126,7 +125,7 @@ function SignInForm() {
             <CardHeader className="text-center pb-3 border-b border-cyan-500/20 bg-gradient-to-b from-white/5 to-transparent">
               <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/40 mx-auto mb-2">
                 <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
-                <span>SST Educational Portal</span>
+                <span>EduPlatform AI Portal</span>
               </div>
               <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Welcome Back</CardTitle>
               <CardDescription className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-1">

@@ -15,14 +15,11 @@ import {
   GraduationCap,
   Play,
   Star,
-  Heart,
-  MessageCircle,
   Calendar,
   ChevronRight,
   ChevronDown,
   CheckCircle2,
   Globe,
-  MapPin,
   Mail,
   Phone,
   ArrowRight,
@@ -30,183 +27,403 @@ import {
   School,
   Languages,
   X,
+  Cpu,
+  Brain,
+  Zap,
+  Bot,
+  FileCheck,
+  ShieldCheck,
+  Flame,
+  Layers,
+  Send,
+  ExternalLink,
+  MessageSquare,
+  HelpCircle,
+  Clock,
   Compass,
-  Cpu
+  Search,
+  Code,
+  Terminal,
+  Sliders,
+  BarChart3,
+  Check,
+  Lock,
+  Database,
+  FileText,
+  AlertCircle,
+  Filter
 } from 'lucide-react'
 
 export default function HomePage() {
-  // Video Modal State
-  const [isVideoOpen, setIsVideoOpen] = useState(false)
-  
-  // News Filter Tab State
-  const [activeNewsCategory, setActiveNewsCategory] = useState<'all' | 'school-life'>('all')
-
-  // Multi-step Enquiry Form State
-  const [formStep, setFormStep] = useState<1 | 2 | 3>(1)
+  // Pilot Request Form State
   const [formData, setFormData] = useState({
-    prefix: 'Mr.',
-    firstName: '',
-    lastName: '',
+    schoolName: '',
+    contactName: '',
+    role: 'Principal / Head of School',
     email: '',
     phone: '',
-    childName: '',
-    childDob: '',
-    entryYear: '2025-2026',
-    stage: 'Primary',
-    campus: 'Karachi Main Campus',
-    languagePref: 'Trilingual (English, Urdu, Sindhi)',
-    contactPref: 'WhatsApp',
+    studentCount: '500 - 1,500 students',
+    country: '',
     message: ''
   })
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // FAQ Accordion State
+  // Interactive Product Tour State
+  const [activeTourTab, setActiveTourTab] = useState<number>(0)
+
+  // Changelog Filter State
+  const [changelogFilter, setChangelogFilter] = useState<string>('all')
+
+  // FAQ State & Category Filter
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [faqCategory, setFaqCategory] = useState<string>('all')
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
   }
 
-  const newsItems = [
+  // Product Tour Modules Data
+  const tourModules = [
     {
-      id: 1,
-      date: '26/04/2025',
-      category: 'school-life',
-      title: 'Annual Trilingual Declamation Contest: Celebrating English, Urdu, and Sindhi Oratory',
-      summary: 'Students across all academic stages demonstrated remarkable eloquence and literary mastery in our annual Trilingual Speech Championship, celebrating our rich cultural heritage and global vision.',
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop'
+      id: 'tutor',
+      name: 'Socratic AI Tutor',
+      tagline: 'Step-by-step conceptual mastery with zero spoilers',
+      icon: Brain,
+      color: 'indigo',
+      link: '/ai-tutor',
+      description: 'An intelligent conversational tutor that evaluates student responses, breaks down complex problems into manageable checkpoints, and guides students to find the answer themselves.',
+      highlights: [
+        'LaTeX mathematical formula and scientific diagram rendering',
+        'Support for Mathematics, Physics, Chemistry, Biology & CS',
+        'Interchangeable reasoning models (GPT-4o, Gemini 1.5, DeepSeek-R1)',
+        'Zero-spoil pedagogical guardrails to protect academic integrity'
+      ],
+      specs: [
+        { label: 'Response Latency', val: '< 800ms' },
+        { label: 'Model Support', val: 'GPT-4o / Gemini / DeepSeek' },
+        { label: 'Formula Rendering', val: 'Full KaTeX / LaTeX' }
+      ],
+      previewType: 'tutor'
     },
     {
-      id: 2,
-      date: '26/04/2025',
-      category: 'all',
-      title: 'Sindh Education Excellence Award: SST Ranked #1 in Educational Technology & Innovation',
-      summary: 'Sindh School of Technology has been officially honored with the prestigious Provincial Gold Standard for AI-assisted STEM pedagogy and comprehensive dual-curriculum outcomes.',
-      image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'
+      id: 'quiz',
+      name: 'Adaptive Quiz Arena',
+      tagline: 'Dynamic exam simulator with zero-collision randomization',
+      icon: Zap,
+      color: 'cyan',
+      link: '/quiz-generator',
+      description: 'Generates syllabus-aligned timed exams with Fisher-Yates question shuffling, progressive difficulty scaling, real-time in-quiz Socratic hints, and instant diagnostic scorecards.',
+      highlights: [
+        'Preset formats for 20 questions (10m), 35 questions (17m), and 50 questions (25m)',
+        'Fisher-Yates zero repetition algorithm across test sessions',
+        'In-quiz Socratic conceptual hints without losing exam score',
+        'Instant performance breakdown by topic, speed, and accuracy'
+      ],
+      specs: [
+        { label: 'Exam Tiers', val: '20 / 35 / 50 Questions' },
+        { label: 'Randomization', val: 'Fisher-Yates Shuffling' },
+        { label: 'Hint Engine', val: 'Live Socratic Guidance' }
+      ],
+      previewType: 'quiz'
     },
     {
-      id: 3,
-      date: '18/03/2025',
-      category: 'all',
-      title: 'Cambridge CAIE High Achievers & Sindh Board Top Positions',
-      summary: 'Our graduating cohort achieved a 100% pass rate with distinction stars in Cambridge O/A Levels and Sindh Board Intermediate examinations, securing admissions to top tier universities.',
-      image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop'
+      id: 'autograder',
+      name: 'Formative Rubric Autograder',
+      tagline: 'Instant 4-tier rubric evaluation with personalized growth plans',
+      icon: FileCheck,
+      color: 'emerald',
+      link: '/autograding',
+      description: 'Automates grading for student essays, coding solutions, and short-answer assignments across 4 objective criteria, providing constructive feedback and 1-click teacher overrides.',
+      highlights: [
+        '4-Tier Rubric: Understanding, Technical Depth, Critical Thinking, Presentation',
+        'Actionable student revision suggestions and improvement roadmaps',
+        'Educator verification queue with instant 1-click mark adjustment',
+        'Supports both natural language essays and code submissions'
+      ],
+      specs: [
+        { label: 'Rubric Criteria', val: '4-Tier Weighted Standard' },
+        { label: 'Educator Override', val: '1-Click Verification' },
+        { label: 'Feedback Speed', val: '< 2 Seconds' }
+      ],
+      previewType: 'autograder'
     },
     {
-      id: 4,
-      date: '12/02/2025',
-      category: 'school-life',
-      title: 'Sindh Cultural Heritage & Science Exhibition at SST Nexus Campus',
-      summary: 'Bridging cultural pride with modern science: Students presented traditional Sindhi crafts alongside AI robotics, renewable solar prototypes, and IoT agricultural systems.',
-      image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop'
+      id: 'plagiarism',
+      name: 'Originality & Plagiarism Engine',
+      tagline: 'Deep semantic similarity scanning and citation verification',
+      icon: ShieldCheck,
+      color: 'rose',
+      link: '/plagiarism',
+      description: 'Analyzes student submissions against class cohorts, online databases, and AI synthesis patterns, generating clear originality percentage reports with highlighted matched passages.',
+      highlights: [
+        'Syntactic and semantic similarity indexing across submitted coursework',
+        'Distinguishes between correctly cited quotations and uncredited text',
+        'Zero-data-retention policy — student work is never leaked or stored in public LLMs',
+        'Exportable PDF integrity certificates for school accreditation records'
+      ],
+      specs: [
+        { label: 'Scanning Method', val: 'Semantic + Syntactic Index' },
+        { label: 'Data Retention', val: 'Zero Public LLM Storage' },
+        { label: 'Reporting', val: 'Sentence-Level Highlighting' }
+      ],
+      previewType: 'plagiarism'
     },
     {
-      id: 5,
-      date: '20/01/2025',
-      category: 'school-life',
-      title: 'Comprehensive Pastoral Care & Seamless Academic Transition for New Students',
-      summary: 'Welcoming families from Karachi, Hyderabad, Sukkur, and across Pakistan with our dedicated language immersion advisors and student mentorship programs.',
-      image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop'
+      id: 'leaderboard',
+      name: 'Gamified Merit Leaderboard',
+      tagline: 'Daily study streaks, merit XP, and verified skill badges',
+      icon: Trophy,
+      color: 'amber',
+      link: '/leaderboard',
+      description: 'Transforms study habits with an intrinsic gamification system. Students earn XP for completed problem sets, build study streaks, and unlock departmental achievement badges.',
+      highlights: [
+        'Class, grade, and campus-level real-time competitive leaderboards',
+        'Daily streak multiplier that rewards consistent study habits over cramming',
+        'Digital skill badges verified by quiz performance and assignment milestones',
+        'Anti-cheat streak validation to maintain positive academic competition'
+      ],
+      specs: [
+        { label: 'Leaderboards', val: 'Class, Grade & Campus' },
+        { label: 'Streak Engine', val: 'Daily Active Multiplier' },
+        { label: 'Reward Type', val: 'Verifiable Digital Badges' }
+      ],
+      previewType: 'leaderboard'
     },
     {
-      id: 6,
-      date: '05/11/2024',
-      category: 'all',
-      title: 'National Robotics & Coding Olympiad Champions',
-      summary: 'SST Junior & Senior engineering teams claimed top podium honors at the All-Pakistan Inter-School Coding & Robotics Championship held at Expo Centre.',
-      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop'
+      id: 'analytics',
+      name: 'Teacher & Admin Telemetry',
+      tagline: 'Real-time cohort insights and early academic interventions',
+      icon: BarChart3,
+      color: 'purple',
+      link: '/dashboard',
+      description: 'Gives school administrators and department heads deep visibility into learning trends, pinpointing difficult concepts, curriculum gaps, and at-risk students before exam time.',
+      highlights: [
+        'Real-time class completion, average mastery curve, and time-on-task telemetry',
+        'Automated early warning flags for students struggling with core prerequisites',
+        'One-click roster and gradebook export to CSV, Excel, or SIS webhooks',
+        'Departmental analytics across STEM and Humanities faculties'
+      ],
+      specs: [
+        { label: 'Data Export', val: 'CSV / Excel / SIS API' },
+        { label: 'Early Warnings', val: 'Automated At-Risk Flags' },
+        { label: 'Telemetry', val: 'Real-time Cohort Tracking' }
+      ],
+      previewType: 'analytics'
     }
   ]
 
-  const filteredNews = activeNewsCategory === 'all' 
-    ? newsItems 
-    : newsItems.filter(item => item.category === activeNewsCategory)
-
-  const socialPosts = [
+  // Product Changelog / Updates Data
+  const changelogItems = [
     {
       id: 1,
-      caption: 'Sindhi Cultural Day celebrations with our Secondary pupils in traditional Ajrak & Topi! 🇵🇰',
-      likes: 342,
-      comments: 24,
-      image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop'
+      date: 'September 2026',
+      version: 'v2.4 Release',
+      category: 'exam',
+      badgeCategory: 'Examination Engine',
+      title: 'AI Quiz Arena: 3-Tier Timed Exam Simulator (20/35/50 Questions)',
+      summary: 'Deployed dynamic exam simulator with Fisher-Yates zero-repetition randomization, live Socratic hints, and precise time limits (10m, 17m, 25m).',
+      points: [
+        'Fisher-Yates zero repetition algorithm across test sessions',
+        '10m (20 Qs), 17m (35 Qs), and 25m (50 Qs) timed exam presets',
+        'In-quiz Socratic hints that guide without spoiling test score',
+        'Instant diagnostic scorecard with topic-level mastery telemetry'
+      ],
+      badge: 'Major Release',
+      badgeColor: 'bg-[#8D1B2D] text-white'
     },
     {
       id: 2,
-      caption: 'Our AI & Robotics lab in full action building smart tech for Sindh agriculture! 🤖✨',
-      likes: 418,
-      comments: 31,
-      image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=600&auto=format&fit=crop'
+      date: 'August 2026',
+      version: 'v2.3 Release',
+      category: 'ai',
+      badgeCategory: 'AI Reasoning Core',
+      title: 'Multi-Model AI Gateway: GPT-4o, Gemini 1.5 Flash, & DeepSeek-R1',
+      summary: 'Introduced interchangeable AI engines with LaTeX mathematical rendering, biochemical pathway breakdown, and step-by-step Socratic inquiry.',
+      points: [
+        '60% latency reduction with Gemini 1.5 Flash streaming pipeline',
+        'DeepSeek-R1 integrated for step-by-step mathematical proofs and STEM reasoning',
+        'Full KaTeX / LaTeX mathematical typesetting support',
+        'Multilingual prompt adaptability for English, Urdu, and Sindhi'
+      ],
+      badge: 'AI Core',
+      badgeColor: 'bg-indigo-600 text-white'
     },
     {
       id: 3,
-      caption: 'Trilingual Declamation finals: Inspiring speeches in English, Urdu, and Sindhi! 🎙️📚',
-      likes: 289,
-      comments: 18,
-      image: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=600&auto=format&fit=crop'
+      date: 'August 2026',
+      version: 'v2.2 Release',
+      category: 'grading',
+      badgeCategory: 'Teacher Copilot',
+      title: 'Formative Rubric Autograder & Growth Feedback Engine',
+      summary: 'Automated 4-tier rubric evaluation (Understanding, Technical Depth, Critical Thinking, Presentation) with actionable revision plans.',
+      points: [
+        'Configurable 4-tier weighted evaluation standard per department',
+        'Instant constructive feedback and student improvement roadmaps',
+        '1-click teacher override with custom educator note attachments',
+        'Support for code syntax checking and long-form essay submissions'
+      ],
+      badge: 'Autograding',
+      badgeColor: 'bg-emerald-600 text-white'
     },
     {
       id: 4,
-      caption: 'First week of the new academic term completed with smiles, energy and learning! 🎒🌟',
-      likes: 512,
-      comments: 42,
-      image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop'
+      date: 'July 2026',
+      version: 'v2.1 Release',
+      category: 'security',
+      badgeCategory: 'Security & Compliance',
+      title: 'Originality & Semantic Plagiarism Scanner with Zero LLM Retention',
+      summary: 'Deep syntactic and semantic similarity indexing across submitted coursework with zero public model storage policy.',
+      points: [
+        'Sentence-level highlight breakdown with direct citation verification',
+        'Zero-retention architecture: student work is never used to train public models',
+        'Cross-class and multi-cohort duplicate submission detection',
+        'Exportable PDF academic integrity certificates for school records'
+      ],
+      badge: 'Integrity',
+      badgeColor: 'bg-rose-600 text-white'
     },
     {
       id: 5,
-      caption: 'Science lab experiments with our young Primary innovators exploring chemistry! 🧪🔬',
-      likes: 310,
-      comments: 15,
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=600&auto=format&fit=crop'
+      date: 'July 2026',
+      version: 'v2.0 Release',
+      category: 'platform',
+      badgeCategory: 'Platform Infrastructure',
+      title: 'Centralized AI Innovation Hub & Multi-Role Navigation Architecture',
+      summary: 'Unified single-pane navigation across 72+ modules, gamified leaderboards, merit badges, and transparent grade adjustment workflows.',
+      points: [
+        'Single-pane navigation connecting Student, Teacher, and Admin portals',
+        'White-label institutional theme engine with custom school logos and colors',
+        'Ultra-fast Next.js Turbopack client-side state caching',
+        'Dedicated pilot sandbox environments with 24-hour rapid provisioning'
+      ],
+      badge: 'Infrastructure',
+      badgeColor: 'bg-cyan-700 text-white'
     },
     {
       id: 6,
-      caption: 'SST Nexus Sixth Form scholars preparing for international university applications! 🏛️🎓',
-      likes: 620,
-      comments: 55,
-      image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=600&auto=format&fit=crop'
-    },
-    {
-      id: 7,
-      caption: 'Sports gala matches and cricket tournament champions lifting the trophy! 🏆🏏',
-      likes: 467,
-      comments: 39,
-      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop'
-    },
-    {
-      id: 8,
-      caption: 'Early Years storytelling session exploring rich Sindhi folklore and English phonics! 📖✨',
-      likes: 375,
-      comments: 21,
-      image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop'
+      date: 'June 2026',
+      version: 'v1.9 Release',
+      category: 'platform',
+      badgeCategory: 'Student Motivation',
+      title: 'Gamified Merit Economy, Study Streaks & Cohort Leaderboards',
+      summary: 'Introduced student XP progression, daily study streak rewards, and verified digital skill badges to boost active daily engagement.',
+      points: [
+        'Dynamic XP calculation based on quiz difficulty and assignment thoroughness',
+        'Daily study streak multipliers with anti-cheat validation',
+        'Campus and grade-level competitive leaderboards',
+        'Digital achievement showcase with STEM and Humanities badges'
+      ],
+      badge: 'Gamification',
+      badgeColor: 'bg-amber-600 text-white'
     }
   ]
 
+  // Filtered changelog items
+  const filteredChangelog = changelogFilter === 'all'
+    ? changelogItems
+    : changelogItems.filter(item => item.category === changelogFilter || changelogFilter === 'all')
+
+  // Product Screenshots / Visual Highlights
+  const productScreenshots = [
+    {
+      id: 1,
+      caption: 'AI Tutor guiding a student through a multi-step calculus problem with LaTeX formulas',
+      tag: 'Socratic AI Tutor',
+      image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 2,
+      caption: 'Timed exam simulation mode with active countdown timer and adaptive difficulty',
+      tag: 'AI Quiz Arena',
+      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 3,
+      caption: "Teacher autograding dashboard with 4-tier rubric evaluation and revision roadmaps",
+      tag: 'Formative Autograder',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 4,
+      caption: 'Cohort leaderboards, active study streaks, and verified digital merit badges',
+      tag: 'Gamified Economics',
+      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop'
+    }
+  ]
+
+  // Comprehensive Product FAQs
   const faqs = [
     {
-      question: 'What educational programmes does Sindh School of Technology offer in Sindh & Pakistan?',
-      answer: 'Sindh School of Technology (SST) provides an integrated, world-class dual-track educational model from Early Years (ages 2–5), Primary (ages 5–11), and Secondary (ages 11–16) through to SST Nexus Sixth Form (ages 16–18+). Students can pursue Cambridge CAIE International qualifications (IGCSE & A-Levels) or Sindh BISE / Federal Board (FBISE) Matriculation and Intermediate (FSC Pre-Medical / Pre-Engineering / Computer Science), ensuring seamless admission to premier universities across Pakistan (AKU, IBA, FAST, LUMS, NED, NUST) and top universities worldwide.'
+      category: 'curriculum',
+      question: 'What curricula and academic syllabi does the platform support?',
+      answer: "The platform is 100% curriculum-agnostic. It is built to support Cambridge CAIE (O & A Levels), International Baccalaureate (IB), Edexcel, American AP, and national/provincial education board syllabi (such as Federal and Sindh Boards). During your free pilot onboarding, we configure the knowledge base with your school's exact textbooks, subject outlines, and exam formats."
     },
     {
-      question: 'How does the Trilingual Language System (English, Urdu, Sindhi) work?',
-      answer: 'Our curriculum is built on a structured Trilingual Framework: (1) English is the primary medium of instruction for STEM, global literature, coding, and international examinations; (2) Urdu is nurtured as our national language for cohesive communication, national literature, and cultural unity; and (3) Sindhi is taught systematically to celebrate regional heritage, historical literature, civic leadership, and regional communication in Sindh.'
+      category: 'ai',
+      question: 'Which AI models power the platform, and can schools choose which engines to enable?',
+      answer: 'Our platform features a multi-model reasoning gateway that supports OpenAI GPT-4o, Google Gemini 1.5 Flash/Pro, and DeepSeek-R1. School administrators can configure default engines per department (e.g., Gemini 1.5 Flash for high-speed general study, DeepSeek-R1 for complex STEM proofs, and GPT-4o for essay autograding).'
     },
     {
-      question: 'What are the advantages of studying at Sindh School of Technology?',
-      answer: 'Students benefit from a unique blend of international academic rigor, advanced AI-assisted learning tools (automated feedback, code autograding, Socratic defense), modern science and robotics laboratories, comprehensive sports facilities, and strong character development rooted in Pakistani and Sindhi ethical values.'
+      category: 'pedagogy',
+      question: 'How does the Socratic AI Tutor prevent students from simply copying homework answers?',
+      answer: "The AI Tutor is built with strict pedagogical guardrails. Instead of spitting out finished answers, it acts as a Socratic mentor: asking probing checkpoint questions, validating the student's thought process, and giving conceptual hints. It never writes complete assignment solutions for students."
     },
     {
-      question: 'How does SST support students transferring from different school systems across Sindh and Pakistan?',
-      answer: 'We provide specialized bridge programs, diagnostic language leveling in English, Urdu, and Sindhi, peer-buddy integration, and individualized academic counseling to ensure every student quickly adapts, excels, and feels deeply at home in our family atmosphere.'
+      category: 'customization',
+      question: 'Can the platform be custom-branded with our institution’s name, logo, and domain?',
+      answer: 'Yes! Every institutional deployment can be fully white-labeled. We configure your custom domain (e.g., learn.yourschool.edu), school crest, institutional color scheme, and welcome notices so the platform functions as an organic part of your digital campus.'
+    },
+    {
+      category: 'grading',
+      question: 'How does the Formative Autograder assist teachers without replacing human oversight?',
+      answer: 'The Autograder is designed as an educator co-pilot. When a student submits work, the AI provides an initial score across 4 objective rubric criteria (Understanding, Technical Depth, Critical Thinking, and Presentation) along with detailed feedback. Teachers can review, edit, or adjust marks with 1 click before scores are published to students.'
+    },
+    {
+      category: 'security',
+      question: 'How is student data privacy and academic security protected?',
+      answer: 'We enforce strict zero-data-retention AI protocols. Student submissions and chat logs are never used to train public AI models. All data is encrypted in transit (TLS 1.3) and at rest (AES-256), with role-based access control compliant with international education data protection standards.'
+    },
+    {
+      category: 'pilot',
+      question: 'How does the 30-day free school pilot work?',
+      answer: 'Our 30-day pilot is completely free with zero financial commitment. Within 24 hours of receiving your request, Muhammad Usman sets up a private sandbox environment for your school, preloaded with sample student and teacher accounts and your subject materials.'
+    },
+    {
+      category: 'integration',
+      question: 'Can the platform integrate with Google Classroom, Microsoft Teams, or our SIS?',
+      answer: 'Yes. The platform supports Google Single Sign-On (SSO), one-click grade roster export to CSV/Excel, and webhook integration for popular Learning Management Systems (LMS) and Student Information Systems (SIS).'
+    },
+    {
+      category: 'pricing',
+      question: 'What are the pricing and licensing models after the pilot concludes?',
+      answer: 'After a successful pilot, we offer affordable, predictable per-student annual licensing specifically tailored for emerging markets and private institutions. Pricing is customized based on enrollment size with zero setup fees and ongoing developer support.'
     }
   ]
 
+  // Filtered FAQs
+  const filteredFaqs = faqCategory === 'all'
+    ? faqs
+    : faqs.filter(f => f.category === faqCategory || faqCategory === 'all')
+
+  const handlePilotSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setFormSubmitted(true)
+    }, 600)
+  }
+
+  const currentTourModule = tourModules[activeTourTab]
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
-      {/* Header */}
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-cyan-500 selection:text-white">
+      {/* Universal Header */}
       <LandingHeader session={null} />
 
-      {/* 1. HERO BANNER: "Learn to Lead with Knowledge & Integrity" */}
-      <section className="relative overflow-hidden bg-[#002E40] text-white pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16 lg:pb-20">
+      {/* 1. HERO SECTION */}
+      <section id="overview" className="relative overflow-hidden bg-[#002E40] text-white pt-28 sm:pt-32 lg:pt-36 pb-14 sm:pb-20 lg:pb-24 border-b border-slate-800">
         <HeroVideoBackground
           imageUrl="https://images.unsplash.com/photo-1562774053-701939374585?q=85&w=2400&auto=format&fit=crop"
           posterUrl="https://images.unsplash.com/photo-1562774053-701939374585?q=85&w=2400&auto=format&fit=crop"
@@ -214,120 +431,128 @@ export default function HomePage() {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
+            {/* Left Hero Content */}
             <div className="lg:col-span-7 space-y-6 text-left">
               
-              {/* Trilingual Pill Header */}
+              {/* Eyebrow Badge */}
               <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-cyan-200 text-xs font-semibold uppercase tracking-wider">
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
-                  Sindh School of Technology
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-semibold uppercase tracking-wider shadow-sm">
+                  <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                  AI-Powered Education Platform
                 </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8D1B2D]/80 border border-[#8D1B2D] text-white text-xs font-bold tracking-wide">
-                  <Languages className="h-3.5 w-3.5" />
-                  Trilingual: English • اردو • سنڌي
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8D1B2D]/90 border border-[#8D1B2D] text-white text-xs font-bold tracking-wide shadow-sm">
+                  <Cpu className="h-3.5 w-3.5 text-amber-300" />
+                  Licensable School AI Infrastructure
                 </div>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12]">
-                Learn to be <span className="text-cyan-300">Yourself</span>
-                <span className="block text-2xl sm:text-3xl font-semibold text-slate-300 mt-2">
-                  علم، اخلاق ۽ جدت جو مرڪز
-                </span>
+              {/* Main Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+                Bring <span className="text-cyan-300">Enterprise-Grade AI Learning</span> to Your School
               </h1>
 
+              {/* Body Paragraph */}
               <p className="text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl font-normal">
-                Sindh School of Technology (SST) is a prestigious private educational institution located in the heart of Sindh, Pakistan. 
-                It features two state-of-the-art campuses designed to provide an outstanding education: one dedicated to Early Years, Primary and Secondary education, 
-                and the other, known as <span className="font-semibold text-white">SST Nexus</span>, exclusively for Sixth Form (A-Level & Intermediate) students. 
-                Welcoming students from across Sindh and all of Pakistan, from the ages of 2 to 18, we offer a comprehensive <strong className="text-white">trilingual education in English, Urdu, and Sindhi</strong>, delivering a modern, globally competitive, and culturally rooted learning experience.
+                An all-in-one platform combining an AI Socratic tutor, automated grading, adaptive exam generation, and plagiarism detection — built to give any school modern AI-driven education tools without the enterprise price tag.
               </p>
 
-              <div className="flex flex-wrap gap-4 pt-2">
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Button 
                   size="lg"
-                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-semibold text-sm px-6 h-12 shadow-lg transition-transform hover:scale-[1.02]"
+                  className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold text-sm px-7 h-12 shadow-xl transition-transform hover:scale-[1.02] cursor-pointer rounded-xl"
                   asChild
                 >
-                  <a href="#enquiry-form">Make an Enquiry</a>
+                  <a href="#pilot-request">
+                    <Send className="h-4 w-4 mr-2 text-cyan-200" />
+                    Request a Pilot
+                  </a>
                 </Button>
 
                 <Button 
                   size="lg"
                   variant="outline"
-                  onClick={() => setIsVideoOpen(true)}
-                  className="border-white/30 bg-white/5 hover:bg-white/10 text-white font-semibold text-sm px-6 h-12 backdrop-blur-sm gap-2"
+                  asChild
+                  className="border-white/30 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm px-6 h-12 backdrop-blur-sm gap-2 rounded-xl transition-all"
                 >
-                  <Play className="h-4 w-4 fill-white text-white" />
-                  Watch Campus Video (2 min)
+                  <a href="#product-tour">
+                    <Brain className="h-4 w-4 text-cyan-300" />
+                    Explore Product Tour
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </a>
                 </Button>
               </div>
 
-              {/* Distinction Quick Stats */}
-              <div className="grid grid-cols-4 gap-3 pt-6 border-t border-white/15">
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-white tracking-tight">2 – 18</div>
-                  <div className="text-[11px] text-slate-300 font-medium">Ages Welcomed</div>
+              {/* 4 Core Metric Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/15">
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-xs">
+                  <div className="text-lg sm:text-xl font-extrabold text-cyan-300 tracking-tight">3 AI Engines</div>
+                  <div className="text-[11px] text-slate-300 font-medium leading-snug mt-0.5">GPT-4o, Gemini, DeepSeek</div>
                 </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-cyan-300 tracking-tight">3</div>
-                  <div className="text-[11px] text-slate-300 font-medium">Languages (EN/UR/SD)</div>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-xs">
+                  <div className="text-lg sm:text-xl font-extrabold text-white tracking-tight">72+ Pages</div>
+                  <div className="text-[11px] text-slate-300 font-medium leading-snug mt-0.5">Modules & Workspaces</div>
                 </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-white tracking-tight">2</div>
-                  <div className="text-[11px] text-slate-300 font-medium">Campuses in Sindh</div>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-xs">
+                  <div className="text-lg sm:text-xl font-extrabold text-amber-300 tracking-tight">20 / 35 / 50</div>
+                  <div className="text-[11px] text-slate-300 font-medium leading-snug mt-0.5">Adaptive Exam Formats</div>
                 </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-bold text-cyan-300 tracking-tight">100%</div>
-                  <div className="text-[11px] text-slate-300 font-medium">Dual Board Passes</div>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-xs">
+                  <div className="text-lg sm:text-xl font-extrabold text-emerald-300 tracking-tight">Any Syllabus</div>
+                  <div className="text-[11px] text-slate-300 font-medium leading-snug mt-0.5">Cambridge, IB, National</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Campus Tech Stream Card */}
+            {/* Right Product Spotlight Card */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-2xl p-6 sm:p-8 bg-[#001724]/60 backdrop-blur-xl border border-cyan-500/30 shadow-2xl space-y-5">
+              <div className="relative rounded-3xl p-6 sm:p-8 bg-[#001724]/80 backdrop-blur-2xl border border-cyan-500/30 shadow-2xl space-y-5 text-white">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">Live Campus & AI Lab Stream</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">Live AI Learning Demo</span>
                   </div>
-                  <Badge className="bg-[#8D1B2D] text-white text-[11px] font-semibold border-none">
-                    SST Nexus
+                  <Badge className="bg-emerald-600 text-white text-[11px] font-bold border-none px-2.5 py-0.5">
+                    Ready to Deploy
                   </Badge>
                 </div>
 
                 <div className="space-y-3">
-                  <h3 className="text-lg font-bold text-white tracking-tight">
-                    Smart AI Classrooms & Robotics Centers
+                  <h3 className="text-xl font-bold text-white tracking-tight">
+                    Interactive Socratic Mentorship & Exam Simulation
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed font-light">
-                    Watch our computer science students collaborate on autonomous robotics, AI autograding models, and full-stack software development in real time.
+                    Test our live reasoning engine across Mathematics, Physics, Chemistry, Biology, and Computer Science. Asks probing questions, verifies logic, and generates zero-repetition exams with instant feedback.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-2">
+                <div className="grid grid-cols-2 gap-3 pt-1">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="text-xs text-cyan-300 font-semibold">1:1 Coding Device</div>
-                    <div className="text-lg font-black text-white">Apple / Linux</div>
+                    <div className="text-[11px] text-cyan-300 font-semibold uppercase tracking-wider">AI Tutor Latency</div>
+                    <div className="text-lg font-black text-white">&lt; 800ms</div>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="text-xs text-emerald-300 font-semibold">STEM Placement</div>
-                    <div className="text-lg font-black text-white">100% Rate</div>
+                    <div className="text-[11px] text-emerald-300 font-semibold uppercase tracking-wider">Autograding Rubric</div>
+                    <div className="text-lg font-black text-white">100% Automated</div>
                   </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
                   <Button
-                    onClick={() => setIsVideoOpen(true)}
-                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-semibold text-xs h-11 rounded-xl shadow-lg flex items-center justify-center gap-2"
+                    asChild
+                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs h-11 rounded-xl shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Play className="h-4 w-4 fill-white" />
-                    Open Full HD Interactive Video Tour
+                    <Link href="/ai-hub">
+                      <Sparkles className="h-4 w-4 text-amber-300" />
+                      Launch Live Interactive Demo
+                    </Link>
                   </Button>
+                  <p className="text-[11px] text-center text-slate-400">
+                    Sample student and educator accounts available inside.
+                  </p>
                 </div>
               </div>
             </div>
@@ -335,954 +560,1132 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. RECOGNISED BY LEADING EDUCATION RANKINGS IN SINDH & PAKISTAN */}
-      <section className="py-16 bg-white border-b">
+      {/* 2. BUILT FOR THE WAY MODERN SCHOOLS TEACH */}
+      <section className="py-16 sm:py-20 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
             <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-              Academic Accreditations & Honours
+              Institutional Flexibility
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Recognised by the Leading Education Rankings in Sindh & Pakistan
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Built for the Way Modern Schools Teach
             </h2>
-            <p className="text-base text-slate-600 leading-relaxed">
-              We believe that educational excellence is built day by day in the classroom and science laboratory. Sindh School of Technology has been featured in premier Pakistani and international education rankings, recognizing our trilingual approach, academic performance, technology integration, student support, and world-class campus facilities.
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Engineered from first principles to adapt to your school's curriculum, language requirements, and pedagogical philosophy.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center text-[#002E40] mb-4">
-                <Trophy className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">#1 in Sindh EdTech</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Ranked Top Technology & Dual-Curriculum School at the Sindh Education Excellence Awards.
-              </p>
-            </div>
-
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 mb-4">
-                <Languages className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">Trilingual Fluency Award</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Benchmark model for seamless fluency and literature mastery across English, Urdu, and Sindhi.
-              </p>
-            </div>
-
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 mb-4">
-                <Award className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">Dual Board Certification</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                100% accredited for Cambridge CAIE (O/A Levels) and Sindh BISE / FBISE Matric and Intermediate diplomas.
-              </p>
-            </div>
-
-            <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl hover:shadow-md transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-purple-100 flex items-center justify-center text-purple-700 mb-4">
-                <Globe className="h-6 w-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">Top University Placements</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Direct pathway to AKU, IBA, FAST, LUMS, NED, NUST, and leading global universities worldwide.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. LEARNING ENVIRONMENT & 2-MINUTE DISCOVERY VIDEO */}
-      <section id="about" className="py-16 sm:py-20 bg-slate-100 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Narrative */}
-            <div className="lg:col-span-6 space-y-6 text-left">
-              <Badge className="bg-[#002E40] text-white text-xs font-semibold px-3 py-1">
-                Our Campus Environment
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-snug">
-                We are very proud of the learning environment we provide our students
-              </h2>
-              <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-                A warm family atmosphere where modern technology, collaborative learning, and rich Sindhi hospitality make every student feel unique, understood, appreciated, and loved.
-              </p>
-              
-              <div className="p-5 bg-white rounded-xl border border-slate-200 shadow-xs space-y-2">
-                <div className="flex items-center gap-2 text-amber-500">
-                  <Star className="h-4 w-4 fill-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400" />
-                  <span className="text-xs font-bold text-slate-800 ml-1">Parent Satisfaction Score (4.9 / 5.0)</span>
+            {/* Card 1 */}
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:shadow-lg transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="h-12 w-12 rounded-xl bg-blue-100 text-[#002E40] flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <BookOpen className="h-6 w-6" />
                 </div>
-                <p className="text-xs sm:text-sm text-slate-600 italic">
-                  &ldquo;A dynamic educational environment where children master modern technology and international languages while staying deeply proud of their Sindhi and Pakistani identity.&rdquo;
+                <h3 className="text-base font-bold text-slate-900">Curriculum-Agnostic</h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                  Configurable for Cambridge CAIE, International Baccalaureate (IB), American AP, or national education board syllabi.
                 </p>
               </div>
             </div>
 
-            {/* Right Video Callout Card */}
-            <div className="lg:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
-                <div className="relative w-full aspect-video sm:h-96">
-                  <iframe
-                    src="https://www.youtube.com/embed/RST4OPVl3Gs"
-                    title="Come and discover Sindh School of Technology"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0"
-                  />
-                </div>
-                
-                {/* Duration & Campus Badge */}
-                <div className="p-4 bg-slate-900 text-white flex items-center justify-between border-t border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-[#8D1B2D] text-white font-semibold text-xs px-2.5 py-0.5 border-none">
-                      Campus Life
-                    </Badge>
-                    <span className="text-xs text-slate-300 font-medium">SST Nexus & Karachi Campus</span>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setIsVideoOpen(true)}
-                    className="text-xs border-white/20 text-white bg-white/10 hover:bg-white/20 h-8 gap-1.5"
-                  >
-                    <Play className="h-3.5 w-3.5 fill-cyan-300 text-cyan-300" />
-                    Fullscreen Modal
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. EDUCATIONAL PILLARS: Trilingual System, Academic Excellence, Sindh Community */}
-      <section id="features" className="py-16 sm:py-24 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-            <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-              Our Core Educational Pillars
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              A Comprehensive Educational Model for Sindh & Pakistan
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: Trilingual Education System */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all">
-              <div className="space-y-4">
-                <div className="h-12 w-12 rounded-xl bg-[#002E40] text-white flex items-center justify-center shadow-sm">
+            {/* Card 2 */}
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:shadow-lg transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="h-12 w-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Languages className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
-                  Trilingual Education System
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                  Based on a comprehensive trilingual model, our teaching provides complete mastery in <strong className="text-slate-800">English, Urdu, and Sindhi</strong>. 
-                  English empowers students for international science and digital technology; Urdu strengthens national unity and classical literature; and Sindhi anchors our pupils in the rich heritage and civic leadership of Sindh. 
-                  Students obtain official Cambridge and Sindh Board certificates, nurturing well-rounded global thinkers.
+                <h3 className="text-base font-bold text-slate-900">Multi-Language Ready</h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                  Deployable in English, Urdu, Sindhi, Arabic, or any regional language of instruction with seamless vernacular support.
                 </p>
-              </div>
-              <div className="pt-6 mt-4 border-t border-slate-200">
-                <span className="text-xs font-semibold text-[#8D1B2D] inline-flex items-center gap-1">
-                  English • اردو • سنڌي <ChevronRight className="h-3.5 w-3.5" />
-                </span>
               </div>
             </div>
 
-            {/* Card 2: Academic & Technological Excellence */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all">
-              <div className="space-y-4">
-                <div className="h-12 w-12 rounded-xl bg-[#8D1B2D] text-white flex items-center justify-center shadow-sm">
+            {/* Card 3 */}
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:shadow-lg transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="h-12 w-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Cpu className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
-                  Academic & Tech Excellence
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                  SST strives to offer an exceptional educational model combining rigorous Cambridge CAIE academics with state-of-the-art computer science and Socratic inquiry. 
-                  Through dedicated teacher mentorship, students achieve outstanding marks in official examinations, securing admissions to top engineering, medical, and business universities across Pakistan and abroad.
+                <h3 className="text-base font-bold text-slate-900">AI-First Architecture</h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                  Three interchangeable AI reasoning engines (GPT-4o, Gemini 1.5, DeepSeek-R1) for optimal cost, latency, and quality flexibility.
                 </p>
-              </div>
-              <div className="pt-6 mt-4 border-t border-slate-200">
-                <span className="text-xs font-semibold text-[#8D1B2D] inline-flex items-center gap-1">
-                  Premier University Placements <ChevronRight className="h-3.5 w-3.5" />
-                </span>
               </div>
             </div>
 
-            {/* Card 3: Sindh & Pakistani Community */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all">
-              <div className="space-y-4">
-                <div className="h-12 w-12 rounded-xl bg-[#002E40] text-white flex items-center justify-center shadow-sm">
-                  <Users className="h-6 w-6" />
+            {/* Card 4 */}
+            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl hover:shadow-lg transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="h-12 w-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <GraduationCap className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
-                  Vibrant SST Community
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                  Founded to transform education across Sindh, SST continues to innovate to meet the needs of a rapidly evolving digital world. 
-                  Throughout this journey, our community ensures the family feeling, mutual respect, and cultural celebration of Sindh remain at the heart of our school life.
+                <h3 className="text-base font-bold text-slate-900">Full Academic Range</h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                  Supports Grade 1 primary foundations, O/A Levels, MDCAT/ECAT, through to undergraduate and postgraduate coursework.
                 </p>
-              </div>
-              <div className="pt-6 mt-4 border-t border-slate-200">
-                <span className="text-xs font-semibold text-[#8D1B2D] inline-flex items-center gap-1">
-                  Karachi & Hyderabad Campuses <ChevronRight className="h-3.5 w-3.5" />
-                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. ACADEMIC LEADERSHIP SPOTLIGHT */}
-      <section className="py-16 sm:py-20 bg-slate-900 text-white border-b">
+      {/* 3. ONE PLATFORM, EVERY CORE ACADEMIC WORKFLOW */}
+      <section id="features" className="py-16 sm:py-24 bg-slate-100 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Leadership Photo */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-700 max-w-sm w-full bg-slate-800">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/usman.jpg"
-                  alt="Muhammad Usman — Head of School & Academic Dean"
-                  className="w-full h-96 object-cover object-top"
-                />
-                <div className="p-4 bg-slate-800 text-center">
-                  <h3 className="text-lg font-bold text-white">Muhammad Usman</h3>
-                  <p className="text-xs text-cyan-300 uppercase tracking-wider font-semibold">Head of School & Academic Dean</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Leadership Biography & Quotes */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <Badge className="bg-[#8D1B2D] text-white text-xs font-semibold px-3 py-1">
-                Academic Leadership
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-                Meet our Head of School
-              </h2>
-              <p className="text-base text-slate-300 leading-relaxed font-normal">
-                Mr. Muhammad Usman is an experienced educational leader and technology innovator with deep expertise across Cambridge international curricula, national education boards, and educational technology reforms in Sindh. Having directed premier secondary colleges and innovation hubs in Sindh, he brings visionary leadership in fostering intellectual curiosity, technical mastery, and moral character.
-              </p>
-
-              {/* Leadership Quote Callout */}
-              <div className="p-5 bg-white/5 rounded-xl border-l-4 border-cyan-400 space-y-2">
-                <p className="text-sm sm:text-base text-cyan-100 italic leading-relaxed">
-                  &ldquo;I strongly believe that for students to achieve their true potential they must be happy, engaged and secure in their learning environment. Our trilingual education in English, Urdu, and Sindhi ensures our youth lead both nationally and globally with knowledge, empathy, and integrity.&rdquo;
-                </p>
-                <p className="text-xs text-slate-400 font-semibold">— Muhammad Usman, Head of School & Academic Dean</p>
-              </div>
-
-              {/* Parent Survey Quote */}
-              <div className="p-5 bg-white/5 rounded-xl border-l-4 border-[#8D1B2D] space-y-2">
-                <p className="text-sm sm:text-base text-slate-200 italic leading-relaxed">
-                  &ldquo;We love the family atmosphere at the school as well as the excellent academic standard, the trilingual fluency, and the individual care given to every student.&rdquo;
-                </p>
-                <p className="text-xs text-slate-400 font-semibold">– Year 1 parents, Voice of Parent Survey</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. OUR TEACHERS */}
-      <section className="py-16 sm:py-20 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-6 text-left">
-              <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-                Faculty & Mentors
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                Our Teachers & Language Specialists
-              </h2>
-              <p className="text-base text-slate-600 leading-relaxed font-normal">
-                SST relies on the essential contribution of highly qualified, passionate educators to make our educational vision a reality. Composed of certified subject experts and distinguished language scholars in English, Urdu, and Sindhi, our faculty invest their time and dedication to support student well-being, fostering analytical thinking and moral values throughout their journey.
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="p-4 bg-slate-50 border rounded-xl">
-                  <div className="text-2xl font-bold text-[#002E40]">100%</div>
-                  <div className="text-xs text-slate-600 font-medium">Certified Subject Specialists</div>
-                </div>
-                <div className="p-4 bg-slate-50 border rounded-xl">
-                  <div className="text-2xl font-bold text-[#8D1B2D]">3 Languages</div>
-                  <div className="text-xs text-slate-600 font-medium">English, Urdu & Sindhi Experts</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6">
-              <div className="grid grid-cols-2 gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop"
-                  alt="Teacher guiding students in class"
-                  className="rounded-xl shadow-md h-52 w-full object-cover"
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=600&auto=format&fit=crop"
-                  alt="Science and robotics faculty"
-                  className="rounded-xl shadow-md h-52 w-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. REVIEWS: 4.9 / 5.0 Rating */}
-      <section className="py-16 bg-slate-50 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-            <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-              Community Reviews
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
+            <Badge className="bg-[#002E40] text-white text-xs font-semibold px-3 py-1">
+              Core Platform Capabilities
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Parent & Student Reviews
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              One Platform, Every Core Academic Workflow
             </h2>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <div className="text-4xl font-extrabold text-slate-900 tracking-tight">4.9<span className="text-xl text-slate-400 font-semibold">/5</span></div>
-              <div className="flex text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-amber-400" />
-                ))}
-              </div>
-            </div>
-            <p className="text-sm text-slate-600">
-              We are proud of our school and delighted that families across Sindh and Pakistan share our vision! Please read some of our reviews below:
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Replace scattered third-party tools with an integrated intelligence platform designed specifically for schools.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-xs space-y-3">
-              <div className="flex text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400" />
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Feature 1: Socratic AI Tutor */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Brain className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  AI Socratic Tutor
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Guides students through Mathematics, Physics, Chemistry, Biology, and Computer Science with LaTeX and code rendering. Asks probing checkpoint questions instead of spoiling final answers.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                &ldquo;The trilingual education in English, Urdu, and Sindhi is unmatched. My children speak and write fluently in all three languages while excelling in Cambridge mathematics.&rdquo;
-              </p>
-              <div className="pt-2 text-xs font-bold text-slate-900">— Karachi Campus Primary Parent</div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600">
+                <span>LaTeX & Code Rendering</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
             </div>
 
-            <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-xs space-y-3">
-              <div className="flex text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400" />
-                ))}
+            {/* Feature 2: AI Quiz Arena */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Zap className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  AI Quiz Arena & Exam Simulator
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Auto-generates timed exams (20, 35, or 50 questions) with zero repetition, Fisher-Yates randomization, adjustable difficulty tiers, in-quiz Socratic hints, and instant scorecards.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                &ldquo;SST Nexus Sixth Form gave our son the exact preparation needed for admission into IBA and AKU. The faculty guidance is truly extraordinary.&rdquo;
-              </p>
-              <div className="pt-2 text-xs font-bold text-slate-900">— A-Level Graduate Parent, Hyderabad</div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-cyan-600">
+                <span>10m / 17m / 25m Timers</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
             </div>
 
-            <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-xs space-y-3">
-              <div className="flex text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-amber-400" />
-                ))}
+            {/* Feature 3: Automated Grading & Feedback */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <FileCheck className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Automated Grading & Feedback
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Multi-dimensional rubric grading (Understanding, Technical Depth, Critical Thinking, Presentation) for student essays and coding submissions with personalized growth plans.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                &ldquo;Modern digital facilities combined with rich cultural values. The teachers are approachable and the coding curriculum gives children a real competitive edge.&rdquo;
-              </p>
-              <div className="pt-2 text-xs font-bold text-slate-900">— Secondary Parent, Sukkur/Karachi</div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+                <span>4-Tier Rubric Analytics</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
+            </div>
+
+            {/* Feature 4: Originality & Plagiarism Detector */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <ShieldCheck className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Originality & Plagiarism Engine
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Deep semantic similarity indexing across submitted coursework to flag uncredited text and AI synthesis patterns, generating clear similarity breakdown percentages.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-600">
+                <span>Sentence-Level Indexing</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
+            </div>
+
+            {/* Feature 5: Gamified Economics & Streaks */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Flame className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Gamified Economics & Streaks
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Real-time leaderboards, daily study streak counters, XP rewards, and merit badges that incentivize consistent daily learning and healthy classroom competition.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-600">
+                <span>XP & Merit Economy</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
+            </div>
+
+            {/* Feature 6: Extension Requests & Interventions */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Layers className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Teacher Workflow & Interventions
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Structured, transparent protocol allowing students facing illness or emergencies to submit formal requests with verification for teacher review and approval.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-600">
+                <span>Transparent Educator Queue</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 8. FOLLOW SST ON SOCIAL MEDIA */}
-      <section className="py-16 bg-white border-b">
+      {/* 4. BUILT BY MUHAMMAD USMAN */}
+      <section id="about" className="py-16 sm:py-24 bg-slate-900 text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#8D1B2D] border-[#8D1B2D]/30 mb-2">
-                Campus Highlights
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Developer Photo / Avatar */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-700 max-w-sm w-full bg-slate-800">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/usman.jpg"
+                  alt="Muhammad Usman — Developer & AI Engineer"
+                  className="w-full h-96 object-cover object-top"
+                />
+                <div className="p-4 bg-slate-800/90 text-center border-t border-slate-700">
+                  <h3 className="text-lg font-bold text-white">Muhammad Usman</h3>
+                  <p className="text-xs text-cyan-300 uppercase tracking-wider font-semibold">Creator & Lead AI Engineer</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Developer Story & Contact Links */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <Badge className="bg-[#8D1B2D] text-white text-xs font-semibold px-3 py-1">
+                Engineering & Vision
               </Badge>
-              <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
-                Follow SST on Social Media
+              
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+                Built by Muhammad Usman
               </h2>
+
+              <p className="text-base text-slate-300 leading-relaxed font-normal">
+                I am an AI/ML and full-stack engineer from Pakistan. I built this platform to bring the kind of AI tutoring and automated grading tools normally reserved for expensive enterprise EdTech products to any school, at a fraction of the cost. I personally support every pilot deployment.
+              </p>
+
+              {/* Developer Quote Callout */}
+              <div className="p-5 bg-white/5 rounded-2xl border-l-4 border-cyan-400 space-y-2">
+                <p className="text-sm sm:text-base text-cyan-100 italic leading-relaxed">
+                  &ldquo;Every school should be able to give its students an AI tutor that guides rather than gives away answers — regardless of budget.&rdquo;
+                </p>
+                <p className="text-xs text-slate-400 font-semibold">— Muhammad Usman, Developer</p>
+              </div>
+
+              {/* Developer Connect Links Row */}
+              <div className="pt-2 space-y-2">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Direct Developer Contact</p>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
+                  <a 
+                    href="mailto:musmanmahar5312@gmail.com" 
+                    className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl transition-all border border-white/10"
+                  >
+                    <Mail className="h-3.5 w-3.5 text-cyan-300" />
+                    musmanmahar5312@gmail.com
+                  </a>
+                  
+                  <a 
+                    href="https://github.com/mhusman123" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl transition-all border border-white/10"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 text-amber-300" />
+                    GitHub
+                  </a>
+
+                  <a 
+                    href="https://www.linkedin.com/in/muhammad-usman-9464b5247/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl transition-all border border-white/10"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 text-blue-400" />
+                    LinkedIn
+                  </a>
+
+                  <a 
+                    href="https://x.com/md_usman73?s=21" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl transition-all border border-white/10"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 text-slate-300" />
+                    X (Twitter)
+                  </a>
+
+                  <a 
+                    href="https://wa.me/923058315292" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-1.5 bg-emerald-700/80 hover:bg-emerald-600 text-white px-3.5 py-2 rounded-xl transition-all border border-emerald-500/40"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-white" />
+                    +92 305 8315292
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. HOW IT WORKS (3-STEP PROCESS) */}
+      <section id="how-it-works" className="py-16 sm:py-24 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
+            <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
+              Simple Deployment
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              How It Works & Pilot Process
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Three straightforward steps to bring AI tutoring and automated grading to your classrooms.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all relative overflow-hidden">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-[#002E40] text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+                  1
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  See a Live Demo
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Walk through the AI tutor, quiz arena, and autograding dashboard with preloaded sample data to evaluate pedagogical accuracy and student user experience.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-200">
+                <Link href="/ai-hub" className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 hover:underline">
+                  Try Interactive Demo <ChevronRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all relative overflow-hidden">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-[#8D1B2D] text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+                  2
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  Run a Free Pilot
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Your teachers and a class cohort of students get full access to the platform for a 30-day trial with zero upfront cost and no obligation.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-200">
+                <a href="#pilot-request" className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 hover:underline">
+                  Request Your Free Pilot <ChevronRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-7 flex flex-col justify-between hover:shadow-lg transition-all relative overflow-hidden">
+              <div className="space-y-4">
+                <div className="h-12 w-12 rounded-xl bg-cyan-700 text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+                  3
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  Go Live
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  We deploy a fully customized instance branded for your institution, on an affordable annual license with dedicated direct developer technical support.
+                </p>
+              </div>
+              <div className="pt-5 mt-4 border-t border-slate-200">
+                <span className="text-xs font-semibold text-slate-500">
+                  Custom domain &amp; branding included
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. PILOT REVIEWS & HONEST PLACEHOLDER */}
+      <section className="py-14 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
+            Pilot Feedback
+          </Badge>
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Early School Pilot Feedback
+          </h2>
+          
+          <div className="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4 max-w-2xl mx-auto">
+            <div className="h-12 w-12 rounded-full bg-cyan-50 text-cyan-700 flex items-center justify-center mx-auto">
+              <School className="h-6 w-6" />
+            </div>
+            <p className="text-sm text-slate-700 leading-relaxed font-medium">
+              Currently onboarding our first cohort of pilot schools — check back soon for live feedback, or request a pilot to test the platform with your classes.
+            </p>
+            <div>
+              <Button 
+                asChild
+                className="bg-[#8D1B2D] hover:bg-[#741322] text-white text-xs font-bold px-5 h-10 rounded-xl cursor-pointer"
+              >
+                <a href="#pilot-request">
+                  Request a Pilot for Your School
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. INTERACTIVE PRODUCT TOUR (ID: product-tour) */}
+      <section id="product-tour" className="py-16 sm:py-24 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div>
+              <Badge className="bg-[#002E40] text-cyan-300 text-xs font-semibold px-3 py-1 mb-2">
+                Interactive Product Tour
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Explore the AI Learning Platform
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl">
+                Click through our core modules below to see live interface simulations and technical specifications.
+              </p>
             </div>
             <Button
-              className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-semibold text-xs h-10 px-5 gap-2"
               asChild
+              className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold text-xs h-10 px-5 rounded-xl gap-2 cursor-pointer shadow-sm shrink-0"
             >
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-                <Globe className="h-4 w-4" />
-                Follow on Social Media
-              </a>
+              <Link href="/ai-hub">
+                <Brain className="h-4 w-4 text-white" />
+                Launch Full AI Hub Demo
+              </Link>
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {socialPosts.map((post) => (
-              <div key={post.id} className="group relative rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-900">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={post.image}
-                  alt={post.caption}
-                  className="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-3 text-white">
-                  <p className="text-xs font-medium line-clamp-2 mb-2 leading-snug">
-                    {post.caption}
-                  </p>
-                  <div className="flex items-center gap-3 text-[11px] text-slate-300">
-                    <span className="flex items-center gap-1">
-                      <Heart className="h-3.5 w-3.5 text-rose-400 fill-rose-400" />
-                      {post.likes}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      {post.comments}
-                    </span>
+          {/* Interactive Tab Navigation */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none border-b border-slate-200 mb-8">
+            {tourModules.map((module, idx) => {
+              const IconComp = module.icon
+              const isActive = activeTourTab === idx
+              return (
+                <button
+                  key={module.id}
+                  onClick={() => setActiveTourTab(idx)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#002E40] text-white shadow-md'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  <IconComp className={`h-4 w-4 ${isActive ? 'text-cyan-300' : 'text-slate-500'}`} />
+                  <span>{module.name}</span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Active Module Showcase Card */}
+          <div className="bg-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-2xl border border-slate-800 relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              {/* Left Column: Details & Capabilities */}
+              <div className="lg:col-span-6 space-y-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-3">
+                    <currentTourModule.icon className="h-3.5 w-3.5" />
+                    {currentTourModule.tagline}
                   </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {currentTourModule.name}
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed mt-2 font-normal">
+                    {currentTourModule.description}
+                  </p>
+                </div>
+
+                {/* Key Feature Bullet List */}
+                <div className="space-y-2.5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Key Pedagogical Highlights</p>
+                  {currentTourModule.highlights.map((h, i) => (
+                    <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Technical Specs Row */}
+                <div className="grid grid-cols-3 gap-3 pt-2 border-t border-white/10">
+                  {currentTourModule.specs.map((s, i) => (
+                    <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                      <div className="text-[10px] text-slate-400 uppercase font-semibold">{s.label}</div>
+                      <div className="text-xs sm:text-sm font-bold text-cyan-300 mt-0.5">{s.val}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Interactive Launch CTA */}
+                <div className="pt-2 flex items-center gap-3">
+                  <Button
+                    asChild
+                    className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold text-xs px-6 h-11 rounded-xl shadow-lg transition-transform hover:scale-[1.02]"
+                  >
+                    <Link href={currentTourModule.link}>
+                      <Play className="h-3.5 w-3.5 mr-1.5 text-white" />
+                      Try Live {currentTourModule.name}
+                    </Link>
+                  </Button>
+                  <span className="text-xs text-slate-400">Direct interactive simulator</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 9. SCHOOL NEWS */}
-      <section className="py-16 sm:py-20 bg-slate-50 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30 mb-2">
-                Latest Announcements
-              </Badge>
-              <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
-                School News & Updates
-              </h2>
+              {/* Right Column: Live Mock Interactive UI Preview */}
+              <div className="lg:col-span-6">
+                <div className="bg-[#001724] border border-cyan-500/30 rounded-2xl p-5 shadow-2xl space-y-4">
+                  
+                  {/* Mock Window Top Bar */}
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="h-3 w-3 rounded-full bg-rose-500/80"></span>
+                      <span className="h-3 w-3 rounded-full bg-amber-500/80"></span>
+                      <span className="h-3 w-3 rounded-full bg-emerald-500/80"></span>
+                      <span className="text-xs font-mono text-slate-400 ml-2">demo.{currentTourModule.id}.module</span>
+                    </div>
+                    <Badge className="bg-emerald-600/90 text-white text-[10px] font-mono border-none">
+                      ONLINE
+                    </Badge>
+                  </div>
+
+                  {/* PREVIEW: Socratic AI Tutor */}
+                  {currentTourModule.previewType === 'tutor' && (
+                    <div className="space-y-3 font-sans text-xs">
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 text-slate-200">
+                        <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">Student Question:</div>
+                        <p className="italic">&ldquo;How do I find the derivative of f(x) = x³ · sin(x)? Just give me the answer.&rdquo;</p>
+                      </div>
+
+                      <div className="bg-cyan-950/40 border border-cyan-500/30 rounded-xl p-3.5 space-y-2 text-slate-200">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-cyan-300 uppercase">
+                          <Bot className="h-3.5 w-3.5 text-cyan-300" />
+                          <span>AI Socratic Mentor:</span>
+                        </div>
+                        <p className="leading-relaxed">
+                          Notice that f(x) is a product of two functions: u(x) = x³ and v(x) = sin(x).
+                        </p>
+                        <div className="p-2 bg-black/40 rounded-lg border border-cyan-500/20 font-mono text-cyan-200 text-[11px]">
+                          d/dx [u · v] = u&apos;v + uv&apos;
+                        </div>
+                        <p className="text-slate-300 leading-relaxed">
+                          What is the derivative of x³, and what is the derivative of sin(x)? Try differentiating each term first!
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                        <span className="flex items-center gap-1"><Check className="h-3.5 w-3.5 text-emerald-400" /> Zero spoilers guardrail active</span>
+                        <span className="font-mono text-cyan-400">Latency: 420ms</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVIEW: Adaptive Quiz Arena */}
+                  {currentTourModule.previewType === 'quiz' && (
+                    <div className="space-y-3 text-xs">
+                      <div className="flex items-center justify-between bg-white/5 p-2.5 rounded-xl border border-white/10">
+                        <span className="font-bold text-cyan-300">Question 14 of 35</span>
+                        <span className="flex items-center gap-1 font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+                          <Clock className="h-3.5 w-3.5" /> 14:28 remaining
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-white/5 rounded-xl border border-white/10 space-y-2">
+                        <p className="font-semibold text-white">Which organelle is responsible for cellular ATP synthesis via oxidative phosphorylation?</p>
+                        <div className="space-y-1.5 pt-1">
+                          <div className="p-2 bg-emerald-950/60 border border-emerald-500/60 rounded-lg text-emerald-200 font-medium flex items-center justify-between">
+                            <span>A) Mitochondria</span>
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                          </div>
+                          <div className="p-2 bg-white/5 border border-white/10 rounded-lg text-slate-300 hover:bg-white/10">
+                            <span>B) Endoplasmic Reticulum</span>
+                          </div>
+                          <div className="p-2 bg-white/5 border border-white/10 rounded-lg text-slate-300 hover:bg-white/10">
+                            <span>C) Golgi Apparatus</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-cyan-950/40 border border-cyan-500/30 rounded-xl flex items-center justify-between text-[11px]">
+                        <span className="text-cyan-300 font-semibold">💡 Socratic Hint Available:</span>
+                        <span className="text-slate-300 font-mono">Exam Tier: Advanced STEM</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVIEW: Formative Autograder */}
+                  {currentTourModule.previewType === 'autograder' && (
+                    <div className="space-y-3 text-xs">
+                      <div className="flex items-center justify-between bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30">
+                        <span className="font-bold text-emerald-300">Formative Assessment Result</span>
+                        <Badge className="bg-emerald-600 text-white font-bold text-[11px] border-none">Grade: 36 / 40 (90%)</Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px]">
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <span className="text-slate-400">Conceptual Depth:</span>
+                          <span className="font-bold text-cyan-300 ml-1">9.5 / 10</span>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <span className="text-slate-400">Technical Rigor:</span>
+                          <span className="font-bold text-cyan-300 ml-1">9.0 / 10</span>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <span className="text-slate-400">Critical Reasoning:</span>
+                          <span className="font-bold text-cyan-300 ml-1">8.5 / 10</span>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <span className="text-slate-400">Structure:</span>
+                          <span className="font-bold text-cyan-300 ml-1">9.0 / 10</span>
+                        </div>
+                      </div>
+
+                      <div className="p-3 bg-white/5 rounded-xl border border-white/10 space-y-1 text-slate-300">
+                        <div className="text-[10px] font-bold text-amber-300 uppercase">Personalized Revision Roadmap:</div>
+                        <p className="text-[11px] leading-relaxed">
+                          Excellent thesis defense. For subsequent submissions, expand on counter-arguments in paragraph 3 to reach full marks in Critical Reasoning.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400">
+                        <span className="text-emerald-400">✓ Teacher verification ready</span>
+                        <span className="text-slate-400">1-click mark approval</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVIEW: Originality & Plagiarism */}
+                  {currentTourModule.previewType === 'plagiarism' && (
+                    <div className="space-y-3 text-xs">
+                      <div className="flex items-center justify-between bg-white/5 p-2.5 rounded-xl border border-white/10">
+                        <span className="font-bold text-white">Originality Index Report</span>
+                        <Badge className="bg-emerald-600 text-white font-bold text-[11px] border-none">94% Original</Badge>
+                      </div>
+
+                      <div className="p-3 bg-white/5 rounded-xl border border-white/10 space-y-2">
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="text-slate-300">Direct Quotes (Properly Cited):</span>
+                          <span className="font-mono text-cyan-300 font-bold">4.2%</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="text-slate-300">Common Academic Formulae:</span>
+                          <span className="font-mono text-cyan-300 font-bold">1.8%</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="text-slate-300">Uncredited Similarity:</span>
+                          <span className="font-mono text-emerald-400 font-bold">0.0% (Clean)</span>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-cyan-950/40 rounded-xl border border-cyan-500/30 text-slate-300 text-[11px] flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+                        <span>Zero Data Retention: Student coursework is never stored in public LLMs.</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVIEW: Gamified Leaderboard */}
+                  {currentTourModule.previewType === 'leaderboard' && (
+                    <div className="space-y-2.5 text-xs">
+                      <div className="flex items-center justify-between bg-white/5 p-2.5 rounded-xl border border-white/10">
+                        <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                          <Trophy className="h-4 w-4 text-amber-300" /> Grade 11 STEM Leaderboard
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-mono">Week 4 Active</span>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between p-2 bg-amber-950/40 border border-amber-500/40 rounded-lg text-white">
+                          <span className="flex items-center gap-2">
+                            <span className="h-5 w-5 rounded-full bg-amber-500 text-black font-extrabold flex items-center justify-center text-[10px]">1</span>
+                            <span className="font-bold">Sarah K.</span>
+                            <Badge className="bg-amber-500/20 text-amber-300 text-[9px] border-none">🔥 14-Day Streak</Badge>
+                          </span>
+                          <span className="font-mono font-bold text-amber-300">2,450 XP</span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-2 bg-white/5 border border-white/10 rounded-lg text-slate-200">
+                          <span className="flex items-center gap-2">
+                            <span className="h-5 w-5 rounded-full bg-slate-600 text-white font-bold flex items-center justify-center text-[10px]">2</span>
+                            <span className="font-medium">Alex M.</span>
+                            <Badge className="bg-cyan-500/20 text-cyan-300 text-[9px] border-none">Calculus Master</Badge>
+                          </span>
+                          <span className="font-mono font-bold text-slate-300">2,310 XP</span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-2 bg-white/5 border border-white/10 rounded-lg text-slate-200">
+                          <span className="flex items-center gap-2">
+                            <span className="h-5 w-5 rounded-full bg-slate-700 text-white font-bold flex items-center justify-center text-[10px]">3</span>
+                            <span className="font-medium">Usman R.</span>
+                            <Badge className="bg-emerald-500/20 text-emerald-300 text-[9px] border-none">Physics Ace</Badge>
+                          </span>
+                          <span className="font-mono font-bold text-slate-300">2,190 XP</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVIEW: Teacher Analytics */}
+                  {currentTourModule.previewType === 'analytics' && (
+                    <div className="space-y-3 text-xs">
+                      <div className="flex items-center justify-between bg-purple-950/40 p-2.5 rounded-xl border border-purple-500/30">
+                        <span className="font-bold text-purple-300">Class Performance Telemetry</span>
+                        <span className="font-mono text-white text-[11px]">Cohort: 120 Students</span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 text-[11px] text-center">
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <div className="text-slate-400 text-[10px]">Completion</div>
+                          <div className="text-emerald-400 font-black text-sm">94.2%</div>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <div className="text-slate-400 text-[10px]">Avg Mastery</div>
+                          <div className="text-cyan-300 font-black text-sm">86.4%</div>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                          <div className="text-slate-400 text-[10px]">Interventions</div>
+                          <div className="text-amber-400 font-black text-sm">3 Flagged</div>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-amber-950/30 border border-amber-500/30 rounded-xl text-[11px] text-slate-200 flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 text-amber-300 font-semibold">
+                          <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
+                          Calculus Integration: 3 students need review
+                        </span>
+                        <Button size="sm" variant="outline" className="h-6 text-[10px] border-white/20 bg-white/10 text-white px-2">
+                          View
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              </div>
+
             </div>
-
-            {/* Category Filter Tabs */}
-            <div className="flex items-center gap-2 bg-slate-200/70 p-1 rounded-lg">
-              <button
-                type="button"
-                onClick={() => setActiveNewsCategory('all')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${activeNewsCategory === 'all' ? 'bg-[#002E40] text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
-              >
-                All Categories
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveNewsCategory('school-life')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${activeNewsCategory === 'school-life' ? 'bg-[#002E40] text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
-              >
-                School Life
-              </button>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredNews.map((item) => (
-              <Card key={item.id} className="overflow-hidden border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                <div>
-                  <div className="relative h-48 w-full overflow-hidden">
+          {/* Screenshot Gallery Grid */}
+          <div className="mt-14 space-y-4">
+            <h3 className="text-lg font-bold text-slate-900">Platform Visual Snapshot Gallery</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {productScreenshots.map((item) => (
+                <div key={item.id} className="group relative rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-900 flex flex-col justify-between">
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-800">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      alt={item.caption}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     />
                     <div className="absolute top-3 left-3">
-                      <Badge className="bg-[#002E40] text-white text-[10px] font-semibold flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {item.date}
+                      <Badge className="bg-[#002E40] text-cyan-300 text-[10px] font-bold border-none">
+                        {item.tag}
                       </Badge>
                     </div>
                   </div>
-                  <CardContent className="p-5 space-y-2">
-                    <h3 className="text-base font-bold text-slate-900 leading-snug line-clamp-2">
+                  <div className="p-4 bg-slate-900 text-white">
+                    <p className="text-xs font-medium leading-snug text-slate-200">
+                      {item.caption}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 8. PRODUCT UPDATES & CHANGELOG (ID: changelog) */}
+      <section id="changelog" className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-10">
+            <Badge className="bg-[#002E40] text-white text-xs font-semibold px-3 py-1">
+              Continuous Innovation
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Product Updates &amp; Changelog
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Transparent, real-time evolution of our educational intelligence architecture and pedagogical features.
+            </p>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            {[
+              { id: 'all', label: 'All Releases' },
+              { id: 'exam', label: 'Examination Engine' },
+              { id: 'ai', label: 'AI Reasoning Core' },
+              { id: 'grading', label: 'Teacher Copilot' },
+              { id: 'security', label: 'Security & Compliance' },
+              { id: 'platform', label: 'Platform & Gamification' }
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setChangelogFilter(f.id)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  changelogFilter === f.id
+                    ? 'bg-[#8D1B2D] text-white shadow-sm'
+                    : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Changelog Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredChangelog.map((item) => (
+              <Card key={item.id} className="overflow-hidden border-slate-200 hover:shadow-xl transition-all flex flex-col justify-between rounded-2xl bg-white group">
+                <CardContent className="p-6 space-y-4">
+                  
+                  {/* Top Version & Date */}
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-[#002E40] text-white text-[11px] font-bold px-2.5 py-0.5">
+                      {item.version}
+                    </Badge>
+                    <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {item.date}
+                    </span>
+                  </div>
+
+                  {/* Title & Summary */}
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-700">{item.badgeCategory}</span>
+                    <h3 className="text-base font-bold text-slate-900 leading-snug mt-0.5 group-hover:text-[#8D1B2D] transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 font-normal">
+                    <p className="text-xs text-slate-600 leading-relaxed mt-2 font-normal">
                       {item.summary}
                     </p>
-                  </CardContent>
-                </div>
-                <div className="p-5 pt-0">
-                  <span className="text-xs font-semibold text-[#8D1B2D] inline-flex items-center gap-1 hover:underline cursor-pointer">
-                    Read Full News <ChevronRight className="h-3.5 w-3.5" />
-                  </span>
+                  </div>
+
+                  {/* Bullet Highlights */}
+                  <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                    {item.points.map((pt, pidx) => (
+                      <div key={pidx} className="flex items-start gap-2 text-xs text-slate-600">
+                        <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span className="leading-snug">{pt}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                </CardContent>
+
+                {/* Footer Tag */}
+                <div className="p-5 pt-0 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold">
+                  <span className="text-slate-500 font-medium">Status: Live in Production</span>
+                  <Badge className={item.badgeColor}>
+                    {item.badge}
+                  </Badge>
                 </div>
               </Card>
             ))}
           </div>
+
+          {/* Changelog Bottom Notice */}
+          <div className="mt-10 p-4 bg-white border border-slate-200 rounded-xl text-center text-xs text-slate-600 max-w-xl mx-auto flex items-center justify-center gap-2">
+            <Sparkles className="h-4 w-4 text-cyan-600" />
+            <span>Have a feature request for your institution? Include it in your pilot request.</span>
+          </div>
+
         </div>
       </section>
 
-      {/* 10. CREATING A UNIQUE LEARNING EXPERIENCE (EDUCATIONAL STAGES) */}
-      <section className="py-16 sm:py-24 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-            <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-              Academic Stages
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Creating a unique learning experience
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600">
-              Guiding students step-by-step with Trilingual mastery (English, Urdu, Sindhi) from foundational years through to university entrance.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Stage 1: Early Years Foundation Stage */}
-            <div className="group rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 hover:shadow-xl transition-all flex flex-col">
-              <div className="relative h-44 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop"
-                  alt="Early Years Foundation Stage"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-amber-600 text-white text-xs font-bold">
-                    2 - 5 years old
-                  </Badge>
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 leading-tight">
-                    Early Years Foundation Stage
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Play-based discovery, emotional security, and natural trilingual immersion in English, Urdu phonics, and Sindhi storytelling.
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Early Years <ChevronRight className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-
-            {/* Stage 2: Primary Education */}
-            <div className="group rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 hover:shadow-xl transition-all flex flex-col">
-              <div className="relative h-44 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop"
-                  alt="Primary Education"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-blue-600 text-white text-xs font-bold">
-                    5 - 11 years old
-                  </Badge>
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 leading-tight">
-                    Primary Education
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Foundational STEM, creative writing in English, Urdu, and Sindhi, computational logic, and ethical character building.
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Primary <ChevronRight className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-
-            {/* Stage 3: Secondary Education */}
-            <div className="group rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 hover:shadow-xl transition-all flex flex-col">
-              <div className="relative h-44 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop"
-                  alt="Secondary Education"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-emerald-600 text-white text-xs font-bold">
-                    11 - 16 years old
-                  </Badge>
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 leading-tight">
-                    Secondary Education
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Dual preparation for Cambridge IGCSE / O-Levels and Sindh Matriculation with science laboratory masterclasses.
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Secondary <ChevronRight className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-
-            {/* Stage 4: SST Nexus Sixth Form & College */}
-            <div className="group rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 hover:shadow-xl transition-all flex flex-col">
-              <div className="relative h-44 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop"
-                  alt="SST Nexus Sixth Form"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-purple-600 text-white text-xs font-bold">
-                    16 - 18+ years old
-                  </Badge>
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 leading-tight">
-                    SST Nexus Sixth Form & College
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    Pre-university campus offering Cambridge A-Levels & Intermediate FSC (Pre-Med/Pre-Engg) with bespoke university coaching.
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-[#8D1B2D] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Sixth Form <ChevronRight className="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 11. INTERACTIVE MULTI-STEP ENQUIRY FORM: "How can we help you?" */}
-      <section id="enquiry-form" className="py-16 sm:py-24 bg-gradient-to-br from-slate-900 via-[#002E40] to-slate-900 text-white border-b">
+      {/* 9. LEAD CAPTURE: REQUEST A PILOT LEAD FORM */}
+      <section id="pilot-request" className="py-16 sm:py-24 bg-gradient-to-br from-slate-950 via-[#002E40] to-slate-950 text-white border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-10">
             <Badge className="bg-[#8D1B2D] text-white text-xs font-semibold px-3 py-1">
-              Admissions Desk — Sindh & Pakistan
+              Pilot Application
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-              How can we help you?
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              Request a Pilot for Your School
             </h2>
-            <p className="text-sm sm:text-base text-slate-300">
-              Please complete the form below to enquire about admissions for the 2025–2026 academic year.
+            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto">
+              Deploy enterprise-grade AI tutoring and automated grading for your students and teachers. 100% free pilot, no commitment required.
             </p>
           </div>
 
-          {/* Form Progress Bar */}
-          <div className="grid grid-cols-3 gap-2 mb-8 text-center text-xs font-bold">
-            <div className={`p-2.5 rounded-lg border transition-all ${formStep >= 1 ? 'bg-white text-[#002E40] border-white shadow-md' : 'bg-white/10 text-slate-400 border-white/10'}`}>
-              1. About you
-            </div>
-            <div className={`p-2.5 rounded-lg border transition-all ${formStep >= 2 ? 'bg-white text-[#002E40] border-white shadow-md' : 'bg-white/10 text-slate-400 border-white/10'}`}>
-              2. About your child
-            </div>
-            <div className={`p-2.5 rounded-lg border transition-all ${formStep >= 3 ? 'bg-white text-[#002E40] border-white shadow-md' : 'bg-white/10 text-slate-400 border-white/10'}`}>
-              3. Contact preferences
-            </div>
-          </div>
-
-          {/* Form Card */}
-          <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-10 shadow-2xl">
+          <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/20">
             {formSubmitted ? (
               <div className="text-center py-10 space-y-4">
                 <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle2 className="h-10 w-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900">Admissions Enquiry Received!</h3>
+                <h3 className="text-2xl font-extrabold text-slate-900">Pilot Request Received!</h3>
                 <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Thank you for contacting Sindh School of Technology. Our admissions counselor will reach out to you via WhatsApp / Phone call within 24 hours.
+                  Thank you for your interest. Muhammad Usman will contact you directly within 24 hours at <strong className="text-slate-900">{formData.email}</strong> to set up your school's pilot environment.
                 </p>
-                <Button
-                  onClick={() => {
-                    setFormSubmitted(false)
-                    setFormStep(1)
-                  }}
-                  className="bg-[#002E40] hover:bg-[#002331] text-white font-semibold text-xs px-6 h-10"
-                >
-                  Submit Another Enquiry
-                </Button>
+                <div className="pt-2">
+                  <Button
+                    onClick={() => {
+                      setFormSubmitted(false)
+                      setFormData({
+                        schoolName: '',
+                        contactName: '',
+                        role: 'Principal / Head of School',
+                        email: '',
+                        phone: '',
+                        studentCount: '500 - 1,500 students',
+                        country: '',
+                        message: ''
+                      })
+                    }}
+                    className="bg-[#002E40] hover:bg-[#002331] text-white font-semibold text-xs px-6 h-10 rounded-xl cursor-pointer"
+                  >
+                    Submit Another Request
+                  </Button>
+                </div>
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  if (formStep < 3) {
-                    setFormStep((prev) => (prev + 1) as 2 | 3)
-                  } else {
-                    setFormSubmitted(true)
-                  }
-                }}
-                className="space-y-6"
-              >
-                {/* STEP 1: About you */}
-                {formStep === 1 && (
-                  <div className="space-y-4">
-                    <h4 className="text-base font-bold text-slate-900 border-b pb-2">Parent / Guardian Information</h4>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Prefix*</label>
-                        <select
-                          value={formData.prefix}
-                          onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40] bg-white"
-                        >
-                          <option>Mr.</option>
-                          <option>Mrs.</option>
-                          <option>Miss</option>
-                          <option>Ms.</option>
-                          <option>Dr.</option>
-                          <option>Prof.</option>
-                          <option>Engr.</option>
-                        </select>
-                      </div>
-
-                      <div className="sm:col-span-3">
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Parent Full Name*</label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Parent / Guardian Name"
-                          value={formData.firstName}
-                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address*</label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="name@example.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Pakistan +92)*</label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="+92 300 1234567"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                        />
-                      </div>
-                    </div>
+              <form onSubmit={handlePilotSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* School / Institution Name */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">School / Institution Name*</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Beaconhouse, City School, Oxford Grammar..."
+                      value={formData.schoolName}
+                      onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
+                      className="w-full h-11 px-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                    />
                   </div>
-                )}
 
-                {/* STEP 2: About your child */}
-                {formStep === 2 && (
-                  <div className="space-y-4">
-                    <h4 className="text-base font-bold text-slate-900 border-b pb-2">Student Information & Campus Preference</h4>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Child&apos;s Full Name*</label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Student Name"
-                          value={formData.childName}
-                          onChange={(e) => setFormData({ ...formData, childName: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Preferred Campus in Sindh*</label>
-                        <select
-                          value={formData.campus}
-                          onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40] bg-white"
-                        >
-                          <option>Karachi Main Campus</option>
-                          <option>Hyderabad Campus</option>
-                          <option>SST Nexus Sixth Form (Karachi)</option>
-                          <option>Sukkur Regional Hub</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Date of Birth*</label>
-                        <input
-                          type="date"
-                          required
-                          value={formData.childDob}
-                          onChange={(e) => setFormData({ ...formData, childDob: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Year of Entry*</label>
-                        <select
-                          value={formData.entryYear}
-                          onChange={(e) => setFormData({ ...formData, entryYear: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40] bg-white"
-                        >
-                          <option>Academic Session 2025–2026</option>
-                          <option>Academic Session 2026–2027</option>
-                          <option>Immediate Mid-Term Transfer</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Academic Stage*</label>
-                        <select
-                          value={formData.stage}
-                          onChange={(e) => setFormData({ ...formData, stage: e.target.value })}
-                          className="w-full h-10 px-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40] bg-white"
-                        >
-                          <option>Early Years (2–5 yrs)</option>
-                          <option>Primary (5–11 yrs)</option>
-                          <option>Secondary (11–16 yrs)</option>
-                          <option>Sixth Form / Intermediate (16–18 yrs)</option>
-                        </select>
-                      </div>
-                    </div>
+                  {/* Your Name & Role */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Your Name*</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your Full Name"
+                      value={formData.contactName}
+                      onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                      className="w-full h-11 px-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                    />
                   </div>
-                )}
+                </div>
 
-                {/* STEP 3: Contact preferences */}
-                {formStep === 3 && (
-                  <div className="space-y-4">
-                    <h4 className="text-base font-bold text-slate-900 border-b pb-2">Language Preferences & Messages</h4>
-                    
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Language System Track</label>
-                      <div className="p-3 bg-slate-50 border rounded-lg text-xs text-slate-700 font-medium">
-                        <span className="font-bold text-[#002E40]">Trilingual System:</span> English (Primary/STEM) + Urdu (National Language) + Sindhi (Regional Heritage)
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Preferred Contact Method*</label>
-                      <div className="flex gap-4">
-                        {['WhatsApp', 'Phone Call', 'Email'].map((method) => (
-                          <label key={method} className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
-                            <input
-                              type="radio"
-                              name="contactPref"
-                              checked={formData.contactPref === method}
-                              onChange={() => setFormData({ ...formData, contactPref: method })}
-                              className="text-[#002E40] focus:ring-[#002E40]"
-                            />
-                            {method}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Questions / Campus Tour Request</label>
-                      <textarea
-                        rows={3}
-                        placeholder="Request a campus visit in Karachi / Hyderabad or ask any questions regarding admissions..."
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full p-3 border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-[#002E40]"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Form Buttons */}
-                <div className="flex items-center justify-between pt-4 border-t">
-                  {formStep > 1 ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setFormStep((prev) => (prev - 1) as 1 | 2)}
-                      className="text-xs font-semibold"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Role Selection */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Your Role / Title*</label>
+                    <select
+                      value={formData.role}
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                      className="w-full h-11 px-3 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] bg-white outline-none"
                     >
-                      Back
-                    </Button>
-                  ) : (
-                    <div />
-                  )}
+                      <option>Principal / Head of School</option>
+                      <option>Academic Dean / Director</option>
+                      <option>IT Director / EdTech Lead</option>
+                      <option>Department Head (Science / STEM / CS)</option>
+                      <option>Teacher / Faculty Member</option>
+                      <option>University Professor / Researcher</option>
+                      <option>School Trustee / Board Member</option>
+                    </select>
+                  </div>
 
+                  {/* Email Address */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Work / Official Email*</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="name@school.edu"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full h-11 px-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {/* Phone / WhatsApp */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Phone / WhatsApp*</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+92 300 1234567"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full h-11 px-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                    />
+                  </div>
+
+                  {/* Approx Students */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Approx. Students*</label>
+                    <select
+                      value={formData.studentCount}
+                      onChange={(e) => setFormData({ ...formData, studentCount: e.target.value })}
+                      className="w-full h-11 px-3 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] bg-white outline-none"
+                    >
+                      <option>Under 200 students</option>
+                      <option>200 - 500 students</option>
+                      <option>500 - 1,500 students</option>
+                      <option>1,500 - 5,000 students</option>
+                      <option>5,000+ students (Multi-campus)</option>
+                    </select>
+                  </div>
+
+                  {/* Country */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Country*</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Pakistan, UAE, UK..."
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      className="w-full h-11 px-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Message / Objectives */}
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Message (Optional — what are you hoping to solve?)</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Tell us about your school's current AI initiatives, subjects of interest, or timeline..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full p-3.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#002E40] outline-none"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2">
                   <Button
                     type="submit"
-                    className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-semibold text-xs px-6 h-10 shadow-sm"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold text-sm h-12 rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
-                    {formStep === 3 ? 'Submit Admissions Enquiry' : 'Continue to Next Step'}
+                    <Send className="h-4 w-4 text-cyan-200" />
+                    <span>{isSubmitting ? 'Submitting Request...' : 'Request Free School Pilot'}</span>
                   </Button>
                 </div>
               </form>
             )}
           </div>
-
-          {/* Next Steps Quick Links */}
-          <div className="mt-8 text-center space-y-3">
-            <p className="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Steps</p>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold">
-              <Link href="/home" className="text-cyan-300 hover:text-white underline">
-                Mission & Values
-              </Link>
-              <span className="text-slate-500">•</span>
-              <Link href="/home" className="text-cyan-300 hover:text-white underline">
-                Trilingual Curriculum
-              </Link>
-              <span className="text-slate-500">•</span>
-              <Link href="#enquiry-form" className="text-cyan-300 hover:text-white underline">
-                Admissions Process
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* 12. EXPLORE OUR FAQS ACCORDION */}
-      <section className="py-16 sm:py-24 bg-white border-b">
+      {/* 10. PRODUCT FAQ SECTION (ID: faq) */}
+      <section id="faq" className="py-16 sm:py-24 bg-white border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-3 mb-12">
-            <Badge variant="outline" className="text-xs font-bold uppercase tracking-wider text-[#002E40] border-[#002E40]/30">
-              Frequently Asked Questions
+          
+          {/* Section Header */}
+          <div className="text-center space-y-3 mb-10">
+            <Badge className="bg-[#002E40] text-white text-xs font-semibold px-3 py-1">
+              Common Questions
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-              Explore our FAQs
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Frequently Asked Questions
             </h2>
+            <p className="text-sm sm:text-base text-slate-600">
+              Clear answers regarding curriculum adaptability, data protection, pilot process, and school licensing.
+            </p>
           </div>
 
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+            {[
+              { id: 'all', label: 'All Questions' },
+              { id: 'curriculum', label: 'Curriculum & Syllabi' },
+              { id: 'ai', label: 'AI Reasoning & Safety' },
+              { id: 'pedagogy', label: 'Pedagogical Model' },
+              { id: 'security', label: 'Privacy & Security' },
+              { id: 'pilot', label: 'Pilot & Deployment' }
+            ].map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setFaqCategory(c.id)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  faqCategory === c.id
+                    ? 'bg-[#002E40] text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+
+          {/* FAQ Accordion */}
           <div className="space-y-4">
-            {faqs.map((faq, idx) => (
+            {filteredFaqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="border border-slate-200 rounded-xl overflow-hidden transition-all"
+                className="border border-slate-200 rounded-2xl overflow-hidden transition-all bg-white shadow-xs"
               >
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className="w-full flex items-center justify-between p-5 text-left bg-slate-50 hover:bg-slate-100 transition-colors"
+                  className="w-full flex items-center justify-between p-5 text-left bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
                 >
-                  <span className="text-sm sm:text-base font-bold text-slate-900">
+                  <span className="text-sm sm:text-base font-bold text-slate-900 pr-4">
                     {faq.question}
                   </span>
                   <ChevronDown
-                    className={`h-5 w-5 text-slate-500 transition-transform duration-200 ${openFaq === idx ? 'rotate-180 text-[#8D1B2D]' : ''}`}
+                    className={`h-5 w-5 text-slate-500 transition-transform duration-200 shrink-0 ${openFaq === idx ? 'rotate-180 text-[#8D1B2D]' : ''}`}
                   />
                 </button>
                 {openFaq === idx && (
@@ -1293,122 +1696,112 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* Direct Contact Support Card */}
+          <div className="mt-12 p-6 sm:p-8 bg-slate-900 rounded-2xl text-white text-center space-y-4 border border-slate-800">
+            <h3 className="text-lg font-bold">Have a specific question about your institution's requirements?</h3>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+              Muhammad Usman is available directly to answer technical, pedagogical, and pilot setup inquiries.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Button
+                asChild
+                className="bg-[#8D1B2D] hover:bg-[#741322] text-white font-bold text-xs px-5 h-10 rounded-xl"
+              >
+                <a href="mailto:musmanmahar5312@gmail.com">
+                  <Mail className="h-3.5 w-3.5 mr-1.5" /> Email Developer
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="border-emerald-500/50 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 font-bold text-xs px-5 h-10 rounded-xl"
+              >
+                <a href="https://wa.me/923058315292" target="_blank" rel="noopener noreferrer">
+                  <Phone className="h-3.5 w-3.5 mr-1.5 text-emerald-400" /> WhatsApp (+92 305 8315292)
+                </a>
+              </Button>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* 13. FULL FOOTER */}
-      <footer className="bg-[#1f242b] text-slate-300 py-14">
+      {/* 11. REWRITTEN PRODUCT FOOTER */}
+      <footer className="bg-[#0B1528] text-slate-300 py-14 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Column 1: School Identity */}
+            {/* Column 1: Product Mission */}
             <div className="space-y-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo.png"
-                alt="Sindh School of Technology"
-                className="h-9 w-auto brightness-200"
+                src="/logo.png?v=9"
+                alt="Logo"
+                className="h-8 sm:h-9 w-auto object-contain drop-shadow-md"
               />
               <p className="text-xs text-slate-400 leading-relaxed">
-                Sindh School of Technology — Providing premier trilingual education in English, Urdu, and Sindhi, fostering intellectual brilliance, digital technology leadership, and moral character.
+                AI-powered learning tools for schools worldwide — built to make quality education technology accessible to any institution, regardless of budget.
               </p>
             </div>
 
-            {/* Column 2: Campuses & Locations in Sindh */}
+            {/* Column 2: Quick Links */}
             <div className="space-y-3">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Our Campuses in Sindh</h4>
-              <div className="space-y-2 text-xs text-slate-400">
-                <p className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-[#8D1B2D] flex-shrink-0 mt-0.5" />
-                  <span>Karachi Main Campus: Early Years, Primary & Secondary</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  <span>SST Nexus Sixth Form: Clifton / Gulshan, Karachi</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <span>Hyderabad Campus: Qasimabad / Auto Bhan, Sindh</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Column 3: Fast Navigation */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Quick Links</h4>
-              <ul className="space-y-1.5 text-xs text-slate-400 font-medium">
-                <li><Link href="/" className="hover:text-white">Platform Portal</Link></li>
-                <li><Link href="/our-school" className="hover:text-white">About SST Overview</Link></li>
-                <li><Link href="/our-school/facilities" className="hover:text-white">Campus Facilities & Features</Link></li>
-                <li><Link href="#enquiry-form" className="hover:text-white">Admissions & Fees</Link></li>
-                <li><Link href="/auth/signin" className="hover:text-white">Student & Educator Portal</Link></li>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white">Navigation</h4>
+              <ul className="space-y-2 text-xs text-slate-400 font-medium">
+                <li><a href="#pilot-request" className="hover:text-white transition-colors">Request a Pilot</a></li>
+                <li><a href="#product-tour" className="hover:text-white transition-colors">Product Tour</a></li>
+                <li><a href="#features" className="hover:text-white transition-colors">Core AI Workflows</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition-colors">Pilot Process</a></li>
+                <li><a href="#changelog" className="hover:text-white transition-colors">Changelog</a></li>
+                <li><a href="#faq" className="hover:text-white transition-colors">Institutional FAQ</a></li>
               </ul>
             </div>
 
-            {/* Column 4: Contact & Admissions */}
+            {/* Column 3: AI Modules */}
             <div className="space-y-3">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-white">Admissions Hotline (Pakistan)</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white">AI Solutions</h4>
+              <ul className="space-y-2 text-xs text-slate-400 font-medium">
+                <li><Link href="/ai-tutor" className="hover:text-white transition-colors">Socratic AI Tutor</Link></li>
+                <li><Link href="/quiz-generator" className="hover:text-white transition-colors">AI Quiz Arena &amp; Exam Simulator</Link></li>
+                <li><Link href="/autograding" className="hover:text-white transition-colors">Formative Autograder</Link></li>
+                <li><Link href="/plagiarism" className="hover:text-white transition-colors">Originality &amp; Plagiarism Engine</Link></li>
+                <li><Link href="/leaderboard" className="hover:text-white transition-colors">Gamified Leaderboard</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 4: Contact Information */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white">Direct Developer Contact</h4>
               <div className="space-y-2 text-xs text-slate-400">
                 <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-emerald-400" />
-                  <span>+92 (021) 3588-9000</span>
+                  <Mail className="h-3.5 w-3.5 text-cyan-400" />
+                  <a href="mailto:musmanmahar5312@gmail.com" className="hover:text-white">musmanmahar5312@gmail.com</a>
                 </p>
                 <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-emerald-400" />
-                  <span>WhatsApp: +92 300 1234567</span>
+                  <Phone className="h-3.5 w-3.5 text-emerald-400" />
+                  <a href="https://wa.me/923058315292" target="_blank" rel="noopener noreferrer" className="hover:text-white">+92 305 8315292 (WhatsApp)</a>
                 </p>
                 <p className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-blue-400" />
-                  <span>admissions@sst.edu.pk</span>
+                  <ExternalLink className="h-3.5 w-3.5 text-blue-400" />
+                  <a href="https://www.linkedin.com/in/muhammad-usman-9464b5247/" target="_blank" rel="noopener noreferrer" className="hover:text-white">LinkedIn Profile</a>
                 </p>
-                <div className="pt-2">
-                  <Badge className="bg-white/10 text-slate-200 border-none text-[10px]">
-                    Accredited by Cambridge CAIE & Sindh BISE
-                  </Badge>
-                </div>
+                <p className="flex items-center gap-2">
+                  <ExternalLink className="h-3.5 w-3.5 text-amber-400" />
+                  <a href="https://github.com/mhusman123" target="_blank" rel="noopener noreferrer" className="hover:text-white">GitHub Repository</a>
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-slate-700/60 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-            <p>© 2026 Sindh School of Technology (SST). All rights reserved.</p>
+          <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+            <p>© 2026 AI Education Platform. Built by Muhammad Usman.</p>
             <div className="flex gap-4">
-              <Link href="#" className="hover:text-slate-400">Privacy Policy</Link>
-              <Link href="#" className="hover:text-slate-400">Terms of Service</Link>
-              <Link href="#" className="hover:text-slate-400">Academic Regulations</Link>
+              <a href="#pilot-request" className="hover:text-slate-400">Request Pilot</a>
+              <Link href="/ai-hub" className="hover:text-slate-400">Live Demo</Link>
+              <a href="mailto:musmanmahar5312@gmail.com" className="hover:text-slate-400">Contact Developer</a>
             </div>
           </div>
         </div>
       </footer>
-
-      {/* Interactive Video Modal */}
-      {isVideoOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-4xl bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-            <div className="flex items-center justify-between p-4 bg-slate-900 text-white">
-              <div className="flex items-center gap-2">
-                <Play className="h-4 w-4 text-cyan-300 fill-cyan-300" />
-                <span className="text-xs sm:text-sm font-bold">Sindh School of Technology — Campus Tour</span>
-              </div>
-              <button
-                onClick={() => setIsVideoOpen(false)}
-                className="h-8 w-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800"
-                aria-label="Close video"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="relative w-full aspect-video">
-              <iframe
-                src="https://www.youtube.com/embed/RST4OPVl3Gs?autoplay=1&rel=0"
-                title="Come and discover Sindh School of Technology"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
